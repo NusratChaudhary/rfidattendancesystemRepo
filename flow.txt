@@ -1,0 +1,13 @@
+<--Web APp-->
+HR Login
+HR regist
+Emp Regist
+Emp Log
+** Use Marquee  like ssa use to broadcast mesg
+
+
+<!- -->
+
+
+
+
