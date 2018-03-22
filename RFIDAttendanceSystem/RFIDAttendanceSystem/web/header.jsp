@@ -6,9 +6,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-        <!-- Bootstrap CSS -->
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" />
-
+       
     </head>
     <body>
         <nav class="navbar navbar-expand-lg navbar-light bg-primary">
@@ -21,13 +19,29 @@
                 <ul class="navbar-nav mr-auto">
 
                 </ul>
-                <button type="button" class="btn btn-sm btn-light mr-sm-2 "  data-toggle="modal" data-target="#loginModal">&nbsp;&nbsp;&nbsp;LOGIN&nbsp;&nbsp;&nbsp;</button>
-                <button type="button" class="btn btn-sm btn-light mr-sm-2" data-toggle="modal" data-target="#registrationModal">&nbsp;&nbsp;&nbsp;SIGNUP&nbsp;&nbsp;&nbsp;</button>
+                <div class="without-login">
+                    <button type="button" class="btn btn-sm btn-light mr-sm-2 "  data-toggle="modal" data-target="#loginModal">&nbsp;&nbsp;&nbsp;LOGIN&nbsp;&nbsp;&nbsp;</button>
+                    <button type="button" class="btn btn-sm btn-light mr-sm-2" data-toggle="modal" data-target="#registrationModal">&nbsp;&nbsp;&nbsp;SIGNUP&nbsp;&nbsp;&nbsp;</button>
+                </div>
+
+                <div class="login">
+                    <button type="button" class="btn btn-sm btn-light mr-sm-2 "  data-toggle="modal" >&nbsp;&nbsp;&nbsp;SIGNOUT&nbsp;&nbsp;&nbsp;</button>                 
+                </div>
+
+
+
             </div>
         </nav>
 
 
 
+
+
+
+
+
+
+        <!--  MODALS Below-->
 
         <!--Login Modal -->
         <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -81,10 +95,87 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <div class="row">
-                            <div class="col-sm-6" style="border-right: 2px solid black">  <button type="button" class="btn btn-primary  btn-block btn-lg" data-toggle="modal" data-target="#hrSignup">HR SignUp</button></div>
-                            <div class="col-sm-6">   <button type="button" class="btn btn-primary btn-block btn-lg" data-toggle="modal" data-target="#empSignup">Employee SignUp</button></div>
-                        </div>
+                        <form>
+
+                            <div class="form-group row">
+                                <label  class="col-sm-4 col-form-label">First Name</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" id="firstName" placeholder="First Name">
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label  class="col-sm-4 col-form-label">Last Name</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" id="lastName" placeholder="Last Name">
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label  class="col-sm-4 col-form-label">Gender</label>
+                                <div class="col-sm-8">
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="gender" value="male">
+                                        <label class="form-check-label" for="male">Male</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="gender" value="female">
+                                        <label class="form-check-label" for="female">Female</label>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="form-group row">
+                                <label  class="col-sm-4 col-form-label">Phone Number</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" id="phoneNumber" placeholder="Phone Number">
+                                </div>
+                            </div>
+
+
+                            <div class="form-group row">
+                                <label  class="col-sm-4 col-form-label">Date of Birth</label>
+                                <div class="col-sm-8">
+                                    <input type="date" class="form-control" id="dateOfBirth" placeholder="Date of Birth">
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label  class="col-sm-4 col-form-label">Email</label>
+                                <div class="col-sm-8">
+                                    <input type="email" class="form-control" id="email" placeholder="Email">
+                                </div>
+                            </div>
+
+
+                            <div class="form-group row">
+                                <label  class="col-sm-4 col-form-label">Password</label>
+                                <div class="col-sm-8" >
+                                    <input type="password" class="form-control" id="password" placeholder="Password">
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="form-group row">
+                                <label  class="col-sm-4 col-form-label">Address</label>
+                                <div class="col-sm-8">
+                                    <textarea class="form-control" rows="4" id="comment"></textarea>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">                   
+                                <div class="col-sm-12 offset-sm-4">
+                                    <button type="submit" class="btn btn-primary">&nbsp;&nbsp; SignUp &nbsp;&nbsp;</button>
+                                </div>
+
+                            </div>
+
+
+
+                        </form>
                     </div>
 
                 </div>
@@ -146,8 +237,5 @@
 
 
 
-        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"  ></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" ></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" ></script>
     </body>
 </html>
