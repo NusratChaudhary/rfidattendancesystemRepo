@@ -10,8 +10,9 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" />
-        <link rel="stylesheet" href="mystyle.css"/>
+        <link rel="stylesheet" href="CSS/mystyle.css"/>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <link rel="stylesheet" href="CSS/animate.css">
         <title>RFID Attendance</title>
     </head>
     <body>
@@ -19,7 +20,11 @@
         <!-- Button trigger modal -->
         <button type="button"  id="modalTrigger" data-toggle="modal" style="display: none" data-target="#loginModal"></button>
 
+<!-- 
 
+First check if any token is recd if yes then show rfis page else show passcode den get auth token and show page
+
+-->
 
 
         <!--Credential Modal -->
@@ -38,14 +43,14 @@
                             <div class="form-group row">
                                 <label class="col-sm-4 col-form-label">Passcode</label>
                                 <div class="col-sm-8">
-                                    <input type="password" id="passcode" class="form-control" maxlength="6" style="text-transform: capitalize" id="passcode" placeholder="Passcode">
+                                    <input type="password" required autofocus="true"id="passcode" class="form-control"  maxlength="6" style="text-transform: capitalize;" placeholder="Passcode">
                                 </div>
                             </div>
-                            <!--   <div class="form-group row">
-                                   <div class=" offset-sm-5">
-                                       <button type="submit" class="btn btn-primary">&nbsp;&nbsp; Submit &nbsp;&nbsp;</button>
-                                   </div>
-                               </div>-->
+                            <div class="form-group row">
+                                <div class="col-sm-5" id="statusContainer">
+                                </div>
+                            </div>
+
                         </form>
                     </div>
 
@@ -58,17 +63,26 @@
 
         <script>
             $(document).ready(function () {
-                var counter = 0;
-                $('#modalTrigger').click();
 
-                $('#passcode').keypress(function () {
-                    counter = counter + 1;
-                    if (counter === 6) {
+                $('#modalTrigger').click(); // click if no seesion found
 
-                      /*  $.post('#', {passcode: $(#passcode).val()},
-                                function (data, status) {
+                $('#passcode').keyup(function () {
 
-                                });*/
+                    var data = $('#passcode').val();
+
+                    if (data.length !== 6) {
+                        $('#passcode').removeClass('wrongInput');
+                        $('#status').remove();
+                    }
+                    if (data.length === 6) {
+                        $('#passcode').blur();
+                        $('#passcode').addClass('wrongInput');
+                        //  $('#passcode').addClass('rightInput');
+                        $("#statusContainer").after("<p id='status'  class='lead animated fadeIn'>Loading <span class='animated infinite fadeOutRight'>...</span></p>");
+                        /*   $.post('#', {passcode: $(#passcode).val()},
+                         function (data, status) {
+                         
+                         });*/
                     }
                 });
 
