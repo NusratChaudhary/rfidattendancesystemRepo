@@ -20,11 +20,11 @@
         <!-- Button trigger modal -->
         <button type="button"  id="modalTrigger" data-toggle="modal" style="display: none" data-target="#loginModal"></button>
 
-<!-- 
-
-First check if any token is recd if yes then show rfis page else show passcode den get auth token and show page
-
--->
+        <!-- 
+        
+        First check if any token is recd if yes then show rfis page else show passcode den get auth token and show page
+        
+        -->
 
 
         <!--Credential Modal -->
@@ -33,7 +33,7 @@ First check if any token is recd if yes then show rfis page else show passcode d
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLabel">RFID Login</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <button type="button" class="close" onclick="javascript:window.history.back();" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
@@ -84,6 +84,11 @@ First check if any token is recd if yes then show rfis page else show passcode d
                          
                          });*/
                     }
+                });
+
+
+                $('#loginModal').on('hidden.bs.modal', function () {
+                    window.history.back();
                 });
 
             });
