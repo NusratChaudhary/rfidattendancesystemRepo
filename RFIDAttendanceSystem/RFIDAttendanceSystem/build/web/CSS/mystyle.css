@@ -10,3 +10,42 @@
 .rightInput{
     border-color: green;
 }
+
+.dashboard-card-row{
+    margin-bottom: 5% ;
+
+}
+
+.live-counter-divider{
+    border-right: 1px solid gray;
+    width: 1px;
+}
+
+.live-counter{
+
+    margin-bottom: 3%;
+    font-family: "Courier New", Courier, monospace;
+}
+
+.live-counter-numbers{
+    font-size: 30px;
+    font-weight: bold;
+    color: grey;
+    margin-left: 12px;
+    vertical-align: sub;
+}
+
+
+
+.shadow{
+    box-shadow:   0 10px 16px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19) !important;
+    -moz-box-shadow:0 10px 16px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19) !important;
+    -webkit-box-shadow:0 10px 16px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19) !important;
+
+}
+
+.shadow:hover{
+    box-shadow:   0 20px 16px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19) !important;
+    -moz-box-shadow:0 20px 16px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19) !important;
+    -webkit-box-shadow:0 20px 16px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19) !important;
+}
