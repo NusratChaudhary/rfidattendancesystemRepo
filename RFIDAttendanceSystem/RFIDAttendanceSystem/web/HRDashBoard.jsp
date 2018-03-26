@@ -22,13 +22,13 @@
             <div class="row live-counter ">
 
                 <div class="col-sm-6 " >
-                    <center> <span class="lead">Attendance Entries </span><span class="live-counter-numbers animated fadeIn">50</span></center>
+                    <center> <span class="lead">Attendance Entries </span><span class="live-counter-numbers animated fadeIn" style="color: green">50</span></center>
                 </div>
                 <!--<div class="col-sm-1 live-counter-divider">
                     
                 </div>-->
                 <div class="col-sm-6">
-                    <center>  <span class="lead">Pending Requests </span><span class="live-counter-numbers animated fadeIn">62</span></center>
+                    <center>  <span class="lead">Pending Requests </span><span class="live-counter-numbers animated fadeIn" style="color: red">62</span></center>
                 </div>
 
             </div>

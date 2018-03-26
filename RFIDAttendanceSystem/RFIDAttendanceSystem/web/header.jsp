@@ -115,11 +115,11 @@
                                 <label  class="col-sm-4 col-form-label">Gender</label>
                                 <div class="col-sm-8">
                                     <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="gender" value="male">
+                                        <input class="form-check-input" type="radio" name="inlineRadioOptions"  value="male">
                                         <label class="form-check-label" for="male">Male</label>
                                     </div>
                                     <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="gender" value="female">
+                                        <input class="form-check-input" type="radio" name="inlineRadioOptions"  value="female">
                                         <label class="form-check-label" for="female">Female</label>
                                     </div>
                                 </div>
