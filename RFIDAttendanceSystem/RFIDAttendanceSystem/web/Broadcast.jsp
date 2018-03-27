@@ -24,62 +24,85 @@
 
 
 
-            <div class="row">
+            <div class="row" style="margin-left: 5px;margin-right: 5px;">
 
 
-                <div class="col-sm-4 bg-light shadow-nohover" style="margin-left: 20px;" >
+                <div class="col-sm-4 bg-light shadow-nohover" >
+                    <div style="margin-left: 10px">
 
-
-                    <!-- Alert -->
-                    <div class="alert alert-success alert-dismissible fade show" role="alert" >
-                        <center> Message Sent Succesfully ! </center>
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <!-- Alert End -->
-
-
-                    <form>
-                        <div class="form-group form-group-padding" >
-                            <label>Message</label>
-                            <textarea class="form-control" rows="5" ></textarea>
+                        <!-- Alert -->
+                        <div class="alert alert-success alert-dismissible fade show" role="alert" >
+                            <center> Message Sent Succesfully ! </center>
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
                         </div>
+                        <!-- Alert End -->
 
 
-                        <center> <div class="form-check form-check-inline " style="font-size: 20px;">
-                                <input class="form-check-input" type="radio" name="messageType" id="broadcast" value="0" >
-                                <label class="form-check-label" for="inlineRadio1">Broadcast Message</label>
-                            </div> &nbsp;&nbsp;&nbsp;
-                            <div class="form-check form-check-inline"style="font-size: 20px;">
-                                <input class="form-check-input" type="radio" name="messageType" id="individual"  value="1">
-                                <label class="form-check-label" for="inlineRadio2">Individual Message</label>
+                        <form>
+                            <div class="form-group form-group-padding" >
+                                <label>Message</label>
+                                <textarea class="form-control" rows="5" ></textarea>
                             </div>
-                        </center>
 
 
-                        <div class="form-group form-group-padding animated fadeIn" id="employeeSelector" style="display: none">
-                            <label for="exampleInputPassword1">Receipt</label>
-                            <select multiple class="form-control" id="exampleFormControlSelect2">
-                                <option>1</option>
-                                <option>2</option>
-                                <option>3</option>
-                                <option>4</option>
-                                <option>5</option>
-                            </select>
-                        </div>
+                            <center> <div class="form-check form-check-inline " style="font-size: 20px;">
+                                    <input class="form-check-input"  type="radio" name="messageType" id="broadcast" value="0" >
+                                    <label class="form-check-label" for="broadcast">Broadcast Message</label>
+                                </div> 
+                                <div class="form-check form-check-inline" style="font-size: 20px;">
+                                    <input class="form-check-input" type="radio" name="messageType" id="individual"  value="1">
+                                    <label class="form-check-label" for="individual">Individual Message</label>
+                                </div>
+                            </center>
 
-                        <div class="form-group form-group-padding">
-                            <center> <button type="submit" class="btn btn-primary">Submit</button></center>
-                        </div>
 
-                    </form>
+                            <div class="form-group form-group-padding animated fadeIn" id="employeeSelector" style="display: none">
+                                <label for="exampleInputPassword1">Receipt</label>
+                                <select multiple class="form-control" id="exampleFormControlSelect2">
+                                    <option>1</option>
+                                    <option>2</option>
+                                    <option>3</option>
+                                    <option>4</option>
+                                    <option>5</option>
+                                </select>
+                            </div>
 
+                            <div class="form-group form-group-padding">
+                                <center> <button type="submit" class="btn btn-primary">Submit</button></center>
+                            </div>
+
+                        </form>
+                    </div>
                 </div>
 
-                <div class="col-sm-8">
+                <div class="col-sm-8" style="overflow: hidden">
+                    <div style="overflow-y:auto;padding: 10px">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5>   Message Type [BroadCast or Receipt]
+                                </h5>
+                            </div>
+                            <div class="card-body">
 
+                                <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                                <a href="#" class="btn btn-danger  float-right  ">Delete</a>
+                            </div>
+                        </div>
+                        <br/>
+                        <div class="card">
+                            <div class="card-header">
+                                <h5>   Message Type [BroadCast or Receipt]</h5>
+                            </div>
+                            <div class="card-body">
 
+                                <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                                <a href="#" class="btn btn-danger float-right">Delete</a>
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
 
 
