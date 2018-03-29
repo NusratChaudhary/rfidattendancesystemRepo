@@ -25,6 +25,7 @@
                 </div>
 
                 <div class="login">
+                    <img src="Resources/notificatonIcon.png" alt="notificatonIcon" style="margin-right: 50px"/>
                     <button type="button" class="btn btn-sm btn-light mr-sm-2 "  data-toggle="modal" >&nbsp;&nbsp;&nbsp;SIGNOUT&nbsp;&nbsp;&nbsp;</button>                 
                 </div>
 

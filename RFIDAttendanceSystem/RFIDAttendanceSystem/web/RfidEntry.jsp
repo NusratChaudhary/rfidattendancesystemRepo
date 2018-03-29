@@ -15,19 +15,84 @@
         <link rel="stylesheet" href="CSS/animate.css">
         <title>RFID Attendance</title>
     </head>
-    <body>
+    <body class="bg-secondary">
 
-        <!-- Button trigger modal -->
+
+
+        <div class="container">
+            <div class="center-div">
+                <div class="bg-light shadow-nohover" >
+                    <div style="margin-left: 10px">
+
+                        <!-- Alert -->
+                        <div class="alert alert-success alert-dismissible fade show" role="alert" >
+                            <center><strong> Successfully Checked In ! </strong></center>
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        
+                        
+                        
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert" >
+                            <center> <strong>Something Went Wrong Contact Administrator ! </strong></center>
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <!-- Alert End -->
+
+
+                        <form>
+                            <div class="form-group form-group-padding" >
+                                <label ><h3>Card Number</h3></label>
+                                <input type="text" class="form-control" autofocus="true">
+                            </div>
+
+
+
+
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        <!-- Button trigger modal 
         <button type="button"  id="modalTrigger" data-toggle="modal" style="display: none" data-target="#loginModal"></button>
 
-        <!-- 
+        
         
         First check if any token is recd if yes then show rfis page else show passcode den get auth token and show page
         
-        -->
+        
 
 
-        <!--Credential Modal -->
+     
         <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog " role="document">
                 <div class="modal-content">
@@ -92,8 +157,7 @@
                 });
 
             });
-        </script>
-
+        </script>-->
         <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"  ></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" ></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" ></script>

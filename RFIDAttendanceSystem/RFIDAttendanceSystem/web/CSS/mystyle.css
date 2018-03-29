@@ -2,6 +2,7 @@
 
 }
 .login{
+
     display: none;
 }
 .wrongInput{
@@ -59,4 +60,18 @@
 
 .form-group-padding{
     padding: 20px;
+}
+
+.center-div{
+    position:fixed;
+    top: 50%;
+    left: 40%;
+    width:50% ;
+    height:18em;
+    margin-top: -9em; /*set to a negative number 1/2 of your height*/
+    margin-left: -15em; /*set to a negative number 1/2 of your width*/
+}
+
+.alert{
+    letter-spacing: 1px !important; 
 }
