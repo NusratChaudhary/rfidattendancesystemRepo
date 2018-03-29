@@ -40,18 +40,22 @@
                 <div class="col-sm-6 ">
                     <div class="card shadow">
                         <div class="card-body">
-                            <h5 class="card-title">Special title treatment</h5>
-                            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                            <a href="#" class="btn btn-primary">Go somewhere</a>
+
+                            <img src="Resources/employeeIcon.png" style="height: 140px;width: auto" class="rounded mx-auto d-block img-fluid" alt="employeeIcon">
+
+                            <h3 class="card-title " align="center">Employees</h3>
+
+
                         </div>
                     </div>
                 </div>
                 <div class="col-sm-6 ">
                     <div class="card shadow">
                         <div class="card-body">
-                            <h5 class="card-title">Special title treatment</h5>
-                            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                            <a href="#" class="btn btn-primary">Go somewhere</a>
+                           
+                            <img src="Resources/broadcastIcon.png" style="height: 140px;width: auto" class="rounded mx-auto d-block img-fluid" alt="broadcastIcon">
+
+                            <h3 class="card-title " align="center">Broadcast Message</h3>
                         </div>
                     </div>
                 </div>
@@ -62,18 +66,19 @@
                 <div class="col-sm-6 ">
                     <div class="card shadow">
                         <div class="card-body">
-                            <h5 class="card-title">Special title treatment</h5>
-                            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                            <a href="#" class="btn btn-primary">Go somewhere</a>
+                          
+                            <img src="Resources/employeeRequestIcon.png" style="height: 140px;width: auto" class="rounded mx-auto d-block img-fluid" alt="employeeRequestIcon">
+
+                            <h3 class="card-title " align="center">Employee Requests</h3>
                         </div>
                     </div>
                 </div>
                 <div class="col-sm-6 ">
                     <div class="card shadow">
                         <div class="card-body">
-                            <h5 class="card-title">Special title treatment</h5>
-                            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                            <a href="#" class="btn btn-primary">Go somewhere</a>
+                            <img src="Resources/attendanceIcon.png" style="height: 140px;width: auto" class="rounded mx-auto d-block img-fluid" alt="attendanceIcon">
+
+                            <h3 class="card-title " align="center">Attendance Records</h3>
                         </div>
                     </div>
                 </div>
