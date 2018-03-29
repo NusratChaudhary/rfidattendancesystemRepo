@@ -23,8 +23,13 @@
 
         <div class="container">
 
-
-            <div class="row dashboard-card-row" style="margin-top: 15%">
+            <div class="jumbotron jumbotron-fluid" style="background-color: transparent;padding: 0">
+  <div class="container">
+    <h1 class="display-4">Welcome Mr Rajesh Jain</h1>
+  </div>
+</div>
+            
+            <div class="row dashboard-card-row" style="margin-top: 8%" >
                 <div class="col-sm-6 ">
                     <div class="card shadow">
                         <div class="card-body">

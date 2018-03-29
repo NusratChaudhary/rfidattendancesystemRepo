@@ -81,23 +81,23 @@
                     <div style="overflow-y:auto;padding: 10px">
                         <div class="card">
                             <div class="card-header">
-                                <h5>   Message Type [BroadCast or Receipt]
+                                <h5>   Message Type : Broadcast
                                 </h5>
                             </div>
                             <div class="card-body">
 
-                                <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                                <p class="card-text">Office will be closed from 21st March till 25th March due to painting work</p>
                                 <a href="#" class="btn btn-danger  float-right  ">Delete</a>
                             </div>
                         </div>
                         <br/>
                         <div class="card">
                             <div class="card-header">
-                                <h5>   Message Type [BroadCast or Receipt]</h5>
+                                <h5>   Message Type : Individual [Rajesh Jain (0012548)] </h5>
                             </div>
                             <div class="card-body">
 
-                                <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                                <p class="card-text">PLease meet Mr Dubey [HR Dept] to talk about salary issues</p>
                                 <a href="#" class="btn btn-danger float-right">Delete</a>
                             </div>
                         </div>

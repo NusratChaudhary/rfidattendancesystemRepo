@@ -10,7 +10,7 @@
     </head>
     <body>
         <nav class="navbar navbar-expand-lg navbar-light bg-primary">
-            <a class="navbar-brand text-white lead" href="#" style="font-weight: 400;">RFID Attendance System</a>
+            <a class="navbar-brand text-white lead" href="#" style="font-weight: 400;">Symphid</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -25,7 +25,7 @@
                 </div>
 
                 <div class="login">
-                    <img src="Resources/notificatonIcon.png" alt="notificatonIcon" style="margin-right: 50px"/>
+                <!--    <img src="Resources/notificatonIcon.png" alt="notificatonIcon" style="margin-right: 50px"/>-->
                     <button type="button" class="btn btn-sm btn-light mr-sm-2 "  data-toggle="modal" >&nbsp;&nbsp;&nbsp;SIGNOUT&nbsp;&nbsp;&nbsp;</button>                 
                 </div>
 
@@ -71,8 +71,8 @@
 
 
                             <div class="form-group row">
-                                <div class="col-sm-10">
-                                    <button type="submit" class="btn btn-primary">Sign in</button>
+                                <div class="col-sm-12">
+                                    <center>  <button type="submit" class="btn btn-primary">Sign in</button></center>
                                 </div>
                             </div>
                         </form>

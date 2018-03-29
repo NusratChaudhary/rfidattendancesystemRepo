@@ -25,16 +25,16 @@
                     <div style="margin-left: 10px">
 
                         <!-- Alert -->
-                        <div class="alert alert-success alert-dismissible fade show" role="alert" >
+                        <div class="alert alert-success alert-dismissible fade show" id="alert" role="alert" >
                             <center><strong> Successfully Checked In ! </strong></center>
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
-                        
-                        
-                        
-                        <div class="alert alert-danger alert-dismissible fade show" role="alert" >
+
+
+
+                        <div class="alert alert-danger alert-dismissible fade show" id="alert2" role="alert" >
                             <center> <strong>Something Went Wrong Contact Administrator ! </strong></center>
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
@@ -46,7 +46,7 @@
                         <form>
                             <div class="form-group form-group-padding" >
                                 <label ><h3>Card Number</h3></label>
-                                <input type="text" class="form-control" autofocus="true">
+                                <input type="password" class="form-control" autofocus="true">
                             </div>
 
 
@@ -61,7 +61,15 @@
         </div>
 
 
+        <script>
+            $("#alert").fadeTo(2000, 500).slideUp(500, function () {
+                $("#alert").slideUp(500);
+            });
 
+            $("#alert2").fadeTo(2000, 500).slideUp(500, function () {
+                $("#alert2").slideUp(500);
+            });
+        </script>
 
 
 
