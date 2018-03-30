@@ -8,11 +8,12 @@
 <!DOCTYPE html>
 <html>
     <head>
-           <link rel="shortcut icon" type="image/png" href="Resources/favicon.png"/> 
+        <link rel="shortcut icon" type="image/png" href="Resources/favicon.png"/> 
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" />
         <link rel="stylesheet" href="CSS/mystyle.css"/>
         <link rel="stylesheet" href="CSS/animate.css"/>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> 
     </head>
     <body class="bg-light">
         <jsp:include page="header.jsp"/>
@@ -39,7 +40,7 @@
 
             <div class="row dashboard-card-row">
                 <div class="col-sm-6 ">
-                    <div class="card shadow">
+                    <div class="card shadow card-cursor" id="EmployeeDetails">
                         <div class="card-body">
 
                             <img src="Resources/employeeIcon.png" style="height: 140px;width: auto" class="rounded mx-auto d-block img-fluid" alt="employeeIcon">
@@ -51,9 +52,9 @@
                     </div>
                 </div>
                 <div class="col-sm-6 ">
-                    <div class="card shadow">
+                    <div class="card shadow  card-cursor" id="Broadcast">
                         <div class="card-body">
-                           
+
                             <img src="Resources/broadcastIcon.png" style="height: 140px;width: auto" class="rounded mx-auto d-block img-fluid" alt="broadcastIcon">
 
                             <h3 class="card-title " align="center">Broadcast Message</h3>
@@ -65,9 +66,9 @@
 
             <div class="row dashboard-card">
                 <div class="col-sm-6 ">
-                    <div class="card shadow">
+                    <div class="card shadow  card-cursor" id="PendingRequest">
                         <div class="card-body">
-                          
+
                             <img src="Resources/employeeRequestIcon.png" style="height: 140px;width: auto" class="rounded mx-auto d-block img-fluid" alt="employeeRequestIcon">
 
                             <h3 class="card-title " align="center">Employee Requests</h3>
@@ -75,7 +76,7 @@
                     </div>
                 </div>
                 <div class="col-sm-6 ">
-                    <div class="card shadow">
+                    <div class="card shadow  card-cursor" id="AttendanceControl">
                         <div class="card-body">
                             <img src="Resources/attendanceIcon.png" style="height: 140px;width: auto" class="rounded mx-auto d-block img-fluid" alt="attendanceIcon">
 
@@ -89,7 +90,18 @@
         </div>
 
 
+        <script>
 
+            $(document).ready(function () {
+
+                $('.card-cursor').click(function (){
+                    location.href = this.id+'.jsp';
+                });
+
+
+
+            });
+        </script>
 
 
         <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"  ></script>

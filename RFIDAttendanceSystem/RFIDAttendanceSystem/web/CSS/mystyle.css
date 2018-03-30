@@ -35,6 +35,9 @@
     vertical-align: sub;
 }
 
+.card-cursor{
+    cursor: pointer;
+}
 
 
 .shadow{

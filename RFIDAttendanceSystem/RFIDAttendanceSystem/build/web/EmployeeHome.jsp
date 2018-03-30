@@ -29,9 +29,9 @@
                 </div>
             </div>
 
-            <div class="row dashboard-card-row" style="margin-top: 8%" >
+            <div class="row dashboard-card-row " style="margin-top: 8%" >
                 <div class="col-sm-6 ">
-                    <div class="card shadow">
+                    <div class="card shadow card-cursor" id="ViewAttendance">
                         <div class="card-body">
 
                             <img src="Resources/attendanceIcon.png" style="height: 140px;width: auto" class="rounded mx-auto d-block img-fluid" alt="attendanceIcon">
@@ -43,7 +43,7 @@
                     </div>
                 </div>
                 <div class="col-sm-6 ">
-                    <div class="card shadow">
+                    <div class="card shadow card-cursor" id="MakeaRequest">
                         <div class="card-body">
 
                             <img src="Resources/employeeRequestIcon.png" style="height: 140px;width: auto" class="rounded mx-auto d-block img-fluid" alt="employeeRequestIcon">
@@ -61,7 +61,18 @@
 
         </div>
 
+  <script>
 
+            $(document).ready(function () {
+
+                $('.card-cursor').click(function (){
+                    location.href = this.id+'.jsp';
+                });
+
+
+
+            });
+        </script>
 
 
         <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"  ></script>
