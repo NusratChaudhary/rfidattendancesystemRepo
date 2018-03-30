@@ -8,6 +8,7 @@
 <!DOCTYPE html>
 <html>
     <head>
+           <link rel="shortcut icon" type="image/png" href="Resources/favicon.png"/> 
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" />
         <link rel="stylesheet" href="CSS/mystyle.css"/>

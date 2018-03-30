@@ -8,7 +8,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-
+        <link rel="shortcut icon" type="image/png" href="Resources/favicon.png"/> 
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" />
         <link rel="stylesheet" href="CSS/mystyle.css"/>
@@ -16,7 +16,7 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <title>Employee</title>
     </head>
-    <body > 
+    <body> 
         <jsp:include page="header.jsp"/>
         <br/><br/>
 
@@ -24,11 +24,11 @@
         <div class="container">
 
             <div class="jumbotron jumbotron-fluid" style="background-color: transparent;padding: 0">
-  <div class="container">
-    <h1 class="display-4">Welcome Mr Rajesh Jain</h1>
-  </div>
-</div>
-            
+                <div class="container">
+                    <h1 class="display-4">Welcome Mr Rajesh Jain</h1>
+                </div>
+            </div>
+
             <div class="row dashboard-card-row" style="margin-top: 8%" >
                 <div class="col-sm-6 ">
                     <div class="card shadow">
