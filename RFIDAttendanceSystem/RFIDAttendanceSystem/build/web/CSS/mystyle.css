@@ -1,9 +1,9 @@
 .without-login{
-
+  display: none;
 }
 .login{
 
-    display: none;
+  
 }
 .wrongInput{
     border-color: red;
@@ -74,4 +74,23 @@
 
 .alert{
     letter-spacing: 1px !important; 
+}
+
+
+
+.notification-item {
+    position:relative;
+    display:inline-block;
+    margin-right: 50px;
+}
+.notification-badge{
+    position: absolute;
+    right:-14px;
+    background:whitesmoke;
+    text-align: center;
+    border-radius: 50px;
+    color:black;
+    font-weight: bold;
+    padding:2px 8px;
+    font-size:10px;
 }

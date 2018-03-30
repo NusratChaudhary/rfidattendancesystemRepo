@@ -6,7 +6,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-       
+
     </head>
     <body>
         <nav class="navbar navbar-expand-lg navbar-light bg-primary">
@@ -25,7 +25,13 @@
                 </div>
 
                 <div class="login">
-                <!--    <img src="Resources/notificatonIcon.png" alt="notificatonIcon" style="margin-right: 50px"/>-->
+                    <div class="notification-item">
+                        <a href="#">
+                            <span class="notification-badge">5</span>
+                            <img src="Resources/notificatonIcon.png" alt="notificatonIcon" />
+                        </a>
+                    </div>
+
                     <button type="button" class="btn btn-sm btn-light mr-sm-2 "  data-toggle="modal" >&nbsp;&nbsp;&nbsp;SIGNOUT&nbsp;&nbsp;&nbsp;</button>                 
                 </div>
 
