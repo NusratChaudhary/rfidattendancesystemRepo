@@ -64,9 +64,9 @@
                 <div class="employeeCard">
 
                     <div class="card" id="id-empName">
-                        <div class="card-header "  id="headingOne">
+                        <div class="card-header "   id="headingOne">
                             <h5 class="mb-0">
-                                <button class="btn btn-light collapsed" data-toggle="collapse" data-target="#empName" aria-expanded="true" aria-controls="empName">
+                                <button class="btn btn-light collapsed" onclick="RotateImage(document.getElementById('empName-img'));" data-toggle="collapse" data-target="#empName" aria-expanded="true" aria-controls="empName">
                                     Employee 1
                                 </button>
                                 <div class="float-right">
@@ -79,7 +79,7 @@
                                     </button>
 
                                     <button  class="btn collapsed"  data-toggle="collapse" data-target="#empName" aria-expanded="true" aria-controls="empName" >
-                                        <img src="Resources/expand-button.png" onclick="" alt="expandButton"/>
+                                        <img src="Resources/expand-button.png" id="empName-img" onclick="RotateImage(this);" alt="expandButton"/>
                                     </button>
                                 </div> 
                             </h5>
@@ -87,7 +87,94 @@
 
                         <div id="empName" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
                             <div class="card-body">
-                                Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+
+                                <div class="row">
+                                    <div class="col-sm-12 offset-sm-10" >
+                                        <img class="employeeImage img-thumbnail img-fluid" src="nil" alt="employeeImage" />
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class=" col-sm-12" style="padding: 50px;">
+                                        <form class="employeeForm">
+                                            <div class="form-group row">
+                                                <label for="name" class="col-sm-2 col-form-label">Name</label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" class="form-control" id="name" >
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="email" class="col-sm-2 col-form-label">E-mail Id</label>
+                                                <div class="col-sm-10">
+                                                    <input type="email" class="form-control" id="email" >
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group row">
+                                                <label for="mobileNumber" class="col-sm-2 col-form-label">Mobile No</label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" class="form-control" id="mobileNumber" >
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label  class="col-sm-2 col-form-label" style="padding-right: 0px;">Gender</label>
+                                                <div class="col-sm-10">
+                                                    <select class="form-control ">
+                                                        <option>Male</option>
+                                                        <option>Female</option>
+                                                    </select>
+
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="Address" class="col-sm-2 col-form-label">Address</label>
+                                                <div class="col-sm-10">
+                                                    <textarea class="form-control" id="Address" rows="3"></textarea>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group row">
+                                                <label for="DOB" class="col-sm-2 col-form-label">DOB</label>
+                                                <div class="col-sm-10">
+                                                    <input type="date" class="form-control" id="DOB" value="2018-03-31" >
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group row">
+                                                <label for="rfid" class="col-sm-2 col-form-label">RFID TAG</label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" class="form-control" id="rfid" >
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group row">
+                                                <label for="sal" class="col-sm-2 col-form-label">Salary</label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" class="form-control" id="sal" >
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group row">
+                                                <label  class="col-sm-2 col-form-label">Department</label>
+                                                <div class="col-sm-10">
+                                                    <select class="form-control">
+                                                        <option>deptID DeptName</option>
+                                                        <option>deptID DeptName</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <br/>
+                                            <div class="form-group row">
+                                                <div class="col-sm-12">
+                                                    <center>  <button type="submit" class="btn btn-primary">Save Changes</button></center>
+                                                </div>
+                                            </div>
+                                        </form> 
+
+
+                                    </div>
+
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -136,10 +223,27 @@
 
 
         <script>
+            const src1 = "Resources/expand-button.png";
+            const src2 = "Resources/expand-arrow.png";
+            function RotateImage(ctx) {
+                var currentSrc = String($(ctx).attr('src'));
+                if (currentSrc === src1) {
+                    ctx.src = src2;
+                }
+                if (currentSrc === src2) {
+                    ctx.src = src1;
+                }
+            }
+
+
             $(document).ready(function () {
 
-             
+            
+            
+
             });
+
+
         </script>
 
         <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"  ></script>
