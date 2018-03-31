@@ -25,7 +25,7 @@
 
             <div class="jumbotron jumbotron-fluid" style="background-color: transparent;padding: 0">
                 <div class="container">
-                    <h1 class="display-4">Welcome Mr Rajesh Jain</h1>
+                    <h1 class="display-4">Welcome {user}</h1>
                 </div>
             </div>
 
