@@ -2,7 +2,7 @@
 
 }
 .login{
-  display: none; 
+    display: none; 
 }
 .wrongInput{
     border-color: red;
@@ -58,6 +58,7 @@
     box-shadow:   0 20px 16px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19) !important;
     -moz-box-shadow:0 20px 16px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19) !important;
     -webkit-box-shadow:0 20px 16px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19) !important;
+
 }
 
 .form-group-padding{
@@ -96,3 +97,59 @@
     padding:2px 8px;
     font-size:10px;
 }
+
+
+.statistics{
+    font-family: "Comic Sans MS", cursive, sans-serif;
+}
+
+
+.statistics table {
+    border-collapse: inherit !important;
+    font-size: 15px;
+    border: none;
+}
+
+.statistics table tbody tr td{
+    border: none;
+}
+
+
+#searchBar{
+    background: url(../Resources/magnifier.png) no-repeat scroll 7px 7px;
+    padding-left:30px;
+}
+
+
+.employeeCard .card{
+    margin: 15px;
+    transition: all .2s ease-in-out;
+}
+
+
+.employeeCard .card:hover{
+    transform: scale(1.05);
+    box-shadow:   0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19) !important;
+    -moz-box-shadow:0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19) !important;
+    -webkit-box-shadow:0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19) !important;
+}
+
+
+.employeeCard .card .card-header h5 button{
+    background: transparent !important;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+.employeeCard .card .card-header h5 div button{
+    background: transparent !important;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important
+    
+}
+
+
+
+
