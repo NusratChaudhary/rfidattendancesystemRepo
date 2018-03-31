@@ -1,5 +1,5 @@
 ------Left Changes File -----------
 
-
+disable edit on collapse if in edit mode and use angular to check if dirty
 make all button look clickavble
 **add JS loader

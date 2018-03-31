@@ -147,17 +147,39 @@
     border: none !important;
     outline: none !important;
     box-shadow: none !important
-    
+
 }
 
 .employeeImage{
- 
+
     min-height: 140px;
     max-height: 140px;
     width: 60px;
     margin-right: 40px;
-    
+
 }
 
+.employeeDetails-NonEditable input{
+    outline: none !important;
+    border: none !important;
+    pointer-events: none !important;
+}
+
+.employeeDetails-NonEditable textArea{
+    outline: none !important;
+    border: none !important;
+    pointer-events: none !important;
+}
+
+
+.employeeDetails-NonEditable select{
+    outline: none !important;
+    border: none !important;
+    pointer-events: none !important;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    text-indent: 1px;
+    text-overflow: '';
+}
 
 

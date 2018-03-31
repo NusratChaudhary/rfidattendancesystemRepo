@@ -70,8 +70,8 @@
                                     Employee 1
                                 </button>
                                 <div class="float-right">
-                                    <button  class="btn collapsed" >
-                                        <img src="Resources/edit.png" alt="editButton"/>
+                                    <button  class="btn collapsed" id="editForm" name="empId"  data-toggle="collapse" data-target="#empName" aria-expanded="true" aria-controls="empName" >
+                                        <img src="Resources/edit.png"  alt="editButton"/>
                                     </button>
 
                                     <button  class="btn collapsed" >
@@ -96,11 +96,11 @@
 
                                 <div class="row">
                                     <div class=" col-sm-12" style="padding: 50px;">
-                                        <form class="employeeForm">
+                                        <form class="employeeDetails-NonEditable" id="empId-form">
                                             <div class="form-group row">
                                                 <label for="name" class="col-sm-2 col-form-label">Name</label>
                                                 <div class="col-sm-10">
-                                                    <input type="text" class="form-control" id="name" >
+                                                    <input type="text" class="form-control" id="name" value="Mohnish Anjaria">
                                                 </div>
                                             </div>
                                             <div class="form-group row">
@@ -238,8 +238,14 @@
 
             $(document).ready(function () {
 
-            
-            
+                $('#editForm').click(function () {
+                    
+                    
+                    
+                    $('#' + $(this).attr('name') + '-form').removeClass('employeeDetails-NonEditable');
+                });
+
+
 
             });
 
