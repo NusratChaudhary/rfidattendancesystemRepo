@@ -218,3 +218,13 @@
 .replyCard textArea{
     font-size: 18px;
 }
+
+
+.attendanceCard .card-header{
+    color: white;
+    background-color: #017afbcf;
+}
+
+.attendanceCard .card-body{
+    text-align: center;
+}

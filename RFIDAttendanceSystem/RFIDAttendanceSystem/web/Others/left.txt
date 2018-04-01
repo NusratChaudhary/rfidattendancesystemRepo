@@ -11,3 +11,6 @@ make all button look clickavble
 
 // search bar in pending request to search for request
 *********$(this).parent().parent().attr('id');  TO ACCESS PARENT ACITIVITY
+
+
+*** Resoponsive ness at end

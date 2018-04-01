@@ -40,8 +40,146 @@
 
 
 
-            <div class="col-sm-9 " style="max-width: 100%;min-height: 100px;">
+            <div class="col-sm-9 float-right" >
+
+
+                <div class="card shadow-nohover attendanceCard" >
+                    <h5 class="card-header">21/01/2013</h5>
+                    <div class="card-body">
+                        <table class="col-sm-12 table table-hover  table-striped">
+                            <thead>
+                                <tr>
+                                    <th >#</th>
+                                    <th >Employee Id</th>
+                                    <th >Employee Name</th>
+                                    <th >Check In</th>
+                                    <th >Check Out</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>0123456789</td>
+                                    <td>Mohnish Anjaria</td>
+                                    <td>8:55</td>
+                                    <td>17:05</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div> 
+
+                <br/>
+
+                <div class="card shadow-nohover attendanceCard">
+                    <h5 class="card-header">22/01/2013</h5>
+                    <div class="card-body">
+                        <table class="col-sm-12 table table-hover  table-striped">
+                            <thead>
+                                <tr>
+                                    <th >#</th>
+                                    <th >Employee Id</th>
+                                    <th >Employee Name</th>
+                                    <th >Check In</th>
+                                    <th >Check Out</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>0123456789</td>
+                                    <td>Mohnish Anjaria</td>
+                                    <td>8:55</td>
+                                    <td>17:05</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div> 
+
+                <br/>
+
+                <div class="card shadow-nohover attendanceCard">
+                    <h5 class="card-header">23/01/2013</h5>
+                    <div class="card-body">
+                        <table class="col-sm-12 table table-hover  table-striped">
+                            <thead>
+                                <tr>
+                                    <th >#</th>
+                                    <th >Employee Id</th>
+                                    <th >Employee Name</th>
+                                    <th >Check In</th>
+                                    <th >Check Out</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>0123456789</td>
+                                    <td>Mohnish Anjaria</td>
+                                    <td>8:55</td>
+                                    <td>17:05</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div> 
+                <br/>
                 
+                 <div class="card shadow-nohover attendanceCard">
+                    <h5 class="card-header">23/01/2013</h5>
+                    <div class="card-body">
+                        <table class="col-sm-12 table table-hover  table-striped">
+                            <thead>
+                                <tr>
+                                    <th >#</th>
+                                    <th >Employee Id</th>
+                                    <th >Employee Name</th>
+                                    <th >Check In</th>
+                                    <th >Check Out</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>0123456789</td>
+                                    <td>Mohnish Anjaria</td>
+                                    <td>8:55</td>
+                                    <td>17:05</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div> 
+                <br/>
+                
+                 <div class="card shadow-nohover attendanceCard">
+                    <h5 class="card-header">23/01/2013</h5>
+                    <div class="card-body">
+                        <table class="col-sm-12 table table-hover  table-striped">
+                            <thead>
+                                <tr>
+                                    <th >#</th>
+                                    <th >Employee Id</th>
+                                    <th >Employee Name</th>
+                                    <th >Check In</th>
+                                    <th >Check Out</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>0123456789</td>
+                                    <td>Mohnish Anjaria</td>
+                                    <td>8:55</td>
+                                    <td>17:05</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div> 
+                <br/>
+
             </div>
 
 
