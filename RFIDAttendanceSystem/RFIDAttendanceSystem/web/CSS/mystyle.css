@@ -186,7 +186,7 @@
 
 
 .requestCard .card-header {
-    
+
     color: white !important;
     font-weight: 400 !important;
     letter-spacing: 1px;
@@ -204,7 +204,7 @@
 }
 
 .read{
-      background-color: #ffc107c7 !important;
+    background-color: #ffc107c7 !important;
 }
 
 .responded{
@@ -227,4 +227,15 @@
 
 .attendanceCard .card-body{
     text-align: center;
+}
+
+.employeeAttendance {
+    text-align: center;
+}
+
+
+@media print{
+    .controlButton{
+        display: none !important;
+    }
 }

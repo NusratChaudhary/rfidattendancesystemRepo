@@ -4,7 +4,7 @@
 make all button look clickavble
 **add JS loader
 
-
+*******************create enums for flags 
 // when card opens it get data from server once collapsed it should clear of variables
 // check if form values are changed or not
 
@@ -14,3 +14,7 @@ make all button look clickavble
 
 
 *** Resoponsive ness at end
+
+
+
+***View Attendance show have print attendance button and mail attendance
