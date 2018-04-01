@@ -183,3 +183,38 @@
 }
 
 
+
+
+.requestCard .card-header {
+    
+    color: white !important;
+    font-weight: 400 !important;
+    letter-spacing: 1px;
+}
+
+.requestBody{
+    text-align: justify;
+    font-size: 1.1em;
+    padding: 10px;
+}
+
+
+.pending{
+    background-color: #dc3535bd !important;
+}
+
+.read{
+      background-color: #ffc107c7 !important;
+}
+
+.responded{
+    background-color: #28a745 !important;
+}
+
+.replyCard{
+    padding: 8px;
+}
+
+.replyCard textArea{
+    font-size: 18px;
+}
