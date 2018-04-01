@@ -1,5 +1,9 @@
 ------Left Changes File -----------
 
-disable edit on collapse if in edit mode and use angular to check if dirty
+
 make all button look clickavble
 **add JS loader
+
+
+// when card opens it get data from server once collapsed it should clear of variables
+// check if form values are changed or not
