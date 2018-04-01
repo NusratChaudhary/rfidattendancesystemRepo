@@ -7,3 +7,7 @@ make all button look clickavble
 
 // when card opens it get data from server once collapsed it should clear of variables
 // check if form values are changed or not
+
+
+
+*********$(this).parent().parent().attr('id');  TO ACCESS PARENT ACITIVITY

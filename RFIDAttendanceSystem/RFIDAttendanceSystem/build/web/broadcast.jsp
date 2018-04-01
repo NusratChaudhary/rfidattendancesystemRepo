@@ -8,7 +8,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-           <link rel="shortcut icon" type="image/png" href="Resources/favicon.png"/> 
+        <link rel="shortcut icon" type="image/png" href="Resources/favicon.png"/> 
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" />
         <link rel="stylesheet" href="CSS/mystyle.css"/>
@@ -25,14 +25,14 @@
 
 
 
-            <div class="row" style="margin-left: 5px;margin-right: 5px;">
+            <div class="" style="margin-left: 5px;margin-right: 5px;">
 
 
-                <div class="col-sm-4 bg-light shadow-nohover" >
+                <div class="float-left bg-light shadow-nohover" >
                     <div style="margin-left: 10px">
 
                         <!-- Alert -->
-                        <div class="alert alert-success alert-dismissible fade show" role="alert" >
+                        <div class="alert alert-success alert-dismissible fade show" id="messageAlert"role="alert" >
                             <center> Message Sent Succesfully ! </center>
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
@@ -78,7 +78,15 @@
                     </div>
                 </div>
 
-                <div class="col-sm-8" style="overflow: hidden">
+                <div class="float-right col-sm-8">
+
+                    <div class="alert alert-success alert-dismissible fade show" id="commonAlert"role="alert" >
+                        <center> Message Deleted Succesfully! </center>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+
                     <div style="overflow-y:auto;padding: 10px">
                         <div class="card">
                             <div class="card-header">
@@ -88,7 +96,7 @@
                             <div class="card-body">
 
                                 <p class="card-text">Office will be closed from 21st March till 25th March due to painting work</p>
-                                <a href="#" class="btn btn-danger  float-right  ">Delete</a>
+                                <a href="#"  class="btn btn-danger  float-right  ">Delete</a>
                             </div>
                         </div>
                         <br/>
@@ -118,6 +126,16 @@
 
 
         <script>
+
+
+            $("#messageAlert").fadeTo(2000, 500).slideUp(500, function () {
+                $("#messageAlert").slideUp(500);
+            });
+
+            $("#commonAlert").fadeTo(2000, 500).slideUp(500, function () {
+                $("#commonAlert").slideUp(500);
+            });
+
             $(document).ready(function () {
 
                 $('#individual').click(function () {
