@@ -16,5 +16,3 @@ make all button look clickavble
 *** Resoponsive ness at end
 
 
-
-***View Attendance show have print attendance button and mail attendance
