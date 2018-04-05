@@ -2,7 +2,7 @@
 
 
 make all button look clickavble
-**add JS loader
+
 
 *******************create enums for flags 
 // when card opens it get data from server once collapsed it should clear of variables
@@ -15,4 +15,61 @@ make all button look clickavble
 
 *** Resoponsive ness at end
 
+
+
+--------------------------------------------------- TASK------------------------
+
+MakeaRequest PAGE left ****
+Add JQuery Loader and loading gif
+Java Model of All Tables
+
+1) Registration 
+	Validation of values using Angular
+	Send Post using Angular or JQuery
+
+2) Login 
+	Validation 
+	Send Post request using angular or JQuery
+	onLogin create a token [login id and user name]
+	
+3) Rfid
+	PIN
+	rfid input will take  input and
+	once scanned it  will send scanned 
+	data and its own gen security pin 
+	to server using angular or JQuery.
+	
+4) Broadcast 
+	ONclick send request to server using angular or jquery
+	on response referesh showMessage Component
+	OnDelete ***Think
+	
+5) Emp Details [HR]
+	Rework on Button of edit and open card thing and onEdit click save change button should be active
+	Use angular to load the employees so that search button works
+	Show More or on scroll page should load more emps ***THink
+	
+	
+6) PendingRequest [HR]
+	Use anglur to load only load few on scroll load more [optional]
+	On Click send [reply] Page should again referesh to change card color
+	
+7) AttendanceControl[HR]
+	*Change color of card header not looking good
+	Use angular to load attendance record on click of submit
+	**Think where to place make changes button on admin request
+	
+8) HrDashboard[HR]
+	Use angular to update Attendance Entries and Pending Requests
+
+9) ViewAttendance[Emp]
+	Load Attendance of User using Angular and add filter to find using date
+	Load More Option **Think
+
+10) MakeaRequest[Emp]
+
+
+	
+	
+	
 
