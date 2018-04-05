@@ -11,3 +11,30 @@ Emp Log
 
 
 
+-------------------------------------------------------------
+
+
+Emp :
+	Register [Send Email Verification and Upload Picture and send to xerox center mail]
+	Login [Create a token and write in DB about it]
+	View Attendance  
+	Make a Request [Send a mail to HR pinging that you have a new request /send link in mail [Optional]  ]
+
+HR :
+	Login [Create a token  and write in DB about it]
+	Edit Emp Data [on Edit Mail to Admin and Editied Emp also and Also LOG in DB]
+	Edit Attendance Details [Admin Permission Required  then on Edit Mail to Admin and Editied Emp also and Also LOG in DB]
+	Send Broadcasts [Send Broadcast]
+	Send Replies to Emp Request [Log in request table and ping user about his reply] 
+
+Admin :
+	Login [Create a token  and write in DB about it]
+	Edit HR id password [Log it and send to Emp and HR ]
+	Edit Emp Data[Log it and send to Emp and HR ]
+	Edit Attendance [Log it and send to Emp and HR ]
+	Watch Request
+	
+	
+
+	
+	
