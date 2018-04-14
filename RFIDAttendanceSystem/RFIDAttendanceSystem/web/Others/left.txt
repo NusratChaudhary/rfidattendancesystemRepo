@@ -18,8 +18,9 @@ make all button look clickavble
 
 
 --------------------------------------------------- TASK------------------------
-
-MakeaRequest PAGE left ****
+** SIGNUP page should have upload picture for RFID
+***Any changes made in Data will be recorded inDB
+MakeaRequest PAGE [Should have View Sent Request PAge Also] left ****
 Add JQuery Loader and loading gif
 Java Model of All Tables
 
@@ -68,6 +69,8 @@ Java Model of All Tables
 
 10) MakeaRequest[Emp]
 
+
+11) Admin []
 
 	
 	
