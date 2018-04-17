@@ -15,7 +15,11 @@ make all button look clickavble
 
 *** Resoponsive ness at end
 
+-------------------------------------------------------------------
 
+Registration Validation
+
+----------------------------------------------------------------
 
 --------------------------------------------------- TASK------------------------
 ** SIGNUP page should have upload picture for RFID

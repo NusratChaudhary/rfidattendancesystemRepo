@@ -1,6 +1,9 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
+
+
+
 <nav class="navbar navbar-expand-lg navbar-light bg-primary">
     <a class="navbar-brand text-white lead" href="#" style="font-weight: 400;">Symphid</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -85,8 +88,12 @@
 
 <!--Regist Modal -->
 <div class="modal fade" id="registrationModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
+
+
+
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">SIGNUP</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -94,19 +101,19 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form method="post" enctype="multipart/form-data" id="registrationForm">
+                <form method="post"  id="registrationForm">
 
                     <div class="form-group row">
                         <label  class="col-sm-4 col-form-label" for="firstName">First Name</label>
                         <div class="col-sm-8">
-                            <input type="text" class="form-control" id="firstName" name="firstName" placeholder="First Name">
+                            <input type="text" class="form-control" id="firstName" minlength="3" name="firstName"  placeholder="First Name" required>
                         </div>
                     </div>
 
                     <div class="form-group row">
                         <label  class="col-sm-4 col-form-label" for="lastName">Last Name</label>
                         <div class="col-sm-8">
-                            <input type="text" class="form-control" id="lastName" name="lastName" placeholder="Last Name">
+                            <input type="text" class="form-control" id="lastName" minlength="3" name="lastName" placeholder="Last Name" required>
                         </div>
                     </div>
 
@@ -114,7 +121,7 @@
                         <label  class="col-sm-4 col-form-label">Gender</label>
                         <div class="col-sm-8">
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="gender" id="male" value="male">
+                                <input class="form-check-input" type="radio" name="gender" id="male" value="male" checked="true">
                                 <label class="form-check-label" for="male">Male</label>
                             </div>
                             <div class="form-check form-check-inline">
@@ -128,7 +135,7 @@
                     <div class="form-group row">
                         <label  class="col-sm-4 col-form-label" for="phoneNumber">Phone Number</label>
                         <div class="col-sm-8">
-                            <input type="text" class="form-control" id="phoneNumber" name="phoneNumber" placeholder="Phone Number">
+                            <input type="text" class="form-control" id="phoneNumber" minlength="10" name="phoneNumber" placeholder="Phone Number" required>
                         </div>
                     </div>
 
@@ -136,14 +143,14 @@
                     <div class="form-group row">
                         <label  class="col-sm-4 col-form-label" for="dateOfBirth">Date of Birth</label>
                         <div class="col-sm-8">
-                            <input type="date" class="form-control" id="dateOfBirth" name="dateOfBirth"  placeholder="Date of Birth">
+                            <input type="date" class="form-control" id="dateOfBirth" name="dateOfBirth"  placeholder="Date of Birth" required >
                         </div>
                     </div>
 
                     <div class="form-group row">
                         <label  class="col-sm-4 col-form-label" for="email">Email</label>
                         <div class="col-sm-8">
-                            <input type="email" class="form-control" id="email" name="email" placeholder="Email">
+                            <input type="email" class="form-control" id="email" minlength="6" name="email" placeholder="Email" required>
                         </div>
                     </div>
 
@@ -151,7 +158,7 @@
                     <div class="form-group row">
                         <label  class="col-sm-4 col-form-label" for="password">Password</label>
                         <div class="col-sm-8" >
-                            <input type="password" class="form-control" id="password" name="password" placeholder="Password">
+                            <input type="password" class="form-control" id="password" minlength="6" name="password" placeholder="Password" required>
 
                         </div>
 
@@ -161,14 +168,14 @@
                     <div class="form-group row">
                         <label  class="col-sm-4 col-form-label" for="comment">Address</label>
                         <div class="col-sm-8">
-                            <textarea class="form-control" rows="4" id="comment" name="address"></textarea>
+                            <textarea class="form-control" rows="4" id="comment" name="address" minlength="10" required></textarea>
                         </div>
                     </div>
 
                     <div class="form-group row">
                         <label  class="col-sm-4 col-form-label">Upload Picture</label>
                         <div class="col-sm-8">
-                            <input type="file" class="form-control" id="inputGroupFile01" name="file" accept="image/jpg,image/jpeg,image/png" required>
+                            <input type="file"  class="form-control" id="profilePicture" name="file" accept="image/jpg,image/jpeg,image/png" required>
                         </div>
                     </div>
 
@@ -195,50 +202,76 @@
 
 <script>
 
+
     $(document).ready(function () {
 
-        $('#signUpButton').click(function (event) {
-            //  $('#signUpButton').prop('disabled', true);
-            // show loader
+
+
+        var dataURL;
+
+        $('#profilePicture').change(function () {
+            var reader = new FileReader();
+            reader.onload = function () {
+                dataURL = reader.result;
+            };
+            reader.readAsDataURL(event.target.files[0]);
+        });
+
+        $('#registrationForm').submit(function (event) {
+
             event.preventDefault();
+            $('#signUpButton').prop('disabled', true);
+            showLoader('.modal');
 
-            var form = $('#registrationForm')[0];
-
-
-            var data = new FormData(form);
-
+            if (!$.isNumeric($('#phoneNumber').val())) {
+                $('#phoneNumber').val('');
+                $('#phoneNumber').addClass('animated  pulse');
+                $('#phoneNumber').attr('placeholder', 'Enter Valid Phone Number');
+                return;
+            }
+            var form = $(this).serializeArray();
+            form.push({name: 'img', value: dataURL});
             $.ajax({
                 type: "POST",
-                enctype: 'multipart/form-data',
                 url: "Registration",
-                data: data,
-                processData: false,
-                contentType: false,
-                cache: false,
-                timeout: 600000,
+                timeout: 6000,
+                data: form,
                 success: function (data) {
-
                     console.log(data + 'success');
-                    $("#btnSubmit").prop("disabled", false);
-
+                    $("#registrationModal .modal-dialog .modal-content .modal-header").before("<div class='alert alert-success' id='modalAlert' role='alert'><center>Registration Successful...</center></div>");
+                    $("#signUpButton").prop("disabled", false);
+                    alertTimeout();
+                    document.getElementById("#registrationForm").reset();
                 },
                 error: function (e) {
-
-
                     console.log("ERROR : ", e);
-                    $("#btnSubmit").prop("disabled", false);
+                    hideLoader('.modal');
+                    $("#registrationModal .modal-dialog .modal-content .modal-header").before("<div class='alert alert-danger' id='modalAlert' role='alert'><center>Unable To Register...</center></div>");
+                    $("#signUpButton").prop("disabled", false);
+                    alertTimeout();
+                    document.getElementById("registrationForm").reset();
 
                 }
             });
 
         });
 
-
-
-
-
-
+        function alertTimeout() {
+            $("#modalAlert").fadeTo(2000, 500).slideUp(500, function () {
+                $("#modalAlert").slideUp(500);
+            });
+        }
     });
+
+
+    var d = new Date();
+    d.setFullYear(d.getFullYear() - 18);
+    if (parseInt(d.getMonth() + 1) < 10) {
+        var backDate = d.getFullYear() + '-0' + parseInt(d.getMonth() + 1) + '-' + d.getDate();
+    } else {
+        var backDate = d.getFullYear() + '-' + parseInt(d.getMonth() + 1) + '-' + d.getDate();
+    }
+    document.getElementById("dateOfBirth").max = backDate.trim();
 
 
 </script>
