@@ -230,6 +230,7 @@
                 return;
             }
             var form = $(this).serializeArray();
+            form.push({name:'api_key',value:'c6e14e8de5f7ef8dd433b64c01d830d3'});
             form.push({name: 'img', value: dataURL});
             $.ajax({
                 type: "POST",
@@ -237,14 +238,28 @@
                 timeout: 6000,
                 data: form,
                 success: function (data) {
-                    console.log(data + 'success');
-                    $("#registrationModal .modal-dialog .modal-content .modal-header").before("<div class='alert alert-success' id='modalAlert' role='alert'><center>Registration Successful...</center></div>");
-                    $("#signUpButton").prop("disabled", false);
-                    alertTimeout();
-                    document.getElementById("#registrationForm").reset();
+                    if (data === 'success') {
+                        hideLoader('.modal');
+                        $("#registrationModal .modal-dialog .modal-content .modal-header").before("<div class='alert alert-success' id='modalAlert' role='alert'><center>Registration Successful...</center></div>");
+                        $("#signUpButton").prop("disabled", false);
+                        alertTimeout();
+                        setTimeout(function () {
+                            document.getElementById("registrationForm").reset();
+                            $('#registrationModal').modal('toggle');
+                            $('#loginModal').modal('toggle');
+                        }, 1500);
+
+                    } else {
+                        hideLoader('.modal');
+                        $("#registrationModal .modal-dialog .modal-content .modal-header").before("<div class='alert alert-danger' id='modalAlert' role='alert'><center>Unable To Register...</center></div>");
+                        $("#signUpButton").prop("disabled", false);
+                        alertTimeout();
+                        document.getElementById("registrationForm").reset();
+
+                    }
+
                 },
                 error: function (e) {
-                    console.log("ERROR : ", e);
                     hideLoader('.modal');
                     $("#registrationModal .modal-dialog .modal-content .modal-header").before("<div class='alert alert-danger' id='modalAlert' role='alert'><center>Unable To Register...</center></div>");
                     $("#signUpButton").prop("disabled", false);

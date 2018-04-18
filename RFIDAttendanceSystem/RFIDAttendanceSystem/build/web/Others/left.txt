@@ -16,8 +16,7 @@ make all button look clickavble
 *** Resoponsive ness at end
 
 -------------------------------------------------------------------
-
-Registration Validation
+****************CHANGE DATATYPE OF ID to VARCHAR ********
 
 ----------------------------------------------------------------
 
