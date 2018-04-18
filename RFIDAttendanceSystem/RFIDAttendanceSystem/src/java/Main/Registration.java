@@ -5,9 +5,9 @@
  */
 package Main;
 
+import Shared.*;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.util.UUID;
