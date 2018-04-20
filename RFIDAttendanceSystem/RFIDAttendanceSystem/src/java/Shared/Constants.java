@@ -13,13 +13,21 @@ import Main.*;
  */
 public class Constants {
 
-    public static final String API_KEY="c6e14e8de5f7ef8dd433b64c01d830d3";
-    
+    public static final String API_KEY = "c6e14e8de5f7ef8dd433b64c01d830d3";
+
     public static final String USER_ACTIVE = "A";
     public static final String USER_VERIFY = "V";
+    public static final String USER_HOLIDAY = "H";
     public static final String USER_INACTIVE = "D";
 
     public static final String RFID_ACTIVE = "A";
     public static final String RFID_INACTIVE = "D";
+
+    public static final String LOGIN_SUCCESS = "S";
+    public static final String LOGIN_INSUCCESS = "U";
+    public static final String LOGIN_HOLIDAY = "H";
+
+    public static final String REGISTER_SUCCESS = "register_success";
+    public static final String REGISTER_INSUCCESS = "register_insuccess";
 
 }

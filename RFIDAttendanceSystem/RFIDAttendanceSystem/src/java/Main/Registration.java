@@ -15,7 +15,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
+ import java.util.Random;
 /**
  *
  * @author mohnish
@@ -38,9 +38,9 @@ public class Registration extends HttpServlet {
         if (request.getParameter("api_key") != null && Helper.validateAPIKEY(request.getParameter("api_key"))) {
 
             if (registerUser(request)) {
-                out.print("success");
+                out.print(Constants.REGISTER_SUCCESS);
             } else {
-                out.print("error");
+                out.print(Constants.REGISTER_INSUCCESS);
             }
 
         } else {
@@ -55,9 +55,9 @@ public class Registration extends HttpServlet {
             Connection con = new ConnectionManager().getConnection();
             PreparedStatement insertEmployees = con.prepareStatement("insert into EMPLOYEES values (?,?,?,?,?,?,?,?,?,?)");
             PreparedStatement insertRfid = con.prepareStatement("insert into RFID values (?,?,?,?)");
-            String employeeID = UUID.randomUUID().toString().replace("-", "").substring(0, 7);
+            int employeeID = Math.abs(new Random().nextInt());  // maths.abs to get positive i.e converts negative to posotive
 
-            insertEmployees.setString(1, employeeID);
+            insertEmployees.setInt(1, employeeID);
             insertEmployees.setString(2, request.getParameter("firstName"));
             insertEmployees.setString(3, request.getParameter("lastName"));
             insertEmployees.setString(4, request.getParameter("gender"));
@@ -68,8 +68,8 @@ public class Registration extends HttpServlet {
             insertEmployees.setString(9, request.getParameter("dateOfBirth"));
             insertEmployees.setString(10, Constants.USER_ACTIVE);
 
-            insertRfid.setString(1, UUID.randomUUID().toString().replace("-", "").substring(0, 7));
-            insertRfid.setString(2, employeeID);
+            insertRfid.setInt(1, Math.abs(new Random().nextInt()));
+            insertRfid.setInt(2, employeeID);
             insertRfid.setBytes(3, request.getParameter("img").getBytes());
             insertRfid.setString(4, Constants.RFID_ACTIVE);
 

@@ -56,24 +56,24 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form>
+                <form action="post" id="loginForm">
                     <div class="form-group row">
                         <label for="inputEmail3" class="col-sm-2 col-form-label">Email</label>
                         <div class="col-sm-10">
-                            <input type="email" class="form-control" id="inputEmail3" placeholder="Email">
+                            <input type="email" class="form-control" id="inputEmail3" name="email" placeholder="Email" required autofocus>
                         </div>
                     </div>
                     <div class="form-group row">
                         <label for="inputPassword3" class="col-sm-2 col-form-label">Password</label>
                         <div class="col-sm-10">
-                            <input type="password" class="form-control" id="inputPassword3" placeholder="Password">
+                            <input type="password" class="form-control" id="inputPassword3" name="password"  placeholder="Password" required>
                         </div>
                     </div>
 
 
                     <div class="form-group row">
                         <div class="col-sm-12">
-                            <center>  <button type="submit" class="btn btn-primary">Sign in</button></center>
+                            <center>  <button type="submit" id="signInButton" class="btn btn-primary">Sign in</button></center>
                         </div>
                     </div>
                 </form>
@@ -106,7 +106,7 @@
                     <div class="form-group row">
                         <label  class="col-sm-4 col-form-label" for="firstName">First Name</label>
                         <div class="col-sm-8">
-                            <input type="text" class="form-control" id="firstName" minlength="3" name="firstName"  placeholder="First Name" required>
+                            <input type="text" class="form-control" id="firstName" minlength="3" name="firstName"  placeholder="First Name" required autofocus>
                         </div>
                     </div>
 
@@ -205,8 +205,10 @@
 
     $(document).ready(function () {
 
+        const BASE_URL = 'http://' + window.location.hostname + ':8080/RFIDAttendanceSystem/';
 
 
+        // Registration Start
         var dataURL;
 
         $('#profilePicture').change(function () {
@@ -230,15 +232,17 @@
                 return;
             }
             var form = $(this).serializeArray();
-            form.push({name:'api_key',value:'c6e14e8de5f7ef8dd433b64c01d830d3'});
+            form.push({name: 'api_key', value: API_KEY});
             form.push({name: 'img', value: dataURL});
+
+
             $.ajax({
                 type: "POST",
                 url: "Registration",
                 timeout: 6000,
                 data: form,
                 success: function (data) {
-                    if (data === 'success') {
+                    if (data === REGISTER_SUCCESS) {
                         hideLoader('.modal');
                         $("#registrationModal .modal-dialog .modal-content .modal-header").before("<div class='alert alert-success' id='modalAlert' role='alert'><center>Registration Successful...</center></div>");
                         $("#signUpButton").prop("disabled", false);
@@ -270,6 +274,66 @@
             });
 
         });
+
+        // Registration End
+
+
+
+        // Login start
+
+        $('#loginForm').submit(function (event) {
+
+            event.preventDefault();
+            showLoader('.modal');
+            $('#signInButton').prop('disabled', true);
+            var form = $(this).serializeArray();
+            form.push({name: 'api_key', value: API_KEY});
+
+
+            $.ajax({
+                type: "POST",
+                url: "Login",
+                timeout: 6000,
+                data: form,
+                success: function (data) {
+                    if (data === LOGIN_SUCCESS) {
+                        hideLoader('.modal');
+                        window.location.replace(BASE_URL + '/EmployeeHome.jsp');
+
+                    } else if (data === LOGIN_HOLIDAY) {
+                        hideLoader('.modal');
+                        $("#loginModal .modal-dialog .modal-content .modal-header").before("<div class='alert alert-danger' id='modalAlert' role='alert'><center>Login is disabled as user is on holiday !!!</center></div>");
+
+                    } else if (data === USER_VERIFY) {
+                        hideLoader('.modal');
+                        $("#loginModal .modal-dialog .modal-content .modal-header").before("<div class='alert alert-danger' id='modalAlert' role='alert'><center>Please Verify your Email first !!!</center></div>");
+
+                    } else {
+                        hideLoader('.modal');
+                        $("#loginModal .modal-dialog .modal-content .modal-header").before("<div class='alert alert-danger' id='modalAlert' role='alert'><center>Email and Password is incorrect !!!</center></div>");
+
+                    }
+                    $("#signInButton").prop("disabled", false);
+                    alertTimeout();
+                    document.getElementById("loginForm").reset();
+
+                },
+                error: function (e) {
+                    hideLoader('.modal');
+                    $("#loginModal .modal-dialog .modal-content .modal-header").before("<div class='alert alert-danger' id='modalAlert' role='alert'><center>Email and Password is incorrect !!!</center></div>");
+                    $("#signInButton").prop("disabled", false);
+                    alertTimeout();
+                    document.getElementById("loginForm").reset();
+                }
+            });
+
+        });
+
+
+        // Login End
+
+
+// Helpers Below
 
         function alertTimeout() {
             $("#modalAlert").fadeTo(2000, 500).slideUp(500, function () {

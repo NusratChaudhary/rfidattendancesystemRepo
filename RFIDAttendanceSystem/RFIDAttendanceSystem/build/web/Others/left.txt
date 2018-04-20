@@ -16,7 +16,7 @@ make all button look clickavble
 *** Resoponsive ness at end
 
 -------------------------------------------------------------------
-****************CHANGE DATATYPE OF ID to VARCHAR ********
+****************MAKE CONSTANTS IN JAVASCRIPT ********
 
 ----------------------------------------------------------------
 

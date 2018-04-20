@@ -16,7 +16,9 @@
         <link rel="stylesheet" href="CSS/animate.css">
         <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
         <script src="CSS/jquery.loading.js"></script>
+        
         <link href="CSS/jquery.loading.css" rel="stylesheet">
+        <script src="CSS/constants.js"></script>
         <title>Welcome</title>
     </head>
     <body>
