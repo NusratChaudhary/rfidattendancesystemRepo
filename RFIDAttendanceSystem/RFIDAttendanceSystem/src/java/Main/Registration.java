@@ -15,7 +15,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
- import java.util.Random;
+import java.util.Random;
+
 /**
  *
  * @author mohnish
@@ -33,8 +34,7 @@ public class Registration extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/plain");
         PrintWriter out = response.getWriter();
-        
-        
+
         if (request.getParameter("api_key") != null && Helper.validateAPIKEY(request.getParameter("api_key"))) {
 
             if (registerUser(request)) {
@@ -75,6 +75,15 @@ public class Registration extends HttpServlet {
 
             if (insertEmployees.executeUpdate() > 0 && insertRfid.executeUpdate() > 0) {
                 con.commit();
+                String verificationMailLink = "";
+                new Thread(new Runnable() {
+
+                    public void run() {
+                        new Mailer().sendMail(request.getParameter("email"), "Email Verification", Constants.EMAIL_VERIFICATION_TEMPLATE + verificationMailLink);
+
+                    }
+                }).start();
+
                 return true;
             } else {
                 con.rollback();
@@ -87,5 +96,10 @@ public class Registration extends HttpServlet {
         }
 
     }
+    
+    
+//    private String createVerificationURL(){
+//        
+//    }
 
 }

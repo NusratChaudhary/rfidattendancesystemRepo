@@ -30,4 +30,9 @@ public class Constants {
     public static final String REGISTER_SUCCESS = "register_success";
     public static final String REGISTER_INSUCCESS = "register_insuccess";
 
+    
+    
+    
+    public static final String EMAIL_VERIFICATION_TEMPLATE="Thanks for signing up!\n Your account has been created, you can login after you have activated your account \n Please click this link to activate your account: \n";
+    
 }
