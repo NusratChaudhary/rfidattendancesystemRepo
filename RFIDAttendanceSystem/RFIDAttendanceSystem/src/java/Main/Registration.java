@@ -8,6 +8,7 @@ package Main;
 import Shared.*;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.util.UUID;
@@ -16,6 +17,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -38,6 +41,7 @@ public class Registration extends HttpServlet {
         if (request.getParameter("api_key") != null && Helper.validateAPIKEY(request.getParameter("api_key"))) {
 
             if (registerUser(request)) {
+
                 out.print(Constants.REGISTER_SUCCESS);
             } else {
                 out.print(Constants.REGISTER_INSUCCESS);
@@ -52,6 +56,7 @@ public class Registration extends HttpServlet {
     private boolean registerUser(HttpServletRequest request) {
 
         try {
+
             Connection con = new ConnectionManager().getConnection();
             PreparedStatement insertEmployees = con.prepareStatement("insert into EMPLOYEES values (?,?,?,?,?,?,?,?,?,?)");
             PreparedStatement insertRfid = con.prepareStatement("insert into RFID values (?,?,?,?)");
@@ -74,15 +79,17 @@ public class Registration extends HttpServlet {
             insertRfid.setString(4, Constants.RFID_ACTIVE);
 
             if (insertEmployees.executeUpdate() > 0 && insertRfid.executeUpdate() > 0) {
-                con.commit();
-                String verificationMailLink = "";
-                new Thread(new Runnable() {
 
+                con.commit();
+
+                String verificationMailLink = createVerificationURL(String.valueOf(employeeID));
+
+                Thread mailThread = new Thread(new Runnable() {
                     public void run() {
                         new Mailer().sendMail(request.getParameter("email"), "Email Verification", Constants.EMAIL_VERIFICATION_TEMPLATE + verificationMailLink);
-
                     }
-                }).start();
+                });
+                mailThread.start();
 
                 return true;
             } else {
@@ -96,10 +103,28 @@ public class Registration extends HttpServlet {
         }
 
     }
-    
-    
-//    private String createVerificationURL(){
-//        
-//    }
+
+    private String createVerificationURL(String id) {
+
+        try {
+            String rawUrl = Constants.MODE_VERIFY_EMAIL + "=" + id;
+            String hashUrl = Helper.getMD5Hash(rawUrl);
+            Connection con = new ConnectionManager().getConnection();
+            PreparedStatement insertVerification = con.prepareStatement("insert into VERIFICATION values (?,?,?,?,?)");
+            insertVerification.setString(1, UUID.randomUUID().toString().replace("-", "").substring(0, 7));
+            insertVerification.setString(2, hashUrl);
+            insertVerification.setString(3, id);
+            insertVerification.setString(4, Constants.MODE_VERIFY_EMAIL);
+            insertVerification.setString(5, Constants.PENDING);
+            insertVerification.executeUpdate();
+
+            return Constants.HOST_ADDRESS + "Verify?code=" + hashUrl;
+
+        } catch (Exception ex) {
+            Logger.getLogger(Registration.class.getName()).log(Level.SEVERE, null, ex);
+            return "error";
+        }
+
+    }
 
 }
