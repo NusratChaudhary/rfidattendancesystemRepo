@@ -253,6 +253,13 @@
                             $('#loginModal').modal('toggle');
                         }, 1500);
 
+                    } else if (data === REGISTER_ALREADY) {
+                        hideLoader('.modal');
+                        $("#registrationModal .modal-dialog .modal-content .modal-header").before("<div class='alert alert-warning' id='modalAlert' role='alert'><center>You Have Already Registered You May Procced to Login...</center></div>");
+                        $("#signUpButton").prop("disabled", false);
+                        alertTimeout();
+                        document.getElementById("registrationForm").reset();
+
                     } else {
                         hideLoader('.modal');
                         $("#registrationModal .modal-dialog .modal-content .modal-header").before("<div class='alert alert-danger' id='modalAlert' role='alert'><center>Unable To Register...</center></div>");
@@ -340,7 +347,7 @@
         function alertTimeout() {
             $("#modalAlert").fadeTo(2000, 500).slideUp(500, function () {
                 $("#modalAlert").slideUp(500);
-                $("#modalAlert").remove();             
+                $("#modalAlert").remove();
             });
         }
     });

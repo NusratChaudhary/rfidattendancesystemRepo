@@ -29,13 +29,16 @@ public class Constants {
 
     public static final String REGISTER_SUCCESS = "RS";
     public static final String REGISTER_INSUCCESS = "RIS";
-
+    public static final String REGISTER_ALREADY = "RA";
+    
     public static final String MODE_VERIFY_EMAIL = "VE";
     public static final String PENDING = "P";
     public static final String COMPLETED = "C";
 
     public static final String EMAIL_VERIFICATION_TEMPLATE = "Thanks for signing up!\n Your account has been created, you can login after you have activated your account \n Please click this link to activate your account: \n\n";
 
-    
-    public static final String HOST_ADDRESS="http://localhost:8080/RFIDAttendanceSystem/";
+    public static final String TYPE_STRING = "string";
+    public static final String TYPE_INT = "int";
+
+    public static final String HOST_ADDRESS = "http://localhost:8080/RFIDAttendanceSystem/";
 }

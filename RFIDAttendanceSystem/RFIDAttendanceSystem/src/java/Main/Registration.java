@@ -27,6 +27,8 @@ import java.util.logging.Logger;
  */
 public class Registration extends HttpServlet {
 
+    boolean userExist = false;
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -45,7 +47,12 @@ public class Registration extends HttpServlet {
 
                 out.print(Constants.REGISTER_SUCCESS);
             } else {
-                out.print(Constants.REGISTER_INSUCCESS);
+                if (userExist) {
+                    out.print(Constants.REGISTER_ALREADY);
+                } else {
+                    out.print(Constants.REGISTER_INSUCCESS);
+                }
+
             }
 
         } else {
@@ -56,42 +63,49 @@ public class Registration extends HttpServlet {
 
     private boolean registerUser(HttpServletRequest request) {
 
+        final String checkQuery = "select count(*) as counter from employees where email='" + request.getParameter("email") + "'";
         try {
 
             Connection con = new ConnectionManager().getConnection();
-            PreparedStatement insertEmployees = con.prepareStatement("insert into EMPLOYEES values (?,?,?,?,?,?,?,?,?,?)");
-            PreparedStatement insertRfid = con.prepareStatement("insert into RFID values (?,?,?,?)");
-            int employeeID = Math.abs(new Random().nextInt()); // maths.abs to get positive i.e converts negative to posotive
-            insertEmployees.setInt(1, employeeID);
-            insertEmployees.setString(2, request.getParameter("firstName"));
-            insertEmployees.setString(3, request.getParameter("lastName"));
-            insertEmployees.setString(4, request.getParameter("gender"));
-            insertEmployees.setString(5, request.getParameter("mobileNumber"));
-            insertEmployees.setString(6, request.getParameter("email"));
-            insertEmployees.setString(7, request.getParameter("address"));
-            insertEmployees.setString(8, request.getParameter("password"));
-            insertEmployees.setDate(9, new java.sql.Date(new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("dateOfBirth")).getTime()));
-            insertEmployees.setString(10, Constants.USER_VERIFY);
-
-            insertRfid.setInt(1, Math.abs(new Random().nextInt()));
-            insertRfid.setInt(2, employeeID);
-            insertRfid.setBytes(3, request.getParameter("img").getBytes());
-            insertRfid.setString(4, Constants.RFID_ACTIVE);
-
-            if (insertEmployees.executeUpdate() > 0 && insertRfid.executeUpdate() > 0) {
-
-                con.commit();
-
-                String verificationMailLink = createVerificationURL(employeeID);
-                new Mailer().sendMail(request.getParameter("email"), "Email Verification", Constants.EMAIL_VERIFICATION_TEMPLATE + verificationMailLink);
-                
-                return true;
-            } else {
-                con.rollback();
-
+            if (Helper.checkIfExist(con, checkQuery, "counter", Constants.TYPE_INT, "1")) {
+                userExist = true;
                 return false;
-            }
 
+            } else {
+
+                PreparedStatement insertEmployees = con.prepareStatement("insert into EMPLOYEES values (?,?,?,?,?,?,?,?,?,?)");
+                PreparedStatement insertRfid = con.prepareStatement("insert into RFID values (?,?,?,?)");
+                int employeeID = Math.abs(new Random().nextInt()); // maths.abs to get positive i.e converts negative to posotive
+                insertEmployees.setInt(1, employeeID);
+                insertEmployees.setString(2, request.getParameter("firstName"));
+                insertEmployees.setString(3, request.getParameter("lastName"));
+                insertEmployees.setString(4, request.getParameter("gender"));
+                insertEmployees.setString(5, request.getParameter("mobileNumber"));
+                insertEmployees.setString(6, request.getParameter("email"));
+                insertEmployees.setString(7, request.getParameter("address"));
+                insertEmployees.setString(8, request.getParameter("password"));
+                insertEmployees.setDate(9, new java.sql.Date(new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("dateOfBirth")).getTime()));
+                insertEmployees.setString(10, Constants.USER_VERIFY);
+
+                insertRfid.setInt(1, Math.abs(new Random().nextInt()));
+                insertRfid.setInt(2, employeeID);
+                insertRfid.setBytes(3, request.getParameter("img").getBytes());
+                insertRfid.setString(4, Constants.RFID_ACTIVE);
+
+                if (insertEmployees.executeUpdate() > 0 && insertRfid.executeUpdate() > 0) {
+
+                    con.commit();
+
+                    String verificationMailLink = createVerificationURL(employeeID);
+                    new Mailer().sendMail(request.getParameter("email"), "Email Verification", Constants.EMAIL_VERIFICATION_TEMPLATE + verificationMailLink);
+
+                    return true;
+                } else {
+                    con.rollback();
+
+                    return false;
+                }
+            }
         } catch (Exception e) {
             System.out.println(e);
             return false;

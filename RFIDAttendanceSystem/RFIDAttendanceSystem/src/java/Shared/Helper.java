@@ -7,6 +7,9 @@ package Shared;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
 
 /**
  *
@@ -30,6 +33,34 @@ public class Helper {
         }
 
         return sb.toString();
+    }
+
+    public static boolean checkIfExist(Connection con, String query, String columnName, String type, String conditionValue) {
+
+        try {
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery(query);
+            while (rs.next()) {
+                if (type.equals(Constants.TYPE_INT)) {
+                    if (conditionValue != null) {
+                        return rs.getInt(columnName) == Integer.parseInt(conditionValue);
+                    } else {
+                        return rs.getInt(columnName) == Integer.parseInt(conditionValue);
+                    }
+                }
+                if (type.equals(Constants.TYPE_STRING)) {
+                    if (conditionValue != null) {
+                        return rs.getString(columnName).equals(conditionValue);
+                    } else {
+                        return rs.getString(columnName).isEmpty();
+                    }
+                }
+            }
+            return false;
+        } catch (Exception e) {
+            System.out.println(e);
+            return false;
+        }
     }
 
 }
