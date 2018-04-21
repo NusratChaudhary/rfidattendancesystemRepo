@@ -27,14 +27,14 @@ public class Constants {
     public static final String LOGIN_INSUCCESS = "U";
     public static final String LOGIN_HOLIDAY = "H";
 
-    public static final String REGISTER_SUCCESS = "register_success";
-    public static final String REGISTER_INSUCCESS = "register_insuccess";
+    public static final String REGISTER_SUCCESS = "RS";
+    public static final String REGISTER_INSUCCESS = "RIS";
 
-    public static final String MODE_VERIFY_EMAIL = "verify_email_mode";
-    public static final String PENDING = "pending";
-    public static final String COMPLETED = "completed";
+    public static final String MODE_VERIFY_EMAIL = "VE";
+    public static final String PENDING = "P";
+    public static final String COMPLETED = "C";
 
-    public static final String EMAIL_VERIFICATION_TEMPLATE = "Thanks for signing up!\n Your account has been created, you can login after you have activated your account \n Please click this link to activate your account: \n";
+    public static final String EMAIL_VERIFICATION_TEMPLATE = "Thanks for signing up!\n Your account has been created, you can login after you have activated your account \n Please click this link to activate your account: \n\n";
 
     
     public static final String HOST_ADDRESS="http://localhost:8080/RFIDAttendanceSystem/";

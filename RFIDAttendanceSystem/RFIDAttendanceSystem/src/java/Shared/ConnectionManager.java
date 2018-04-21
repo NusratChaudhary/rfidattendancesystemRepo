@@ -24,8 +24,10 @@ public class ConnectionManager {
         try {
             Class.forName(driver);
             Connection con = DriverManager.getConnection(url, username, password);
+            System.out.println(con);
             return con;
         } catch (Exception e) {
+            System.out.println(e);
             return null;
         }
 

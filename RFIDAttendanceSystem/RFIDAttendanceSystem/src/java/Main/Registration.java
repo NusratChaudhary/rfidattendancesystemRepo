@@ -11,6 +11,7 @@ import java.io.PrintWriter;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.text.SimpleDateFormat;
 import java.util.UUID;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -60,18 +61,17 @@ public class Registration extends HttpServlet {
             Connection con = new ConnectionManager().getConnection();
             PreparedStatement insertEmployees = con.prepareStatement("insert into EMPLOYEES values (?,?,?,?,?,?,?,?,?,?)");
             PreparedStatement insertRfid = con.prepareStatement("insert into RFID values (?,?,?,?)");
-            int employeeID = Math.abs(new Random().nextInt());  // maths.abs to get positive i.e converts negative to posotive
-
+            int employeeID = Math.abs(new Random().nextInt()); // maths.abs to get positive i.e converts negative to posotive
             insertEmployees.setInt(1, employeeID);
             insertEmployees.setString(2, request.getParameter("firstName"));
             insertEmployees.setString(3, request.getParameter("lastName"));
             insertEmployees.setString(4, request.getParameter("gender"));
-            insertEmployees.setInt(5, Integer.parseInt(request.getParameter("phoneNumber")));
+            insertEmployees.setString(5, request.getParameter("mobileNumber"));
             insertEmployees.setString(6, request.getParameter("email"));
             insertEmployees.setString(7, request.getParameter("address"));
             insertEmployees.setString(8, request.getParameter("password"));
-            insertEmployees.setString(9, request.getParameter("dateOfBirth"));
-            insertEmployees.setString(10, Constants.USER_ACTIVE);
+            insertEmployees.setDate(9, new java.sql.Date(new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("dateOfBirth")).getTime()));
+            insertEmployees.setString(10, Constants.USER_VERIFY);
 
             insertRfid.setInt(1, Math.abs(new Random().nextInt()));
             insertRfid.setInt(2, employeeID);
@@ -82,15 +82,9 @@ public class Registration extends HttpServlet {
 
                 con.commit();
 
-                String verificationMailLink = createVerificationURL(String.valueOf(employeeID));
-
-                Thread mailThread = new Thread(new Runnable() {
-                    public void run() {
-                        new Mailer().sendMail(request.getParameter("email"), "Email Verification", Constants.EMAIL_VERIFICATION_TEMPLATE + verificationMailLink);
-                    }
-                });
-                mailThread.start();
-
+                String verificationMailLink = createVerificationURL(employeeID);
+                new Mailer().sendMail(request.getParameter("email"), "Email Verification", Constants.EMAIL_VERIFICATION_TEMPLATE + verificationMailLink);
+                
                 return true;
             } else {
                 con.rollback();
@@ -99,21 +93,22 @@ public class Registration extends HttpServlet {
             }
 
         } catch (Exception e) {
+            System.out.println(e);
             return false;
         }
 
     }
 
-    private String createVerificationURL(String id) {
+    private String createVerificationURL(int id) {
 
         try {
             String rawUrl = Constants.MODE_VERIFY_EMAIL + "=" + id;
             String hashUrl = Helper.getMD5Hash(rawUrl);
             Connection con = new ConnectionManager().getConnection();
             PreparedStatement insertVerification = con.prepareStatement("insert into VERIFICATION values (?,?,?,?,?)");
-            insertVerification.setString(1, UUID.randomUUID().toString().replace("-", "").substring(0, 7));
+            insertVerification.setInt(1, Math.abs(new Random().nextInt()));
             insertVerification.setString(2, hashUrl);
-            insertVerification.setString(3, id);
+            insertVerification.setInt(3, id);
             insertVerification.setString(4, Constants.MODE_VERIFY_EMAIL);
             insertVerification.setString(5, Constants.PENDING);
             insertVerification.executeUpdate();

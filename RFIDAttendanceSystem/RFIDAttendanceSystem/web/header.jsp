@@ -135,7 +135,7 @@
                     <div class="form-group row">
                         <label  class="col-sm-4 col-form-label" for="phoneNumber">Phone Number</label>
                         <div class="col-sm-8">
-                            <input type="text" class="form-control" id="phoneNumber" minlength="10" name="phoneNumber" placeholder="Phone Number" required>
+                            <input type="text" class="form-control" id="phoneNumber" minlength="10" name="mobileNumber" placeholder="Phone Number" required>
                         </div>
                     </div>
 
@@ -239,7 +239,7 @@
             $.ajax({
                 type: "POST",
                 url: "Registration",
-                timeout: 6000,
+                timeout: 100000,
                 data: form,
                 success: function (data) {
                     if (data === REGISTER_SUCCESS) {
@@ -264,6 +264,7 @@
 
                 },
                 error: function (e) {
+                    console.log(e);
                     hideLoader('.modal');
                     $("#registrationModal .modal-dialog .modal-content .modal-header").before("<div class='alert alert-danger' id='modalAlert' role='alert'><center>Unable To Register...</center></div>");
                     $("#signUpButton").prop("disabled", false);
@@ -293,7 +294,7 @@
             $.ajax({
                 type: "POST",
                 url: "Login",
-                timeout: 6000,
+                timeout: 10000,
                 data: form,
                 success: function (data) {
                     if (data === LOGIN_SUCCESS) {
@@ -319,6 +320,7 @@
 
                 },
                 error: function (e) {
+                    console.log(e);
                     hideLoader('.modal');
                     $("#loginModal .modal-dialog .modal-content .modal-header").before("<div class='alert alert-danger' id='modalAlert' role='alert'><center>Email and Password is incorrect !!!</center></div>");
                     $("#signInButton").prop("disabled", false);
@@ -338,6 +340,7 @@
         function alertTimeout() {
             $("#modalAlert").fadeTo(2000, 500).slideUp(500, function () {
                 $("#modalAlert").slideUp(500);
+                $("#modalAlert").remove();             
             });
         }
     });

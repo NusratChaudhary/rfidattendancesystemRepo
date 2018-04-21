@@ -36,7 +36,7 @@ public class Login extends HttpServlet {
         PrintWriter out = response.getWriter();
 
         if (request.getParameter("api_key") != null && Helper.validateAPIKEY(request.getParameter("api_key"))) {
-
+            System.out.println("hello");
           out.print(loginUser(request));
 
         } else {
@@ -50,9 +50,9 @@ public class Login extends HttpServlet {
         try {
             Connection con = new ConnectionManager().getConnection();
             Statement stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery("select count(*) as counter,flag from EMPLOYEES where EMAIL='" + request.getParameter("email") + "' AND PASSWORD='" + request.getParameter("password") + "' AND FLAG='" + Constants.USER_ACTIVE + "' ");
+            ResultSet rs = stmt.executeQuery("select flag from EMPLOYEES where EMAIL='" + request.getParameter("email") + "' AND PASSWORD='" + request.getParameter("password")+"'");
             while (rs.next()) {
-                if (rs.getInt("counter") == 1) {
+                if (!rs.getString("flag").isEmpty()) {
                     if (rs.getString("flag").equals(Constants.USER_ACTIVE)) {
                         return Constants.LOGIN_SUCCESS;
                     }
@@ -69,6 +69,7 @@ public class Login extends HttpServlet {
             }
             return Constants.LOGIN_INSUCCESS;
         } catch (Exception e) {
+            System.out.println(e);
             return Constants.LOGIN_INSUCCESS;
         }
 
