@@ -35,7 +35,7 @@ public class Login extends HttpServlet {
         response.setContentType("text/plain");
         PrintWriter out = response.getWriter();
 
-        if (request.getParameter("api_key") != null && Helper.validateAPIKEY(request.getParameter("api_key"))) {
+        if (request.getHeader("api_key") != null && Helper.validateAPIKEY(request.getHeader("api_key"))) {
             System.out.println("hello");
           out.print(loginUser(request));
 

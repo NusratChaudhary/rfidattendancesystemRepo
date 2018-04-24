@@ -101,7 +101,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form method="post"  id="registrationForm">
+                <form method="post" id="registrationForm" enctype="multipart/form-data">
 
                     <div class="form-group row">
                         <label  class="col-sm-4 col-form-label" for="firstName">First Name</label>
@@ -209,16 +209,7 @@
 
 
         // Registration Start
-        var dataURL;
-
-        $('#profilePicture').change(function () {
-            var reader = new FileReader();
-            reader.onload = function () {
-                dataURL = reader.result;
-            };
-            reader.readAsDataURL(event.target.files[0]);
-        });
-
+//
         $('#registrationForm').submit(function (event) {
 
             event.preventDefault();
@@ -231,16 +222,24 @@
                 $('#phoneNumber').attr('placeholder', 'Enter Valid Phone Number');
                 return;
             }
-            var form = $(this).serializeArray();
-            form.push({name: 'api_key', value: API_KEY});
-            form.push({name: 'img', value: dataURL});
 
+
+            // Get form
+            var form = document.getElementById('registrationForm');
+            var fdata = new FormData(form);
+            console.log(fdata);
+
+            //   fdata.append({name: 'api_key', value: API_KEY});
 
             $.ajax({
                 type: "POST",
                 url: "Registration",
+                headers: {"api_key": API_KEY},
                 timeout: 100000,
-                data: form,
+                data: fdata,
+                processData: false,
+                contentType: false,
+                cache: false,
                 success: function (data) {
                     if (data === REGISTER_SUCCESS) {
                         hideLoader('.modal');
@@ -295,11 +294,11 @@
             showLoader('.modal');
             $('#signInButton').prop('disabled', true);
             var form = $(this).serializeArray();
-            form.push({name: 'api_key', value: API_KEY});
 
 
             $.ajax({
                 type: "POST",
+                headers: {"api_key": API_KEY},
                 url: "Login",
                 timeout: 10000,
                 data: form,

@@ -6,13 +6,17 @@
 package Main;
 
 import Shared.*;
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
-import java.security.NoSuchAlgorithmException;
+import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.text.SimpleDateFormat;
-import java.util.UUID;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.Map;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -20,6 +24,14 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileItemFactory;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import java.util.Set;
+import java.util.TreeMap;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 
 /**
  *
@@ -40,30 +52,57 @@ public class Registration extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/plain");
         PrintWriter out = response.getWriter();
+        
+        if (request.getHeader("api_key") != null && Helper.validateAPIKEY(request.getHeader("api_key"))) {
 
-        if (request.getParameter("api_key") != null && Helper.validateAPIKEY(request.getParameter("api_key"))) {
+            boolean isMultipart = ServletFileUpload.isMultipartContent(request);
+            if (isMultipart) {
+                FileItemFactory factory = new DiskFileItemFactory();
+                ServletFileUpload upload = new ServletFileUpload(factory);
+                try {
 
-            if (registerUser(request)) {
+                    Map<String, String> map = new Hashtable<String, String>();
+                    List<FileItem> multiparts = upload.parseRequest(request);
+                    InputStream imageStream = null;
+                    for (FileItem item : multiparts) {
 
-                out.print(Constants.REGISTER_SUCCESS);
-            } else {
-                if (userExist) {
-                    out.print(Constants.REGISTER_ALREADY);
-                } else {
-                    out.print(Constants.REGISTER_INSUCCESS);
+                        if (!item.isFormField()) {
+
+                            imageStream = item.getInputStream();
+
+                        }
+                        if (item.isFormField()) {
+
+                            map.put(item.getFieldName(), item.getString());
+                        }
+                    }
+
+                    if (registerUser(map, imageStream)) {
+
+                        out.print(Constants.REGISTER_SUCCESS);
+                    } else {
+                        if (userExist) {
+                            out.print(Constants.REGISTER_ALREADY);
+                        } else {
+                            out.print(Constants.REGISTER_INSUCCESS);
+                        }
+
+                    }
+
+                } catch (Exception e) {
+                    System.out.println(e);
                 }
-
+            } else {
+                out.print("invalidRequest");
             }
-
         } else {
             out.print("invalidRequest");
         }
-
     }
 
-    private boolean registerUser(HttpServletRequest request) {
+    private boolean registerUser(Map mapItems, InputStream stream) {
 
-        final String checkQuery = "select count(*) as counter from employees where email='" + request.getParameter("email") + "'";
+        final String checkQuery = "select count(*) as counter from employees where email='" + mapItems.get("email").toString() + "'";
         try {
 
             Connection con = new ConnectionManager().getConnection();
@@ -77,19 +116,22 @@ public class Registration extends HttpServlet {
                 PreparedStatement insertRfid = con.prepareStatement("insert into RFID values (?,?,?,?)");
                 int employeeID = Math.abs(new Random().nextInt()); // maths.abs to get positive i.e converts negative to posotive
                 insertEmployees.setInt(1, employeeID);
-                insertEmployees.setString(2, request.getParameter("firstName"));
-                insertEmployees.setString(3, request.getParameter("lastName"));
-                insertEmployees.setString(4, request.getParameter("gender"));
-                insertEmployees.setString(5, request.getParameter("mobileNumber"));
-                insertEmployees.setString(6, request.getParameter("email"));
-                insertEmployees.setString(7, request.getParameter("address"));
-                insertEmployees.setString(8, request.getParameter("password"));
-                insertEmployees.setDate(9, new java.sql.Date(new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("dateOfBirth")).getTime()));
+                insertEmployees.setString(2, mapItems.get("firstName").toString());
+                insertEmployees.setString(3, mapItems.get("lastName").toString());
+                insertEmployees.setString(4, mapItems.get("gender").toString());
+                insertEmployees.setString(5, mapItems.get("mobileNumber").toString());
+                insertEmployees.setString(6, mapItems.get("email").toString());
+                insertEmployees.setString(7, mapItems.get("address").toString());
+                insertEmployees.setString(8, mapItems.get("password").toString());
+                insertEmployees.setDate(9, new java.sql.Date(new SimpleDateFormat("yyyy-MM-dd").parse(mapItems.get("dateOfBirth").toString()).getTime()));
                 insertEmployees.setString(10, Constants.USER_VERIFY);
+
+                byte[] fileContent = IOUtils.toByteArray(stream);
+              //  Blob imageBlob = new oracle.sql.BLOB(fileContent);
 
                 insertRfid.setInt(1, Math.abs(new Random().nextInt()));
                 insertRfid.setInt(2, employeeID);
-                insertRfid.setBytes(3, request.getParameter("img").getBytes());
+                insertRfid.setBytes(3, fileContent);
                 insertRfid.setString(4, Constants.RFID_ACTIVE);
 
                 if (insertEmployees.executeUpdate() > 0 && insertRfid.executeUpdate() > 0) {
@@ -97,7 +139,7 @@ public class Registration extends HttpServlet {
                     con.commit();
 
                     String verificationMailLink = createVerificationURL(employeeID);
-                    new Mailer().sendMail(request.getParameter("email"), "Email Verification", Constants.EMAIL_VERIFICATION_TEMPLATE + verificationMailLink);
+                    new Mailer().sendMail(mapItems.get("email").toString(), "Email Verification", Constants.EMAIL_VERIFICATION_TEMPLATE + verificationMailLink);
 
                     return true;
                 } else {
