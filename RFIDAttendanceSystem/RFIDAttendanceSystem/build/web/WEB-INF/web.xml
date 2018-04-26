@@ -8,6 +8,14 @@
         <servlet-name>Login</servlet-name>
         <servlet-class>Main.Login</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>verify</servlet-name>
+        <servlet-class>Main.verify</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>Signout</servlet-name>
+        <servlet-class>Main.Signout</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Registration</servlet-name>
         <url-pattern>/Registration</url-pattern>
@@ -15,6 +23,14 @@
     <servlet-mapping>
         <servlet-name>Login</servlet-name>
         <url-pattern>/Login</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>verify</servlet-name>
+        <url-pattern>/verify</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Signout</servlet-name>
+        <url-pattern>/Signout</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

@@ -16,63 +16,65 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
  * @author mohnish
  */
 public class Login extends HttpServlet {
-
+    
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
+        
     }
-
+    
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/plain");
         PrintWriter out = response.getWriter();
-
+        
         if (request.getHeader("api_key") != null && Helper.validateAPIKEY(request.getHeader("api_key"))) {
-            System.out.println("hello");
-          out.print(loginUser(request));
-
+            out.print(loginUser(request));
+            
         } else {
             out.print("invalidRequest");
         }
-
+        
     }
-
+    
     private String loginUser(HttpServletRequest request) {
-
+        
         try {
             Connection con = new ConnectionManager().getConnection();
             Statement stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery("select flag from EMPLOYEES where EMAIL='" + request.getParameter("email") + "' AND PASSWORD='" + request.getParameter("password")+"'");
+            ResultSet rs = stmt.executeQuery("select EMPLOYEEID,FLAG from EMPLOYEES where EMAIL='" + request.getParameter("email") + "' AND PASSWORD='" + request.getParameter("password") + "'");
             while (rs.next()) {
-                if (!rs.getString("flag").isEmpty()) {
-                    if (rs.getString("flag").equals(Constants.USER_ACTIVE)) {
+                if (!rs.getString("FLAG").isEmpty()) {
+                    if (rs.getString("FLAG").equals(Constants.USER_ACTIVE)) {
+                        HttpSession loginSession = request.getSession();
+                        loginSession.setAttribute("id", rs.getInt("EMPLOYEEID"));
                         return Constants.LOGIN_SUCCESS;
                     }
-                    if (rs.getString("flag").equals(Constants.USER_HOLIDAY)) {
+                    if (rs.getString("FLAG").equals(Constants.USER_HOLIDAY)) {
                         return Constants.LOGIN_HOLIDAY;
                     }
-                    if (rs.getString("flag").equals(Constants.USER_VERIFY)) {
+                    if (rs.getString("FLAG").equals(Constants.USER_VERIFY)) {
                         return Constants.USER_VERIFY;
                     }
                 } else {
                     return Constants.LOGIN_INSUCCESS;
                 }
-
+                
             }
             return Constants.LOGIN_INSUCCESS;
         } catch (Exception e) {
             System.out.println(e);
             return Constants.LOGIN_INSUCCESS;
         }
-
+        
     }
-
+    
 }

@@ -16,10 +16,15 @@ const LOGIN_HOLIDAY = "H";
 const REGISTER_SUCCESS = "RS";
 const REGISTER_INSUCCESS = "RIS";
 const REGISTER_ALREADY = "RA";
-    
+
 const MODE_VERIFY_EMAIL = "VE";
 const PENDING = "P";
 const COMPLETED = "C";
+
+const ALREADY_VERIFIED = "AV";
+
+const ERROR = "ERR";
+const LOGGED_OUT = "logged_out";
 
 const EMAIL_VERIFICATION_TEMPLATE = "Thanks for signing up!\n Your account has been created, you can login after you have activated your account \n Please click this link to activate your account: \n\n";
 
