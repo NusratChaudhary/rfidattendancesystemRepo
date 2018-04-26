@@ -50,12 +50,13 @@ public class Login extends HttpServlet {
         try {
             Connection con = new ConnectionManager().getConnection();
             Statement stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery("select EMPLOYEEID,FLAG from EMPLOYEES where EMAIL='" + request.getParameter("email") + "' AND PASSWORD='" + request.getParameter("password") + "'");
+            ResultSet rs = stmt.executeQuery("select EMPLOYEEID,FLAG,FIRSTNAME,LASTNAME from EMPLOYEES where EMAIL='" + request.getParameter("email") + "' AND PASSWORD='" + request.getParameter("password") + "'");
             while (rs.next()) {
                 if (!rs.getString("FLAG").isEmpty()) {
                     if (rs.getString("FLAG").equals(Constants.USER_ACTIVE)) {
                         HttpSession loginSession = request.getSession();
                         loginSession.setAttribute("id", rs.getInt("EMPLOYEEID"));
+                        loginSession.setAttribute("name", rs.getString("FIRSTNAME") + " " + rs.getString("LASTNAME"));
                         return Constants.LOGIN_SUCCESS;
                     }
                     if (rs.getString("FLAG").equals(Constants.USER_HOLIDAY)) {
