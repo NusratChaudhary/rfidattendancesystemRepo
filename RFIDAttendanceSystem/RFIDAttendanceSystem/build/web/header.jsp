@@ -1,7 +1,6 @@
 
+<%@page import="Shared.Constants"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-
-
 
 
 <nav class="navbar navbar-expand-lg navbar-light bg-primary">
@@ -14,12 +13,11 @@
         <ul class="navbar-nav mr-auto">
 
         </ul>
-        <div class="without-login">
-            <button type="button" class="btn btn-sm btn-light mr-sm-2 "  data-toggle="modal" data-target="#loginModal">&nbsp;&nbsp;&nbsp;LOGIN&nbsp;&nbsp;&nbsp;</button>
-            <button type="button" class="btn btn-sm btn-light mr-sm-2" data-toggle="modal" data-target="#registrationModal">&nbsp;&nbsp;&nbsp;SIGNUP&nbsp;&nbsp;&nbsp;</button>
-        </div>
-
-        <div class="login">
+        <%
+            // Session COntroller 
+            if (session.getAttribute("id") != null) {
+        %>
+        <div class="login" >
             <div class="notification-item">
                 <a href="#">
                     <span class="notification-badge">5</span>
@@ -29,6 +27,28 @@
 
             <button type="button" class="btn btn-sm btn-light mr-sm-2 "  data-toggle="modal" >&nbsp;&nbsp;&nbsp;SIGNOUT&nbsp;&nbsp;&nbsp;</button>                 
         </div>
+        <%
+        } else {
+            String uri = request.getRequestURI();
+            String currentPage = uri.substring(uri.lastIndexOf("/") + 1);
+            if (Constants.FLAGGED_PAGES.contains(currentPage)) {
+        %>
+        <script>
+            window.location.href = "welcome.jsp";
+        </script>
+        <%
+            }
+
+        %>
+        <div class="without-login"  >
+            <button type="button" class="btn btn-sm btn-light mr-sm-2 "  data-toggle="modal" data-target="#loginModal">&nbsp;&nbsp;&nbsp;LOGIN&nbsp;&nbsp;&nbsp;</button>
+            <button type="button" class="btn btn-sm btn-light mr-sm-2" data-toggle="modal" data-target="#registrationModal">&nbsp;&nbsp;&nbsp;SIGNUP&nbsp;&nbsp;&nbsp;</button>
+        </div>
+        <%            }
+        %>
+
+
+
 
 
 
@@ -206,8 +226,6 @@
     $(document).ready(function () {
 
         const BASE_URL = 'http://' + window.location.hostname + ':8080/RFIDAttendanceSystem/';
-
-
         // Registration Start
 //
         $('#registrationForm').submit(function (event) {
@@ -215,7 +233,6 @@
             event.preventDefault();
             $('#signUpButton').prop('disabled', true);
             showLoader('.modal');
-
             if (!$.isNumeric($('#phoneNumber').val())) {
                 $('#phoneNumber').val('');
                 $('#phoneNumber').addClass('animated  pulse');
@@ -228,7 +245,6 @@
             var form = document.getElementById('registrationForm');
             var fdata = new FormData(form);
             console.log(fdata);
-
             //   fdata.append({name: 'api_key', value: API_KEY});
 
             $.ajax({
@@ -251,21 +267,18 @@
                             $('#registrationModal').modal('toggle');
                             $('#loginModal').modal('toggle');
                         }, 1500);
-
                     } else if (data === REGISTER_ALREADY) {
                         hideLoader('.modal');
                         $("#registrationModal .modal-dialog .modal-content .modal-header").before("<div class='alert alert-warning' id='modalAlert' role='alert'><center>You Have Already Registered You May Procced to Login...</center></div>");
                         $("#signUpButton").prop("disabled", false);
                         alertTimeout();
                         document.getElementById("registrationForm").reset();
-
                     } else {
                         hideLoader('.modal');
                         $("#registrationModal .modal-dialog .modal-content .modal-header").before("<div class='alert alert-danger' id='modalAlert' role='alert'><center>Unable To Register...</center></div>");
                         $("#signUpButton").prop("disabled", false);
                         alertTimeout();
                         document.getElementById("registrationForm").reset();
-
                     }
 
                 },
@@ -276,12 +289,9 @@
                     $("#signUpButton").prop("disabled", false);
                     alertTimeout();
                     document.getElementById("registrationForm").reset();
-
                 }
             });
-
         });
-
         // Registration End
 
 
@@ -294,8 +304,6 @@
             showLoader('.modal');
             $('#signInButton').prop('disabled', true);
             var form = $(this).serializeArray();
-
-
             $.ajax({
                 type: "POST",
                 headers: {"api_key": API_KEY},
@@ -306,24 +314,19 @@
                     if (data === LOGIN_SUCCESS) {
                         hideLoader('.modal');
                         window.location.replace(BASE_URL + '/EmployeeHome.jsp');
-
                     } else if (data === LOGIN_HOLIDAY) {
                         hideLoader('.modal');
                         $("#loginModal .modal-dialog .modal-content .modal-header").before("<div class='alert alert-danger' id='modalAlert' role='alert'><center>Login is disabled as user is on holiday !!!</center></div>");
-
                     } else if (data === USER_VERIFY) {
                         hideLoader('.modal');
                         $("#loginModal .modal-dialog .modal-content .modal-header").before("<div class='alert alert-danger' id='modalAlert' role='alert'><center>Please Verify your Email first !!!</center></div>");
-
                     } else {
                         hideLoader('.modal');
                         $("#loginModal .modal-dialog .modal-content .modal-header").before("<div class='alert alert-danger' id='modalAlert' role='alert'><center>Email and Password is incorrect !!!</center></div>");
-
                     }
                     $("#signInButton").prop("disabled", false);
                     alertTimeout();
                     document.getElementById("loginForm").reset();
-
                 },
                 error: function (e) {
                     console.log(e);
@@ -334,10 +337,7 @@
                     document.getElementById("loginForm").reset();
                 }
             });
-
         });
-
-
         // Login End
 
 
@@ -350,8 +350,6 @@
             });
         }
     });
-
-
     var d = new Date();
     d.setFullYear(d.getFullYear() - 18);
     if (parseInt(d.getMonth() + 1) < 10) {
@@ -363,6 +361,7 @@
 
 
 </script>
+
 
 
 

@@ -5,11 +5,15 @@
  */
 package Main;
 
+import Model.Employee;
+import Model.Rfid;
 import Shared.ConnectionManager;
 import Shared.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import javax.servlet.ServletException;
@@ -50,13 +54,13 @@ public class Login extends HttpServlet {
         try {
             Connection con = new ConnectionManager().getConnection();
             Statement stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery("select EMPLOYEEID,FLAG,FIRSTNAME,LASTNAME from EMPLOYEES where EMAIL='" + request.getParameter("email") + "' AND PASSWORD='" + request.getParameter("password") + "'");
+            ResultSet rs = stmt.executeQuery("select * from EMPLOYEES where EMAIL='" + request.getParameter("email") + "' AND PASSWORD='" + request.getParameter("password") + "'");
             while (rs.next()) {
                 if (!rs.getString("FLAG").isEmpty()) {
                     if (rs.getString("FLAG").equals(Constants.USER_ACTIVE)) {
                         HttpSession loginSession = request.getSession();
                         loginSession.setAttribute("id", rs.getInt("EMPLOYEEID"));
-                        loginSession.setAttribute("name", rs.getString("FIRSTNAME") + " " + rs.getString("LASTNAME"));
+                        loginSession.setAttribute("json", getUserJson(con, rs.getInt("EMPLOYEEID"), rs));
                         return Constants.LOGIN_SUCCESS;
                     }
                     if (rs.getString("FLAG").equals(Constants.USER_HOLIDAY)) {
@@ -76,6 +80,33 @@ public class Login extends HttpServlet {
             return Constants.LOGIN_INSUCCESS;
         }
         
+    }
+    
+    private String getUserJson(Connection con, int id, ResultSet employeeResult) {
+        try {
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery("select * from RFID where EMPLOYEEID='" + id + "'");
+            rs.absolute(1);
+            int rfidNumber = rs.getInt("RFIDNUMBER");
+            //  blo blob = rs.getBlob("IMAGE");
+
+            Employee employee = new Employee(
+                    id,
+                    Helper.convertDateToString(new Date(rs.getDate("DOB").getTime()), "dd-MM-yyyy"),
+                    rs.getString("FIRSTNAME"),
+                    rs.getString("LASTNAME"),
+                    rs.getString("GENDER"),
+                    rs.getString("PHONENUMBER"),
+                    rs.getString("EMAIL"),
+                    rs.getString("ADDRESS"),
+                    new Rfid(rfidNumber, null)
+            );
+            
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.writeValueAsString(employee);
+        } catch (Exception e) {
+            return Constants.ERROR;
+        }
     }
     
 }

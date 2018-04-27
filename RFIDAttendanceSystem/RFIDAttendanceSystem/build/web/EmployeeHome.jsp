@@ -13,6 +13,7 @@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" />
         <link rel="stylesheet" href="CSS/mystyle.css"/>
         <link rel="stylesheet" href="CSS/animate.css"/>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <title>Employee</title>
     </head>
@@ -21,11 +22,11 @@
         <br/><br/>
 
 
-        <div class="container">
+        <div class="container" ng-app="rootApp" ng-controller="rootCtrl">
 
             <div class="jumbotron jumbotron-fluid" style="background-color: transparent;padding: 0">
                 <div class="container">
-                    <h1 class="display-4">Welcome {user}</h1>
+                    <h1 class="display-4">Welcome {{userData.firstName}}</h1>
                 </div>
             </div>
 
@@ -61,12 +62,12 @@
 
         </div>
 
-  <script>
+        <script>
 
             $(document).ready(function () {
 
-                $('.card-cursor').click(function (){
-                    location.href = this.id+'.jsp';
+                $('.card-cursor').click(function () {
+                    location.href = this.id + '.jsp';
                 });
 
 
@@ -74,6 +75,16 @@
             });
         </script>
 
+
+        <script>
+            var app = angular.module('rootApp', []);
+
+            app.controller('rootCtrl', function ($scope) {
+                $scope.userData = JSON.parse('<%=(String) session.getAttribute("json")%>');
+            });
+
+
+        </script>
 
         <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"  ></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" ></script>

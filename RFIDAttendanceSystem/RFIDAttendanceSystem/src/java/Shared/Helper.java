@@ -8,8 +8,11 @@ package Shared;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 /**
  *
@@ -61,6 +64,11 @@ public class Helper {
             System.out.println(e);
             return false;
         }
+    }
+
+    public static String convertDateToString(Date date, String format) {
+        DateFormat dateFormat = new SimpleDateFormat(format);
+        return dateFormat.format(date);
     }
 
 }

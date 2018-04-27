@@ -13,6 +13,8 @@ import java.io.PrintWriter;
 import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.Hashtable;
 import java.util.List;
@@ -52,7 +54,7 @@ public class Registration extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/plain");
         PrintWriter out = response.getWriter();
-        
+
         if (request.getHeader("api_key") != null && Helper.validateAPIKEY(request.getHeader("api_key"))) {
 
             boolean isMultipart = ServletFileUpload.isMultipartContent(request);
@@ -127,12 +129,12 @@ public class Registration extends HttpServlet {
                 insertEmployees.setString(10, Constants.USER_VERIFY);
 
                 byte[] fileContent = IOUtils.toByteArray(stream);
-              //  Blob imageBlob = new oracle.sql.BLOB(fileContent);
+                //  Blob imageBlob = new oracle.sql.BLOB(fileContent);
 
-                insertRfid.setInt(1, Math.abs(new Random().nextInt()));
+                insertRfid.setInt(1, generateRfidNumber(con));
                 insertRfid.setInt(2, employeeID);
                 insertRfid.setBytes(3, fileContent);
-                insertRfid.setString(4, Constants.RFID_ACTIVE);
+                insertRfid.setString(4, Constants.RFID_INACTIVE);
 
                 if (insertEmployees.executeUpdate() > 0 && insertRfid.executeUpdate() > 0) {
 
@@ -178,4 +180,18 @@ public class Registration extends HttpServlet {
 
     }
 
+    private int generateRfidNumber(Connection con) {
+
+        try {
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery("select id from RFIDCARDS where flag='A'");
+            while (rs.next()) {
+                return rs.getInt("id");
+            }
+            return 0;
+        } catch (Exception e) {
+            System.out.println(e);
+            return 0;
+        }
+    }
 }

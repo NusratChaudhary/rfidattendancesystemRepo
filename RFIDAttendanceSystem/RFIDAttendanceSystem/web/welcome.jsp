@@ -15,8 +15,11 @@
         <link rel="stylesheet" href="CSS/mystyle.css"/>
         <link rel="stylesheet" href="CSS/animate.css">
         <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+
         <script src="CSS/jquery.loading.js"></script>
-        
+
         <link href="CSS/jquery.loading.css" rel="stylesheet">
         <script src="CSS/constants.js"></script>
         <title>Welcome</title>
@@ -58,7 +61,7 @@
 
 
 
-     
+        
         <!--        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"  ></script>-->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" ></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" ></script>

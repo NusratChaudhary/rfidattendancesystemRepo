@@ -1,8 +1,8 @@
 .without-login{
-
+    display: block; 
 }
 .login{
-    display: none; 
+    display: block; 
 }
 .wrongInput{
     border-color: red;

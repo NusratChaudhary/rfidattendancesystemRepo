@@ -6,6 +6,8 @@
 package Shared;
 
 import Main.*;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  *
@@ -45,4 +47,7 @@ public class Constants {
 
     public static final String LOGGED_OUT = "logged_out";
     public static final String HOST_ADDRESS = "http://localhost:8080/RFIDAttendanceSystem/";
+    
+    public static final String FLAGGED_PAGES= "EmployeeHome.jsp,EmployeeDetails.jsp";
+ 
 }
