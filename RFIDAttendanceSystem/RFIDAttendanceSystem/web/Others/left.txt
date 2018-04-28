@@ -18,7 +18,8 @@ make all button look clickavble
 -------------------------------------------------------------------
 **************** ********
 ADD RFIDCARDS TABLE WHERE COLS - id[rfidnumber] Flag
-Check blob in and out from db and think how to show blob on html
+
+-*********CLOSE ALL CONNECTION AFTER TASK CON.CLOSE in finally block
 ----------------------------------------------------------------
 
 --------------------------------------------------- TASK------------------------

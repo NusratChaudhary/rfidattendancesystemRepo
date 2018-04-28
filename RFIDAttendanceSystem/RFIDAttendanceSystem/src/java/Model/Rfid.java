@@ -14,30 +14,23 @@ import oracle.sql.BLOB;
 public class Rfid {
 
     private int RFIDNUMBER;
-    private BLOB IMAGE;
 
     public Rfid() {
     }
 
-    public Rfid(int RFIDNUMBER, BLOB IMAGE) {
+    public Rfid(int RFIDNUMBER) {
         this.RFIDNUMBER = RFIDNUMBER;
-        this.IMAGE = IMAGE;
-    }
-
-    public void setRFIDNUMBER(int RFIDNUMBER) {
-        this.RFIDNUMBER = RFIDNUMBER;
-    }
-
-    public void setIMAGE(BLOB IMAGE) {
-        this.IMAGE = IMAGE;
     }
 
     public int getRFIDNUMBER() {
         return RFIDNUMBER;
     }
 
-    public BLOB getIMAGE() {
-        return IMAGE;
+    public void setRFIDNUMBER(int RFIDNUMBER) {
+        this.RFIDNUMBER = RFIDNUMBER;
     }
+
+
+   
 
 }

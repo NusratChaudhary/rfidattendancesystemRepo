@@ -16,6 +16,10 @@
         <servlet-name>Signout</servlet-name>
         <servlet-class>Main.Signout</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ImageProvider</servlet-name>
+        <servlet-class>Main.ImageProvider</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Registration</servlet-name>
         <url-pattern>/Registration</url-pattern>
@@ -31,6 +35,10 @@
     <servlet-mapping>
         <servlet-name>Signout</servlet-name>
         <url-pattern>/Signout</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ImageProvider</servlet-name>
+        <url-pattern>/ImageProvider</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

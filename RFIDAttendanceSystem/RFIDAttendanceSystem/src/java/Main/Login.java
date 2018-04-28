@@ -85,11 +85,10 @@ public class Login extends HttpServlet {
     private String getUserJson(Connection con, int id, ResultSet employeeResult) {
         try {
             Statement stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery("select * from RFID where EMPLOYEEID='" + id + "'");
+            ResultSet rs = stmt.executeQuery("select RFIDNUMBER from RFID where EMPLOYEEID='" + id + "'");
             rs.absolute(1);
             int rfidNumber = rs.getInt("RFIDNUMBER");
-            //  blo blob = rs.getBlob("IMAGE");
-
+           
             Employee employee = new Employee(
                     id,
                     Helper.convertDateToString(new Date(rs.getDate("DOB").getTime()), "dd-MM-yyyy"),
@@ -99,7 +98,7 @@ public class Login extends HttpServlet {
                     rs.getString("PHONENUMBER"),
                     rs.getString("EMAIL"),
                     rs.getString("ADDRESS"),
-                    new Rfid(rfidNumber, null)
+                    new Rfid(rfidNumber)
             );
             
             ObjectMapper mapper = new ObjectMapper();
