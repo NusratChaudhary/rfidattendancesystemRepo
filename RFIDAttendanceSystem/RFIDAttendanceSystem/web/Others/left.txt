@@ -19,7 +19,6 @@ make all button look clickavble
 **************** ********
 ADD RFIDCARDS TABLE WHERE COLS - id[rfidnumber] Flag
 
--*********CLOSE ALL CONNECTION AFTER TASK CON.CLOSE in finally block
 ----------------------------------------------------------------
 
 --------------------------------------------------- TASK------------------------

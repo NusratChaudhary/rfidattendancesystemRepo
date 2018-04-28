@@ -14,6 +14,7 @@ import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.Hashtable;
@@ -105,9 +106,10 @@ public class Registration extends HttpServlet {
     private boolean registerUser(Map mapItems, InputStream stream) {
 
         final String checkQuery = "select count(*) as counter from employees where email='" + mapItems.get("email").toString() + "'";
+        Connection con = new ConnectionManager().getConnection();
+
         try {
 
-            Connection con = new ConnectionManager().getConnection();
             if (Helper.checkIfExist(con, checkQuery, "counter", Constants.TYPE_INT, "1")) {
                 userExist = true;
                 return false;
@@ -153,6 +155,12 @@ public class Registration extends HttpServlet {
         } catch (Exception e) {
             System.out.println(e);
             return false;
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
 
     }
