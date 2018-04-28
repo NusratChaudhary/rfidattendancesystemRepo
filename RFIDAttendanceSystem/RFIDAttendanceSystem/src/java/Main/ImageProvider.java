@@ -38,7 +38,7 @@ public class ImageProvider extends HttpServlet {
             Connection con = new ConnectionManager().getConnection();
             try {
                 Statement stmt = con.createStatement();
-                ResultSet rs = stmt.executeQuery("select IMAGE from RFID where RFIDNUMBER='" + request.getParameter("rfidNumber") + "'");
+                ResultSet rs = stmt.executeQuery("select IMAGE from RFID where RFIDNUMBER=" + request.getParameter("rfidNumber"));
                 Blob b = rs.getBlob(1);
 
                 BufferedImage bImage = ImageIO.read(b.getBinaryStream());

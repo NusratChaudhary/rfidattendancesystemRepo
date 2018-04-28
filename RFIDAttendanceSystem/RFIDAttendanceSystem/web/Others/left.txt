@@ -28,14 +28,14 @@ MakeaRequest PAGE [Should have View Sent Request PAge Also] left ****
 Add JQuery Loader and loading gif
 Java Model of All Tables
 
-1) Registration 
+1) Registration ~~~~~
 	Validation of values using Angular
 	Send Post using Angular or JQuery
 
-2) Login 
+2) Login~~~~
 	Validation 
 	Send Post request using angular or JQuery
-	onLogin create a token [login id and user name]
+	onLogin create a token [login id and user name] 
 	
 3) Rfid
 	PIN

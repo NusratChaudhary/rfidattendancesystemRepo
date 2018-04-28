@@ -13,6 +13,7 @@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" />
         <link rel="stylesheet" href="CSS/mystyle.css"/>
         <link rel="stylesheet" href="CSS/animate.css"/>
+        <script src="CSS/constants.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <title>Employee</title>
@@ -26,7 +27,10 @@
 
             <div class="jumbotron jumbotron-fluid" style="background-color: transparent;padding: 0">
                 <div class="container">
-                    <h1 class="display-4">Welcome {{userData.firstName}}</h1>
+                    <div class="clearfix">
+                        <h1 class="employeeNameDisplay float-left">Welcome {{userData.firstName}}</h1>
+                        <img ng-if="profilePicture" src="{{profilePicture}}" class="img-fluid w-25 float-right" alt="Profile Picture">
+                    </div>
                 </div>
             </div>
 
@@ -65,13 +69,9 @@
         <script>
 
             $(document).ready(function () {
-
                 $('.card-cursor').click(function () {
                     location.href = this.id + '.jsp';
                 });
-
-
-
             });
         </script>
 
@@ -79,8 +79,27 @@
         <script>
             var app = angular.module('rootApp', []);
 
-            app.controller('rootCtrl', function ($scope) {
+            app.controller('rootCtrl', function ($scope, $http) {
                 $scope.userData = JSON.parse('<%=(String) session.getAttribute("json")%>');
+                $scope.profilePicture = null;
+                if ($scope.userData !== null) {
+
+                    var request = {
+                        method: 'GET',
+                        url: 'ImageProvider',
+                        headers: {"api_key": API_KEY},
+                        timeout: 10000,
+                        data: {rfidNumber: $scope.userData.rfid.rfidnumber}
+                    };
+                    $http(request).then(function (response) {
+                        //First function handles success
+                        $scope.profilePicture = response.data;
+                    }, function (response) {
+                        console.log('Error ', response);
+                    });
+
+                }
+
             });
 
 

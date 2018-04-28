@@ -13,21 +13,21 @@ import oracle.sql.BLOB;
  */
 public class Rfid {
 
-    private int RFIDNUMBER;
+    private int rfidNumber;
 
     public Rfid() {
     }
 
     public Rfid(int RFIDNUMBER) {
-        this.RFIDNUMBER = RFIDNUMBER;
+        this.rfidNumber = RFIDNUMBER;
     }
 
     public int getRFIDNUMBER() {
-        return RFIDNUMBER;
+        return rfidNumber;
     }
 
     public void setRFIDNUMBER(int RFIDNUMBER) {
-        this.RFIDNUMBER = RFIDNUMBER;
+        this.rfidNumber = RFIDNUMBER;
     }
 
 
