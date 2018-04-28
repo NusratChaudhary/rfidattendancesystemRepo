@@ -1,32 +1,39 @@
 const API_KEY = "c6e14e8de5f7ef8dd433b64c01d830d3";
 
-const USER_ACTIVE = "A";
-const USER_VERIFY = "V";
-const USER_HOLIDAY = "H";
-const USER_INACTIVE = "D";
-const USER_PRESENT = "P";
+const USER_ACTIVE = "user_active";
+const USER_VERIFY = "user_verify";
+const USER_HOLIDAY = "user_holiday";
+const USER_INACTIVE = "user_deactive";
 
-const RFID_ACTIVE = "A";
-const RFID_INACTIVE = "D";
+const RFID_ACTIVE = "rfid_active";
+const RFID_INACTIVE = "rfid_deactive";
 
-const LOGIN_SUCCESS = "S";
-const LOGIN_INSUCCESS = "U";
-const LOGIN_HOLIDAY = "H";
+const LOGIN_SUCCESS = "login_success";
+const LOGIN_INSUCCESS = "login_unsuccess";
+const LOGIN_HOLIDAY = "login_holiday";
 
-const REGISTER_SUCCESS = "RS";
-const REGISTER_INSUCCESS = "RIS";
-const REGISTER_ALREADY = "RA";
+const REGISTER_SUCCESS = "register_success";
+const REGISTER_INSUCCESS = "register_insuccess";
+const REGISTER_ALREADY = "register_already";
 
-const MODE_VERIFY_EMAIL = "VE";
-const PENDING = "P";
-const COMPLETED = "C";
+const MODE_VERIFY_EMAIL = "mode_verify_email";
+const PENDING = "pending";
+const COMPLETED = "completed";
+const ALREADY_VERIFIED = "already_verified";
 
-const ALREADY_VERIFIED = "AV";
+
+const RFID_CARD_ACTIVE = "rfid_card_active";
+const RFID_CARD_INACTIVE = "rfid_card_inactive";
+
+const RFID_CARD_NOT_AVAILABLE = "rfid_card_unavailable";
+
 
 const ERROR = "ERR";
+
+const TYPE_STRING = "string";
+const TYPE_INT = "int";
+
 const LOGGED_OUT = "logged_out";
-
-const EMAIL_VERIFICATION_TEMPLATE = "Thanks for signing up!\n Your account has been created, you can login after you have activated your account \n Please click this link to activate your account: \n\n";
-
-
 const HOST_ADDRESS = "http://localhost:8080/RFIDAttendanceSystem/";
+
+const FLAGGED_PAGES = "EmployeeHome.jsp,EmployeeDetails.jsp";

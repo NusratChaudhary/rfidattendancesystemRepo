@@ -141,6 +141,7 @@ public class Registration extends HttpServlet {
                     rfidNotAvailable = true;
                     return false;
                 }
+
                 insertRfid.setInt(1, Integer.valueOf(rfidNumber));
                 insertRfid.setInt(2, employeeID);
                 insertRfid.setBytes(3, fileContent);
@@ -152,6 +153,8 @@ public class Registration extends HttpServlet {
 
                     String verificationMailLink = createVerificationURL(employeeID);
                     new Mailer().sendMail(mapItems.get("email").toString(), "Email Verification", Constants.EMAIL_VERIFICATION_TEMPLATE + verificationMailLink);
+                    Statement stmt = con.createStatement();
+                    stmt.executeUpdate("update RFIDCARDS set flag='" + Constants.RFID_CARD_ACTIVE + "' where id=" + Integer.parseInt(rfidNumber));
 
                     return true;
                 } else {
@@ -187,7 +190,7 @@ public class Registration extends HttpServlet {
             insertVerification.setString(5, Constants.PENDING);
             insertVerification.executeUpdate();
 
-            return Constants.HOST_ADDRESS + "Verify?code=" + hashUrl;
+            return Constants.HOST_ADDRESS + "verify?code=" + hashUrl;
 
         } catch (Exception ex) {
             Logger.getLogger(Registration.class.getName()).log(Level.SEVERE, null, ex);
@@ -200,9 +203,10 @@ public class Registration extends HttpServlet {
 
         try {
             Statement stmt = con.createStatement();
+            System.out.println("select id from RFIDCARDS where flag='" + Constants.RFID_CARD_INACTIVE + "'");
             ResultSet rs = stmt.executeQuery("select id from RFIDCARDS where flag='" + Constants.RFID_CARD_INACTIVE + "'");
             while (rs.next()) {
-                stmt.executeUpdate("update RFIDCARDS set flag='" + Constants.RFID_CARD_ACTIVE + "' where id=" + rs.getInt("id"));
+                String val = String.valueOf(rs.getInt("id"));
                 return String.valueOf(rs.getInt("id"));
             }
             return Constants.RFID_CARD_NOT_AVAILABLE;

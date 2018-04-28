@@ -13,32 +13,32 @@ public class Constants {
 
     public static final String API_KEY = "c6e14e8de5f7ef8dd433b64c01d830d3";
 
-    public static final String USER_ACTIVE = "A";
-    public static final String USER_VERIFY = "V";
-    public static final String USER_HOLIDAY = "H";
-    public static final String USER_INACTIVE = "D";
+    public static final String USER_ACTIVE = "user_active";
+    public static final String USER_VERIFY = "user_verify";
+    public static final String USER_HOLIDAY = "user_holiday";
+    public static final String USER_INACTIVE = "user_deactive";
 
-    public static final String RFID_ACTIVE = "A";
-    public static final String RFID_INACTIVE = "D";
+    public static final String RFID_ACTIVE = "rfid_active";
+    public static final String RFID_INACTIVE = "rfid_deactive";
 
-    public static final String LOGIN_SUCCESS = "S";
-    public static final String LOGIN_INSUCCESS = "U";
-    public static final String LOGIN_HOLIDAY = "H";
+    public static final String LOGIN_SUCCESS = "login_success";
+    public static final String LOGIN_INSUCCESS = "login_unsuccess";
+    public static final String LOGIN_HOLIDAY = "login_holiday";
 
-    public static final String REGISTER_SUCCESS = "RS";
-    public static final String REGISTER_INSUCCESS = "RIS";
-    public static final String REGISTER_ALREADY = "RA";
+    public static final String REGISTER_SUCCESS = "register_success";
+    public static final String REGISTER_INSUCCESS = "register_insuccess";
+    public static final String REGISTER_ALREADY = "register_already";
 
-    public static final String MODE_VERIFY_EMAIL = "VE";
-    public static final String PENDING = "P";
-    public static final String COMPLETED = "C";
-    public static final String ALREADY_VERIFIED = "AV";
+    public static final String MODE_VERIFY_EMAIL = "mode_verify_email";
+    public static final String PENDING = "pending";
+    public static final String COMPLETED = "completed";
+    public static final String ALREADY_VERIFIED = "already_verified";
 
     
-    public static final String RFID_CARD_ACTIVE = "RCA";
-    public static final String RFID_CARD_INACTIVE = "RCI";
+    public static final String RFID_CARD_ACTIVE = "rfid_card_active";
+    public static final String RFID_CARD_INACTIVE = "rfid_card_inactive";
 
-    public static final String RFID_CARD_NOT_AVAILABLE = "RCNA";
+    public static final String RFID_CARD_NOT_AVAILABLE = "rfid_card_unavailable";
 
     
     public static final String ERROR = "ERR";

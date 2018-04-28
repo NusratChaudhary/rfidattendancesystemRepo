@@ -267,7 +267,13 @@
                             $('#registrationModal').modal('toggle');
                             $('#loginModal').modal('toggle');
                         }, 1500);
-                    } else if (data === REGISTER_ALREADY) {
+                    }else if (data === RFID_CARD_NOT_AVAILABLE) {
+                        hideLoader('.modal');
+                        $("#registrationModal .modal-dialog .modal-content .modal-header").before("<div class='alert alert-warning' id='modalAlert' role='alert'><center>Unable to register RFID card is not available...</center></div>");
+                        $("#signUpButton").prop("disabled", false);
+                        alertTimeout();
+                        document.getElementById("registrationForm").reset();
+                    }  else if (data === REGISTER_ALREADY) {
                         hideLoader('.modal');
                         $("#registrationModal .modal-dialog .modal-content .modal-header").before("<div class='alert alert-warning' id='modalAlert' role='alert'><center>You Have Already Registered You May Procced to Login...</center></div>");
                         $("#signUpButton").prop("disabled", false);
@@ -319,7 +325,7 @@
                         $("#loginModal .modal-dialog .modal-content .modal-header").before("<div class='alert alert-danger' id='modalAlert' role='alert'><center>Login is disabled as user is on holiday !!!</center></div>");
                     } else if (data === USER_VERIFY) {
                         hideLoader('.modal');
-                        $("#loginModal .modal-dialog .modal-content .modal-header").before("<div class='alert alert-danger' id='modalAlert' role='alert'><center>Please Verify your Email first !!!</center></div>");
+                        $("#loginModal .modal-dialog .modal-content .modal-header").before("<div class='alert alert-danger' id='modalAlert' role='alert'><center>Please Verify your Email !!!</center></div>");
                     } else {
                         hideLoader('.modal');
                         $("#loginModal .modal-dialog .modal-content .modal-header").before("<div class='alert alert-danger' id='modalAlert' role='alert'><center>Email and Password is incorrect !!!</center></div>");

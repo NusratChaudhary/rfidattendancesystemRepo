@@ -63,8 +63,8 @@ public class verify extends HttpServlet {
         try {
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery("select WORK,FLAG from VERIFICATION where CODE='" + code + "'");
-            if (rs.first()) {
-                rs.absolute(1); // goes to first row
+            if (rs.next()) {
+
                 if (rs.getString("FLAG").equals(Constants.COMPLETED)) {
                     return Constants.COMPLETED;
                 }
@@ -91,10 +91,10 @@ public class verify extends HttpServlet {
         try {
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery("select REFERENCEID from VERIFICATION where CODE='" + code + "'");
-            if (rs.first()) {
-                rs.absolute(1); // goes to first row
+            if (rs.next()) {
                 int counter = stmt.executeUpdate("update EMPLOYEES SET FLAG='" + Constants.USER_ACTIVE + "' where EMPLOYEEID=" + rs.getInt("REFERENCEID"));
                 if (counter > 0) {
+                    stmt.executeUpdate("update VERIFICATION set flag='" + Constants.COMPLETED + "' where code='" + code + "'");
                     return Constants.COMPLETED;
                 } else {
                     return Constants.ERROR;

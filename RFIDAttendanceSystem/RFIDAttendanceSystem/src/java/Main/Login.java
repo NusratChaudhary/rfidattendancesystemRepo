@@ -93,27 +93,31 @@ public class Login extends HttpServlet {
     private String getUserJson(Connection con, int id, ResultSet employeeResult) {
         try {
             Statement stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery("select RFIDNUMBER from RFID where EMPLOYEEID='" + id + "'");
-            rs.absolute(1);
-            int rfidNumber = rs.getInt("RFIDNUMBER");
+            ResultSet rs = stmt.executeQuery("select RFIDNUMBER from RFID where EMPLOYEEID=" + id );
+            if (rs.next()) {
 
-            Employee employee = new Employee(
-                    id,
-                    Helper.convertDateToString(new Date(rs.getDate("DOB").getTime()), "dd-MM-yyyy"),
-                    rs.getString("FIRSTNAME"),
-                    rs.getString("LASTNAME"),
-                    rs.getString("GENDER"),
-                    rs.getString("PHONENUMBER"),
-                    rs.getString("EMAIL"),
-                    rs.getString("ADDRESS"),
-                    new Rfid(rfidNumber)
-            );
+                int rfidNumber = rs.getInt("RFIDNUMBER");
 
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.writeValueAsString(employee);
-        } catch (Exception e) {
+                Employee employee = new Employee(
+                        id,
+                        Helper.convertDateToString(new Date(employeeResult.getDate("DOB").getTime()), "dd-MM-yyyy"),
+                        employeeResult.getString("FIRSTNAME"),
+                        employeeResult.getString("LASTNAME"),
+                        employeeResult.getString("GENDER"),
+                        employeeResult.getString("PHONENUMBER"),
+                        employeeResult.getString("EMAIL"),
+                        employeeResult.getString("ADDRESS"),
+                        new Rfid(rfidNumber)
+                );
+
+                ObjectMapper mapper = new ObjectMapper();
+                return mapper.writeValueAsString(employee);
+            }
             return Constants.ERROR;
-        }finally {
+        } catch (Exception e) {
+            System.out.println(e);
+            return Constants.ERROR;
+        } finally {
             try {
                 con.close();
             } catch (SQLException ex) {

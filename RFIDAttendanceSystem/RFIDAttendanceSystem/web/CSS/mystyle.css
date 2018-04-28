@@ -240,6 +240,10 @@
 
 }
 
+.profilePicture{
+    width: 10% !important;
+}
+
 
 @media print{
     #controlButton{

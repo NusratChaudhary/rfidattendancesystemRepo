@@ -28,8 +28,8 @@
             <div class="jumbotron jumbotron-fluid" style="background-color: transparent;padding: 0">
                 <div class="container">
                     <div class="clearfix">
-                        <h1 class="employeeNameDisplay float-left">Welcome {{userData.firstName}}</h1>
-                        <img ng-if="profilePicture" src="{{profilePicture}}" class="img-fluid w-25 float-right" alt="Profile Picture">
+                        <h1 class="employeeNameDisplay float-left mt-2 ml-4">Welcome {{userData.firstName}}</h1>
+                        <img ng-if="profilePicture"  data-ng-src="data:image/png;base64,{{profilePicture}}" class="img-fluid img-thumbnail profilePicture mr-5 float-right" alt="Profile Picture">
                     </div>
                 </div>
             </div>
@@ -78,30 +78,37 @@
 
         <script>
             var app = angular.module('rootApp', []);
-
             app.controller('rootCtrl', function ($scope, $http) {
                 $scope.userData = JSON.parse('<%=(String) session.getAttribute("json")%>');
                 $scope.profilePicture = null;
                 if ($scope.userData !== null) {
-
                     var request = {
                         method: 'GET',
                         url: 'ImageProvider',
+                        responseType: 'arraybuffer',
                         headers: {"api_key": API_KEY},
                         timeout: 10000,
-                        data: {rfidNumber: $scope.userData.rfid.rfidnumber}
+                        params: {rfidNumber: $scope.userData.rfid.rfidnumber}
                     };
                     $http(request).then(function (response) {
                         //First function handles success
-                        $scope.profilePicture = response.data;
+                        $scope.profilePicture = _arrayBufferToBase64(response.data);
                     }, function (response) {
                         console.log('Error ', response);
                     });
-
                 }
 
-            });
 
+            });
+            function _arrayBufferToBase64(buffer) {
+                var binary = '';
+                var bytes = new Uint8Array(buffer);
+                var len = bytes.byteLength;
+                for (var i = 0; i < len; i++) {
+                    binary += String.fromCharCode(bytes[i]);
+                }
+                return window.btoa(binary);
+            }
 
         </script>
 
