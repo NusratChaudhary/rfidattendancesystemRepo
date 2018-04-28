@@ -15,7 +15,7 @@
         </ul>
         <%
             // Session COntroller 
-            if (true) {
+            if (session.getAttribute("id")!=null) {
         %>
         <div class="login" >
             <div class="notification-item">

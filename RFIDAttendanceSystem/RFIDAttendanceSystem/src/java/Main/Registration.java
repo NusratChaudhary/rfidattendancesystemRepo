@@ -43,6 +43,7 @@ import org.apache.commons.io.IOUtils;
 public class Registration extends HttpServlet {
 
     boolean userExist = false;
+    boolean rfidNotAvailable = false;
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -86,6 +87,8 @@ public class Registration extends HttpServlet {
                     } else {
                         if (userExist) {
                             out.print(Constants.REGISTER_ALREADY);
+                        } else if (rfidNotAvailable) {
+                            out.print(Constants.RFID_CARD_NOT_AVAILABLE);
                         } else {
                             out.print(Constants.REGISTER_INSUCCESS);
                         }
@@ -133,7 +136,12 @@ public class Registration extends HttpServlet {
                 byte[] fileContent = IOUtils.toByteArray(stream);
                 //  Blob imageBlob = new oracle.sql.BLOB(fileContent);
 
-                insertRfid.setInt(1, generateRfidNumber(con));
+                String rfidNumber = generateRfidNumber(con);
+                if (rfidNumber.equals(Constants.RFID_CARD_NOT_AVAILABLE)) {
+                    rfidNotAvailable = true;
+                    return false;
+                }
+                insertRfid.setInt(1, Integer.valueOf(rfidNumber));
                 insertRfid.setInt(2, employeeID);
                 insertRfid.setBytes(3, fileContent);
                 insertRfid.setString(4, Constants.RFID_INACTIVE);
@@ -188,18 +196,19 @@ public class Registration extends HttpServlet {
 
     }
 
-    private int generateRfidNumber(Connection con) {
+    private String generateRfidNumber(Connection con) {
 
         try {
             Statement stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery("select id from RFIDCARDS where flag='A'");
+            ResultSet rs = stmt.executeQuery("select id from RFIDCARDS where flag='" + Constants.RFID_CARD_INACTIVE + "'");
             while (rs.next()) {
-                return rs.getInt("id");
+                stmt.executeUpdate("update RFIDCARDS set flag='" + Constants.RFID_CARD_ACTIVE + "' where id=" + rs.getInt("id"));
+                return String.valueOf(rs.getInt("id"));
             }
-            return 0;
+            return Constants.RFID_CARD_NOT_AVAILABLE;
         } catch (Exception e) {
             System.out.println(e);
-            return 0;
+            return null;
         }
     }
 }

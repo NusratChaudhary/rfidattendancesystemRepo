@@ -34,6 +34,13 @@ public class Constants {
     public static final String COMPLETED = "C";
     public static final String ALREADY_VERIFIED = "AV";
 
+    
+    public static final String RFID_CARD_ACTIVE = "RCA";
+    public static final String RFID_CARD_INACTIVE = "RCI";
+
+    public static final String RFID_CARD_NOT_AVAILABLE = "RCNA";
+
+    
     public static final String ERROR = "ERR";
 
     public static final String EMAIL_VERIFICATION_TEMPLATE = "Thanks for signing up!\n Your account has been created, you can login after you have activated your account \n Please click this link to activate your account: \n\n";
