@@ -15,6 +15,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -36,10 +37,26 @@ public class verify extends HttpServlet {
 
         switch (getTask(code)) {
             case Constants.MODE_VERIFY_EMAIL:
-                out.print(getEmailVerified(code));
+                if (getEmailVerified(code).equals(Constants.COMPLETED)) {
+                    request.setAttribute("title", "Email Verification");
+                    request.setAttribute("status", "true");
+                    request.setAttribute("message", "Your Email has been verified successfully");
+                    RequestDispatcher rd = request.getRequestDispatcher("Verification.jsp");
+                    rd.forward(request, response);
+                } else {
+                    request.setAttribute("title", "Email Verification");
+                    request.setAttribute("status", "false");
+                    request.setAttribute("message", "Unable to Verify Your Email please contact Administatrator");
+                    RequestDispatcher rd = request.getRequestDispatcher("Verification.jsp");
+                    rd.forward(request, response);
+                }
                 break;
             case Constants.COMPLETED:
-                out.print(Constants.ALREADY_VERIFIED);
+                request.setAttribute("title", "Already Verification");
+                request.setAttribute("status", "false");
+                request.setAttribute("message", "Verification is already completed ...");
+                RequestDispatcher rd = request.getRequestDispatcher("Verification.jsp");
+                rd.forward(request, response);
                 break;
             case Constants.ERROR:
                 out.print(Constants.ERROR);

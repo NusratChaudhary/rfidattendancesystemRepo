@@ -9,7 +9,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>title</title>
+        <title> <%=request.getAttribute("title")%></title>
 
         <link rel="shortcut icon" type="image/png" href="Resources/favicon.png"/> 
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -19,15 +19,21 @@
         <link rel="stylesheet" href="CSS/animate.css">
         <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     </head>
+    <%
+        if (request.getAttribute("message") == null) {
+               RequestDispatcher rd = request.getRequestDispatcher("welcome.jsp");
+                    rd.forward(request, response);
+        }
+    %>
     <body class="bg-light">
         <div class="container border border-white shadow-nohover rounded p-5 mt-5">
 
             <div class="clearfix mx-auto">
                 <div class="float-left p-5">
-                    message's
+                    <%=request.getAttribute("message")%>
                 </div>
-                <div class="float-right">
-                    <img class="img-fluid" src="Resources/verified_img.png"  width="160px" height="100px"/>
+                <div class="float-right" hidden="<%=request.getAttribute("status")%>">
+                    <img class="img-fluid animated flip"  src="Resources/verified_img.png"  width="160px" height="100px"/>
                 </div>
             </div>
         </div>
