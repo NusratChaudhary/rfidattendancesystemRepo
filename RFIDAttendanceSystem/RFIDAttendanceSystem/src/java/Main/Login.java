@@ -62,7 +62,8 @@ public class Login extends HttpServlet {
                     if (rs.getString("FLAG").equals(Constants.USER_ACTIVE)) {
                         HttpSession loginSession = request.getSession();
                         loginSession.setAttribute("id", rs.getInt("EMPLOYEEID"));
-                        loginSession.setAttribute("json", getUserJson(con, rs.getInt("EMPLOYEEID"), rs));
+                        loginSession.setAttribute("userJson", getUserJson(con, rs.getInt("EMPLOYEEID"), rs));
+                        loginSession.setAttribute("userData", getUserData(con, rs.getInt("EMPLOYEEID"), rs));
                         return Constants.LOGIN_SUCCESS;
                     }
                     if (rs.getString("FLAG").equals(Constants.USER_HOLIDAY)) {
@@ -93,7 +94,7 @@ public class Login extends HttpServlet {
     private String getUserJson(Connection con, int id, ResultSet employeeResult) {
         try {
             Statement stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery("select RFIDNUMBER from RFID where EMPLOYEEID=" + id );
+            ResultSet rs = stmt.executeQuery("select RFIDNUMBER from RFID where EMPLOYEEID=" + id);
             if (rs.next()) {
 
                 int rfidNumber = rs.getInt("RFIDNUMBER");
@@ -117,6 +118,35 @@ public class Login extends HttpServlet {
         } catch (Exception e) {
             System.out.println(e);
             return Constants.ERROR;
+        } 
+    }
+
+    private Employee getUserData(Connection con, int id, ResultSet employeeResult) {
+        try {
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery("select RFIDNUMBER from RFID where EMPLOYEEID=" + id);
+            if (rs.next()) {
+
+                int rfidNumber = rs.getInt("RFIDNUMBER");
+
+                Employee employee = new Employee(
+                        id,
+                        Helper.convertDateToString(new Date(employeeResult.getDate("DOB").getTime()), "dd-MM-yyyy"),
+                        employeeResult.getString("FIRSTNAME"),
+                        employeeResult.getString("LASTNAME"),
+                        employeeResult.getString("GENDER"),
+                        employeeResult.getString("PHONENUMBER"),
+                        employeeResult.getString("EMAIL"),
+                        employeeResult.getString("ADDRESS"),
+                        new Rfid(rfidNumber)
+                );
+
+                return employee;
+            }
+            return null;
+        } catch (Exception e) {
+            System.out.println(e);
+            return null;
         } finally {
             try {
                 con.close();

@@ -5,11 +5,10 @@
  */
 package Main;
 
+import Model.Employee;
 import Shared.ConnectionManager;
-import Shared.Helper;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.Blob;
 import java.sql.Connection;
@@ -23,6 +22,7 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -33,35 +33,34 @@ public class ImageProvider extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("image/jpeg");
-        if (request.getHeader("api_key") != null && Helper.validateAPIKEY(request.getHeader("api_key"))) {
-            Connection con = new ConnectionManager().getConnection();
-            try {
-                Statement stmt = con.createStatement();
-                ResultSet rs = stmt.executeQuery("select IMAGE from RFID where RFIDNUMBER=" + request.getParameter("rfidNumber"));
-                if (rs.next()) {
-                    Blob b = rs.getBlob(1);
-                    ServletOutputStream out = response.getOutputStream();
-                    BufferedInputStream bin = new BufferedInputStream(b.getBinaryStream());
-                    BufferedOutputStream bout = new BufferedOutputStream(out);
-                    int ch = 0;;
-                    while ((ch = bin.read()) != -1) {
-                        bout.write(ch);
-                    }
-                    bin.close();
-                    bout.close();
-                    out.close();
-                }
-            } catch (Exception e) {
-                System.out.println(e);
-            } finally {
-                try {
-                    con.close();
-                } catch (SQLException ex) {
-                    Logger.getLogger(ImageProvider.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
 
+        response.setContentType("image/jpeg");
+        HttpSession session = request.getSession(false);
+        Connection con = new ConnectionManager().getConnection();
+        try {
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery("select IMAGE from RFID where RFIDNUMBER=" + (Integer) ((Employee) session.getAttribute("userData")).getRfid().getRFIDNUMBER());
+            if (rs.next()) {
+                Blob b = rs.getBlob(1);
+                ServletOutputStream out = response.getOutputStream();
+                BufferedInputStream bin = new BufferedInputStream(b.getBinaryStream());
+                BufferedOutputStream bout = new BufferedOutputStream(out);
+                int ch = 0;;
+                while ((ch = bin.read()) != -1) {
+                    bout.write(ch);
+                }
+                bin.close();
+                bout.close();
+                out.close();
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(ImageProvider.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
 
     }

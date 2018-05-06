@@ -4,7 +4,7 @@
 
 
 <nav class="navbar navbar-expand-lg navbar-light bg-primary">
-    <a class="navbar-brand text-white lead" href="#" style="font-weight: 400;">Symphid</a>
+    <a class="navbar-brand text-white lead" href="welcome.jsp" style="font-weight: 400;">Symphid</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
@@ -305,7 +305,6 @@
         // Login start
 
         $('#loginForm').submit(function (event) {
-
             event.preventDefault();
             showLoader('.modal');
             $('#signInButton').prop('disabled', true);
@@ -319,7 +318,7 @@
                 success: function (data) {
                     if (data === LOGIN_SUCCESS) {
                         hideLoader('.modal');
-                        window.location.replace(BASE_URL + '/EmployeeHome.jsp');
+                        window.location.replace(BASE_URL + 'EmployeeHome.jsp');
                     } else if (data === LOGIN_HOLIDAY) {
                         hideLoader('.modal');
                         $("#loginModal .modal-dialog .modal-content .modal-header").before("<div class='alert alert-danger' id='modalAlert' role='alert'><center>Login is disabled as user is on holiday !!!</center></div>");
@@ -349,8 +348,6 @@
 
 
         $('#signoutButton').click(function (event) {
-
-            event.preventDefault();
             showLoader('body');
             $('#signoutButton').prop('disabled', true);
             $.ajax({

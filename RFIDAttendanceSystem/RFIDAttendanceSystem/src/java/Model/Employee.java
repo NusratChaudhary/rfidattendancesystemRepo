@@ -108,5 +108,9 @@ public class Employee {
     public Rfid getRfid() {
         return rfid;
     }
+    
+    public String getName(){
+        return firstName+" "+lastName;
+    }
 
 }

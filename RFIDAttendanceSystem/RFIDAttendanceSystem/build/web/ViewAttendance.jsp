@@ -4,6 +4,7 @@
     Author     : mohnish
 --%>
 
+<%@page import="Model.Employee"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -13,19 +14,18 @@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" />
         <link rel="stylesheet" href="CSS/mystyle.css"/>
         <link rel="stylesheet" href="CSS/animate.css"/>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-        <title>JSP Page</title>
-        
+        <script src="CSS/constants.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>    
+        <script src="CSS/jquery.loading.js"></script>
+        <link href="CSS/jquery.loading.css" rel="stylesheet">
+        <title><%=((Employee) session.getAttribute("userData")).getName()%></title>
+
     </head>
     <body>
         <jsp:include page="header.jsp"/>
         <br/><br/>
-
-
-
-
         <div class="container">
-
             <div class="row">
                 <div class="col-sm-2 offset-sm-11" id="controlButton" >
                     <img src="Resources/printer.png"  onclick="window.print()" style="height: 40px;width: 40px;padding: 5px;cursor: pointer; "  alt="print"/>
@@ -33,37 +33,37 @@
                 </div>
 
             </div>
-
-            <table class="table table-striped shadow-nohover employeeAttendance">
-                <thead >
-                <th>Date</th>
-                <th >Check In</th>
-                <th >Check Out</th>
-
-                </tr>
-                </thead>
-                <tbody >
-                    <tr>
-                        <th >1</th>
-                        <td>Mark</td>
-                        <td>Otto</td>
+            <div ng-app="Attendance" ng-controller="AttendanceCtrl">
+                <table class="table table-striped shadow-nohover employeeAttendance" >
+                    <thead >
+                    <th>Date</th>
+                    <th >Check In</th>
+                    <th >Check Out</th>
 
                     </tr>
-                    <tr>
-                        <th >2</th>
-                        <td>Jacob</td>
-                        <td>Thornton</td>
+                    </thead>
+                    <tbody >
+                        <tr>
+                            <th >1</th>
+                            <td>Mark</td>
+                            <td>Otto</td>
 
-                    </tr>
-                    <tr>
-                        <th >3</th>
-                        <td>Larry</td>
-                        <td>the Bird</td>
+                        </tr>
+                        <tr>
+                            <th >2</th>
+                            <td>Jacob</td>
+                            <td>Thornton</td>
 
-                    </tr>
-                </tbody>
-            </table>
+                        </tr>
+                        <tr>
+                            <th >3</th>
+                            <td>Larry</td>
+                            <td>the Bird</td>
 
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
             <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                 <div class="modal-dialog " role="document">
                     <div class="modal-content">
@@ -74,7 +74,7 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            Do you want to send Email on abc@gmail.com ?
+                            Do you want to send Email on <%=((Employee) session.getAttribute("userData")).getEmail()%>
 
 
                             <center> <button type="button" class="btn btn-sm btn-primary">Send Report</button></center>
@@ -93,14 +93,19 @@
 
             $(document).ready(function () {
 
+                showLoader('body');
 
+                var app = angular.module('Attendance', []);
+                app.controller('AttendanceCtrl', function ($scope) {
 
-
+                });
             });
+
+
+
         </script>
 
 
-        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"  ></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" ></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" ></script>
     </body>

@@ -26,12 +26,10 @@ public class Signout extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/plain");
         PrintWriter out = response.getWriter();
-
         if (request.getHeader("api_key") != null && Helper.validateAPIKEY(request.getHeader("api_key"))) {
             HttpSession session = request.getSession();
             session.invalidate();
             out.print(Constants.LOGGED_OUT);
-
         } else {
             out.print("invalidRequest");
         }

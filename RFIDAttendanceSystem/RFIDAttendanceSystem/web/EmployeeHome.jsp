@@ -4,6 +4,7 @@
     Author     : mohnish
 --%>
 
+<%@page import="Model.Employee"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -15,21 +16,23 @@
         <link rel="stylesheet" href="CSS/animate.css"/>
         <script src="CSS/constants.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-        <title>Employee</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>    
+          <script src="CSS/jquery.loading.js"></script>
+        <link href="CSS/jquery.loading.css" rel="stylesheet">
+        <title><%=((Employee) session.getAttribute("userData")).getName()%></title>
     </head>
     <body> 
         <jsp:include page="header.jsp"/>
         <br/><br/>
 
 
-        <div class="container" ng-app="rootApp" ng-controller="rootCtrl">
+        <div class="container" >
 
             <div class="jumbotron jumbotron-fluid" style="background-color: transparent;padding: 0">
                 <div class="container">
                     <div class="clearfix">
-                        <h1 class="employeeNameDisplay float-left mt-2 ml-4">Welcome {{userData.firstName}}</h1>
-                        <img ng-if="profilePicture"  data-ng-src="data:image/png;base64,{{profilePicture}}" class="img-fluid img-thumbnail profilePicture mr-5 float-right" alt="Profile Picture">
+                        <h1 class="employeeNameDisplay float-left mt-2 ml-4">Welcome <%=((Employee) session.getAttribute("userData")).getFirstName()%></h1>
+                        <img src="ImageProvider" id="userProfile" class="img-fluid img-thumbnail profilePicture mr-5 float-right" alt="Profile Picture">
                     </div>
                 </div>
             </div>
@@ -73,46 +76,10 @@
                     location.href = this.id + '.jsp';
                 });
             });
-        </script>
 
-
-        <script>
-            var app = angular.module('rootApp', []);
-            app.controller('rootCtrl', function ($scope, $http) {
-                $scope.userData = JSON.parse('<%=(String) session.getAttribute("json")%>');
-                $scope.profilePicture = null;
-                if ($scope.userData !== null) {
-                    var request = {
-                        method: 'GET',
-                        url: 'ImageProvider',
-                        responseType: 'arraybuffer',
-                        headers: {"api_key": API_KEY},
-                        timeout: 10000,
-                        params: {rfidNumber: $scope.userData.rfid.rfidnumber}
-                    };
-                    $http(request).then(function (response) {
-                        //First function handles success
-                        $scope.profilePicture = _arrayBufferToBase64(response.data);
-                    }, function (response) {
-                        console.log('Error ', response);
-                    });
-                }
-
-
-            });
-            function _arrayBufferToBase64(buffer) {
-                var binary = '';
-                var bytes = new Uint8Array(buffer);
-                var len = bytes.byteLength;
-                for (var i = 0; i < len; i++) {
-                    binary += String.fromCharCode(bytes[i]);
-                }
-                return window.btoa(binary);
-            }
 
         </script>
 
-        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"  ></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" ></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" ></script>
     </body>

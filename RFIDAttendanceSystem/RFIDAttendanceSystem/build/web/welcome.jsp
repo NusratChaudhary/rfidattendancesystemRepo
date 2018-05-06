@@ -25,8 +25,21 @@
         <title>Welcome</title>
     </head>
     <body>
-        <jsp:include page="header.jsp"/>
+        <%
 
+            if (session.getAttribute("id") != null) {
+                RequestDispatcher rd = request.getRequestDispatcher("EmployeeHome.jsp");
+                rd.forward(request, response);
+            }
+
+            if (session.getAttribute("hrId") != null) {
+                RequestDispatcher rd = request.getRequestDispatcher("null.jsp");
+                rd.forward(request, response);
+            }
+
+        %>
+        <jsp:include page="header.jsp"/>
+        
 
 
         <div class="container" style="margin-top: 15px">
@@ -61,7 +74,7 @@
 
 
 
-        
+
         <!--        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"  ></script>-->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" ></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" ></script>
