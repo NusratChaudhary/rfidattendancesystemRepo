@@ -15,7 +15,7 @@
         </ul>
         <%
             // Session COntroller 
-            if (session.getAttribute("id")!=null) {
+            if (session.getAttribute("id") != null) {
         %>
         <div class="login" >
             <div class="notification-item">
@@ -25,7 +25,7 @@
                 </a>
             </div>
 
-            <button type="button" class="btn btn-sm btn-light mr-sm-2 "  data-toggle="modal" >&nbsp;&nbsp;&nbsp;SIGNOUT&nbsp;&nbsp;&nbsp;</button>                 
+            <button type="button" class="btn btn-sm btn-light mr-sm-2 " id="signoutButton"  data-toggle="modal" >&nbsp;&nbsp;&nbsp;SIGNOUT&nbsp;&nbsp;&nbsp;</button>                 
         </div>
         <%
         } else {
@@ -267,13 +267,13 @@
                             $('#registrationModal').modal('toggle');
                             $('#loginModal').modal('toggle');
                         }, 1500);
-                    }else if (data === RFID_CARD_NOT_AVAILABLE) {
+                    } else if (data === RFID_CARD_NOT_AVAILABLE) {
                         hideLoader('.modal');
                         $("#registrationModal .modal-dialog .modal-content .modal-header").before("<div class='alert alert-warning' id='modalAlert' role='alert'><center>Unable to register RFID card is not available...</center></div>");
                         $("#signUpButton").prop("disabled", false);
                         alertTimeout();
                         document.getElementById("registrationForm").reset();
-                    }  else if (data === REGISTER_ALREADY) {
+                    } else if (data === REGISTER_ALREADY) {
                         hideLoader('.modal');
                         $("#registrationModal .modal-dialog .modal-content .modal-header").before("<div class='alert alert-warning' id='modalAlert' role='alert'><center>You Have Already Registered You May Procced to Login...</center></div>");
                         $("#signUpButton").prop("disabled", false);
@@ -346,6 +346,33 @@
         });
         // Login End
 
+
+
+        $('#signoutButton').click(function (event) {
+
+            event.preventDefault();
+            showLoader('body');
+            $('#signoutButton').prop('disabled', true);
+            $.ajax({
+                type: "GET",
+                headers: {"api_key": API_KEY},
+                url: "Signout",
+                timeout: 10000,
+                success: function (data) {
+                    if (data === LOGGED_OUT) {
+                        hideLoader('.modal');
+                        window.location.replace(BASE_URL + '/welcome.jsp');
+                    } else {
+                        hideLoader('body');
+                    }
+                    $("#signoutButton").prop("disabled", false);
+                },
+                error: function (e) {
+                    console.log(e);
+                    hideLoader('body');
+                }
+            });
+        });
 
 // Helpers Below
 
