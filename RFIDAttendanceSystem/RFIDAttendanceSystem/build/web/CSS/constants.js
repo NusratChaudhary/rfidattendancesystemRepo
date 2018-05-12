@@ -27,7 +27,8 @@ const RFID_CARD_INACTIVE = "rfid_card_inactive";
 
 const RFID_CARD_NOT_AVAILABLE = "rfid_card_unavailable";
 
-
+const GET_EMP_ATTENDANCE = "get_employee_attendance";
+const ATTENDANCE_NOT_FOUND = "attendance_not_found";
 const ERROR = "ERR";
 
 const TYPE_STRING = "string";

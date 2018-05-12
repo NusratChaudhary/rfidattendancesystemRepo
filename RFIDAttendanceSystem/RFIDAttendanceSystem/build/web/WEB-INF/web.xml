@@ -18,7 +18,11 @@
     </servlet>
     <servlet>
         <servlet-name>ImageProvider</servlet-name>
-        <servlet-class>Main.ImageProvider</servlet-class>
+        <servlet-class>Shared.ImageProvider</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>Attendance</servlet-name>
+        <servlet-class>Main.Attendance</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>Registration</servlet-name>
@@ -39,6 +43,10 @@
     <servlet-mapping>
         <servlet-name>ImageProvider</servlet-name>
         <url-pattern>/ImageProvider</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Attendance</servlet-name>
+        <url-pattern>/Attendance</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

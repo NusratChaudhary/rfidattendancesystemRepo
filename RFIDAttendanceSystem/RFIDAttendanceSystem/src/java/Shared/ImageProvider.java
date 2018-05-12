@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Main;
+package Shared;
 
 import Model.Employee;
 import Shared.ConnectionManager;
@@ -45,7 +45,7 @@ public class ImageProvider extends HttpServlet {
                 ServletOutputStream out = response.getOutputStream();
                 BufferedInputStream bin = new BufferedInputStream(b.getBinaryStream());
                 BufferedOutputStream bout = new BufferedOutputStream(out);
-                int ch = 0;;
+                int ch = 0;
                 while ((ch = bin.read()) != -1) {
                     bout.write(ch);
                 }

@@ -34,13 +34,14 @@ public class Constants {
     public static final String COMPLETED = "completed";
     public static final String ALREADY_VERIFIED = "already_verified";
 
-    
     public static final String RFID_CARD_ACTIVE = "rfid_card_active";
     public static final String RFID_CARD_INACTIVE = "rfid_card_inactive";
 
     public static final String RFID_CARD_NOT_AVAILABLE = "rfid_card_unavailable";
 
-    
+    public static final String GET_EMP_ATTENDANCE = "get_employee_attendance";
+    public static final String ATTENDANCE_NOT_FOUND = "attendance_not_found";
+
     public static final String ERROR = "ERR";
 
     public static final String EMAIL_VERIFICATION_TEMPLATE = "Thanks for signing up!\n Your account has been created, you can login after you have activated your account \n Please click this link to activate your account: \n\n";
@@ -50,7 +51,10 @@ public class Constants {
 
     public static final String LOGGED_OUT = "logged_out";
     public static final String HOST_ADDRESS = "http://localhost:8080/RFIDAttendanceSystem/";
-    
-    public static final String FLAGGED_PAGES= "EmployeeHome.jsp,EmployeeDetails.jsp";
- 
+
+    public static final String FLAGGED_PAGES = "EmployeeHome.jsp,EmployeeDetails.jsp";
+
+    public static final String ATTENDANCE_IN = "in";
+    public static final String ATTENDANCE_OUT = "out";
+    public static final String ATTENDANCE_ABSENT = "absent";
 }
