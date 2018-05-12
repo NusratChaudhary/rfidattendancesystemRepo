@@ -1,5 +1,5 @@
 --------------------------------------------------------
---  File created - Saturday-April-28-2018   
+--  File created - Saturday-May-12-2018   
 --------------------------------------------------------
 --------------------------------------------------------
 --  DDL for Table ADMIN
@@ -89,8 +89,10 @@
   CREATE TABLE "HR"."HR" 
    (	"EMAIL" VARCHAR2(50 BYTE), 
 	"PASSWORD" VARCHAR2(50 BYTE)
-   ) SEGMENT CREATION DEFERRED 
+   ) SEGMENT CREATION IMMEDIATE 
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
+  STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
+  PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
   TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Table MAILSERVICE
@@ -113,6 +115,22 @@
 	"CONTEXT" VARCHAR2(500 BYTE), 
 	"TYPE" VARCHAR2(20 BYTE), 
 	"TIME" TIMESTAMP (6)
+   ) SEGMENT CREATION DEFERRED 
+  PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
+  TABLESPACE "USERS" ;
+--------------------------------------------------------
+--  DDL for Table REQUEST
+--------------------------------------------------------
+
+  CREATE TABLE "HR"."REQUEST" 
+   (	"REQUESTID" NUMBER, 
+	"REQUESTSUBJECT" VARCHAR2(300 BYTE), 
+	"REQUESTBODY" VARCHAR2(2000 BYTE),
+  "REQUESTREPLY" VARCHAR2(2000 BYTE),
+	"EMPLOYEEID" NUMBER, 
+	"ADMINSTATUS" NUMBER, 
+	"DATETIME" TIMESTAMP (6), 
+	"FLAG" VARCHAR2(50 BYTE)
    ) SEGMENT CREATION DEFERRED 
   PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
   TABLESPACE "USERS" ;
@@ -196,33 +214,80 @@ REM INSERTING into HR.DEPARTMENT
 SET DEFINE OFF;
 REM INSERTING into HR.EMPLOYEES
 SET DEFINE OFF;
-Insert into HR.EMPLOYEES (EMPLOYEEID,FIRSTNAME,LASTNAME,GENDER,PHONENUMBER,EMAIL,ADDRESS,PASSWORD,DOB,FLAG) values (1406149307,'Mohnish','Anjaria','male','9969742702','anjariamohnish@gmail.com','41/A,Nuemec Heights Shraddhanand Road,Vile Parle East','pass123',to_date('04-11-96','DD-MM-RR'),'V');
+Insert into HR.EMPLOYEES (EMPLOYEEID,FIRSTNAME,LASTNAME,GENDER,PHONENUMBER,EMAIL,ADDRESS,PASSWORD,DOB,FLAG) values (1015584988,'Mohnish','Anjaria','male','9969742702','anjariamohnish@gmail.com','401/A,Neumec Heights ,Shraddhanand Road Vile Parle East','pass123',to_date('04-11-96','DD-MM-RR'),'user_active');
 REM INSERTING into HR.HOLIDAY
 SET DEFINE OFF;
 REM INSERTING into HR.HR
 SET DEFINE OFF;
+Insert into HR.HR (EMAIL,PASSWORD) values ('anjariamohnish@gmail.com','pass123');
 REM INSERTING into HR.MAILSERVICE
 SET DEFINE OFF;
 REM INSERTING into HR.MESSAGES
 SET DEFINE OFF;
+REM INSERTING into HR.REQUEST
+SET DEFINE OFF;
 REM INSERTING into HR.RFID
 SET DEFINE OFF;
-Insert into HR.RFID (RFIDNUMBER,EMPLOYEEID,FLAG) values (1559626371,1406149307,'A');
+Insert into HR.RFID (RFIDNUMBER,EMPLOYEEID,FLAG) values (9051449,1015584988,'rfid_deactive');
 REM INSERTING into HR.RFIDCARDS
 SET DEFINE OFF;
-Insert into HR.RFIDCARDS (ID,FLAG) values (9051449,'RCI');
+Insert into HR.RFIDCARDS (ID,FLAG) values (9051449,'rfid_card_active');
 REM INSERTING into HR.SALARY
 SET DEFINE OFF;
 REM INSERTING into HR.TRIGGR
 SET DEFINE OFF;
 REM INSERTING into HR.VERIFICATION
 SET DEFINE OFF;
-Insert into HR.VERIFICATION (ID,CODE,REFERENCEID,WORK,FLAG) values (1483618063,'17b8cb8769daaee2f56f43c8cbba0283',1406149307,'VE','P');
+Insert into HR.VERIFICATION (ID,CODE,REFERENCEID,WORK,FLAG) values (25767832,'437a51d1f6510a4cdb580bd9b23c58b8',1015584988,'mode_verify_email','completed');
+--------------------------------------------------------
+--  DDL for Index ATTENDENCE_PK
+--------------------------------------------------------
+
+  CREATE UNIQUE INDEX "HR"."ATTENDENCE_PK" ON "HR"."ATTENDENCE" ("ATTENDENCEID") 
+  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS NOCOMPRESS LOGGING
+  TABLESPACE "USERS" ;
+--------------------------------------------------------
+--  DDL for Index DEPARTMENT_PK
+--------------------------------------------------------
+
+  CREATE UNIQUE INDEX "HR"."DEPARTMENT_PK" ON "HR"."DEPARTMENT" ("DEPTID") 
+  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS NOCOMPRESS LOGGING
+  TABLESPACE "USERS" ;
 --------------------------------------------------------
 --  DDL for Index EMPLOYEES_PK
 --------------------------------------------------------
 
   CREATE UNIQUE INDEX "HR"."EMPLOYEES_PK" ON "HR"."EMPLOYEES" ("EMPLOYEEID") 
+  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+  STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
+  PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
+  TABLESPACE "USERS" ;
+--------------------------------------------------------
+--  DDL for Index HOLIDAY_PK
+--------------------------------------------------------
+
+  CREATE UNIQUE INDEX "HR"."HOLIDAY_PK" ON "HR"."HOLIDAY" ("HOLIDAYID") 
+  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS NOCOMPRESS LOGGING
+  TABLESPACE "USERS" ;
+--------------------------------------------------------
+--  DDL for Index MESSAGES_PK
+--------------------------------------------------------
+
+  CREATE UNIQUE INDEX "HR"."MESSAGES_PK" ON "HR"."MESSAGES" ("MESSSAGEID") 
+  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS NOCOMPRESS LOGGING
+  TABLESPACE "USERS" ;
+--------------------------------------------------------
+--  DDL for Index REQUEST_PK
+--------------------------------------------------------
+
+  CREATE UNIQUE INDEX "HR"."REQUEST_PK" ON "HR"."REQUEST" ("REQUESTID") 
+  PCTFREE 10 INITRANS 2 MAXTRANS 255 NOCOMPRESS LOGGING
+  TABLESPACE "USERS" ;
+--------------------------------------------------------
+--  DDL for Index RFIDCARDS_PK
+--------------------------------------------------------
+
+  CREATE UNIQUE INDEX "HR"."RFIDCARDS_PK" ON "HR"."RFIDCARDS" ("ID") 
   PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
   STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
@@ -237,81 +302,38 @@ Insert into HR.VERIFICATION (ID,CODE,REFERENCEID,WORK,FLAG) values (1483618063,'
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
   TABLESPACE "USERS" ;
 --------------------------------------------------------
---  DDL for Index MESSAGES_PK
+--  Constraints for Table ADMIN
 --------------------------------------------------------
 
-  CREATE UNIQUE INDEX "HR"."MESSAGES_PK" ON "HR"."MESSAGES" ("MESSSAGEID") 
-  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS NOCOMPRESS LOGGING
-  TABLESPACE "USERS" ;
---------------------------------------------------------
---  DDL for Index RFIDCARDS_PK
---------------------------------------------------------
-
-  CREATE UNIQUE INDEX "HR"."RFIDCARDS_PK" ON "HR"."RFIDCARDS" ("ID") 
-  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
-  PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USERS" ;
---------------------------------------------------------
---  DDL for Index DEPARTMENT_PK
---------------------------------------------------------
-
-  CREATE UNIQUE INDEX "HR"."DEPARTMENT_PK" ON "HR"."DEPARTMENT" ("DEPTID") 
-  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS NOCOMPRESS LOGGING
-  TABLESPACE "USERS" ;
---------------------------------------------------------
---  DDL for Index ATTENDENCE_PK
---------------------------------------------------------
-
-  CREATE UNIQUE INDEX "HR"."ATTENDENCE_PK" ON "HR"."ATTENDENCE" ("ATTENDENCEID") 
-  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS NOCOMPRESS LOGGING
-  TABLESPACE "USERS" ;
---------------------------------------------------------
---  DDL for Index HOLIDAY_PK
---------------------------------------------------------
-
-  CREATE UNIQUE INDEX "HR"."HOLIDAY_PK" ON "HR"."HOLIDAY" ("HOLIDAYID") 
-  PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS NOCOMPRESS LOGGING
-  TABLESPACE "USERS" ;
---------------------------------------------------------
---  Constraints for Table RFID
---------------------------------------------------------
-
-  ALTER TABLE "HR"."RFID" ADD CONSTRAINT "RFIDPK" PRIMARY KEY ("RFIDNUMBER")
-  USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
-  PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
-  TABLESPACE "USERS"  ENABLE;
+  ALTER TABLE "HR"."ADMIN" MODIFY ("USERNAME" NOT NULL ENABLE);
  
-  ALTER TABLE "HR"."RFID" MODIFY ("RFIDNUMBER" NOT NULL ENABLE);
- 
-  ALTER TABLE "HR"."RFID" MODIFY ("FLAG" NOT NULL ENABLE);
+  ALTER TABLE "HR"."ADMIN" MODIFY ("PASSWORD" NOT NULL ENABLE);
 --------------------------------------------------------
---  Constraints for Table MAILSERVICE
+--  Constraints for Table ATTENDENCE
 --------------------------------------------------------
 
-  ALTER TABLE "HR"."MAILSERVICE" MODIFY ("RECIEVER" NOT NULL ENABLE);
- 
-  ALTER TABLE "HR"."MAILSERVICE" MODIFY ("SUBJECT" NOT NULL ENABLE);
- 
-  ALTER TABLE "HR"."MAILSERVICE" MODIFY ("CONTEXT" NOT NULL ENABLE);
- 
-  ALTER TABLE "HR"."MAILSERVICE" MODIFY ("TIME" NOT NULL ENABLE);
---------------------------------------------------------
---  Constraints for Table MESSAGES
---------------------------------------------------------
-
-  ALTER TABLE "HR"."MESSAGES" ADD CONSTRAINT "MESSAGES_PK" PRIMARY KEY ("MESSSAGEID")
+  ALTER TABLE "HR"."ATTENDENCE" ADD CONSTRAINT "ATTENDENCE_PK" PRIMARY KEY ("ATTENDENCEID")
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS NOCOMPRESS LOGGING
   TABLESPACE "USERS"  ENABLE;
  
-  ALTER TABLE "HR"."MESSAGES" MODIFY ("MESSSAGEID" NOT NULL ENABLE);
+  ALTER TABLE "HR"."ATTENDENCE" MODIFY ("ATTENDENCEID" NOT NULL ENABLE);
  
-  ALTER TABLE "HR"."MESSAGES" MODIFY ("CONTEXT" NOT NULL ENABLE);
+  ALTER TABLE "HR"."ATTENDENCE" MODIFY ("RFIDNUMBER" NOT NULL ENABLE);
  
-  ALTER TABLE "HR"."MESSAGES" MODIFY ("TYPE" NOT NULL ENABLE);
+  ALTER TABLE "HR"."ATTENDENCE" MODIFY ("CHECKIN" NOT NULL ENABLE);
  
-  ALTER TABLE "HR"."MESSAGES" MODIFY ("TIME" NOT NULL ENABLE);
+  ALTER TABLE "HR"."ATTENDENCE" MODIFY ("CHECKOUT" NOT NULL ENABLE);
+--------------------------------------------------------
+--  Constraints for Table DEPARTMENT
+--------------------------------------------------------
+
+  ALTER TABLE "HR"."DEPARTMENT" ADD CONSTRAINT "DEPARTMENT_PK" PRIMARY KEY ("DEPTID")
+  USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS NOCOMPRESS LOGGING
+  TABLESPACE "USERS"  ENABLE;
+ 
+  ALTER TABLE "HR"."DEPARTMENT" MODIFY ("DEPTID" NOT NULL ENABLE);
+ 
+  ALTER TABLE "HR"."DEPARTMENT" MODIFY ("DEPTNAME" NOT NULL ENABLE);
 --------------------------------------------------------
 --  Constraints for Table EMPLOYEES
 --------------------------------------------------------
@@ -342,36 +364,6 @@ Insert into HR.VERIFICATION (ID,CODE,REFERENCEID,WORK,FLAG) values (1483618063,'
  
   ALTER TABLE "HR"."EMPLOYEES" MODIFY ("FLAG" NOT NULL ENABLE);
 --------------------------------------------------------
---  Constraints for Table DEPARTMENT
---------------------------------------------------------
-
-  ALTER TABLE "HR"."DEPARTMENT" ADD CONSTRAINT "DEPARTMENT_PK" PRIMARY KEY ("DEPTID")
-  USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS NOCOMPRESS LOGGING
-  TABLESPACE "USERS"  ENABLE;
- 
-  ALTER TABLE "HR"."DEPARTMENT" MODIFY ("DEPTID" NOT NULL ENABLE);
- 
-  ALTER TABLE "HR"."DEPARTMENT" MODIFY ("DEPTNAME" NOT NULL ENABLE);
---------------------------------------------------------
---  Constraints for Table SALARY
---------------------------------------------------------
-
-  ALTER TABLE "HR"."SALARY" MODIFY ("AMOUNT" NOT NULL ENABLE);
---------------------------------------------------------
---  Constraints for Table HR
---------------------------------------------------------
-
-  ALTER TABLE "HR"."HR" MODIFY ("EMAIL" NOT NULL ENABLE);
- 
-  ALTER TABLE "HR"."HR" MODIFY ("PASSWORD" NOT NULL ENABLE);
---------------------------------------------------------
---  Constraints for Table TRIGGR
---------------------------------------------------------
-
-  ALTER TABLE "HR"."TRIGGR" MODIFY ("TIME" NOT NULL ENABLE);
- 
-  ALTER TABLE "HR"."TRIGGR" MODIFY ("TASK" NOT NULL ENABLE);
---------------------------------------------------------
 --  Constraints for Table HOLIDAY
 --------------------------------------------------------
 
@@ -387,20 +379,74 @@ Insert into HR.VERIFICATION (ID,CODE,REFERENCEID,WORK,FLAG) values (1483618063,'
  
   ALTER TABLE "HR"."HOLIDAY" MODIFY ("REASON" NOT NULL ENABLE);
 --------------------------------------------------------
---  Constraints for Table ATTENDENCE
+--  Constraints for Table HR
 --------------------------------------------------------
 
-  ALTER TABLE "HR"."ATTENDENCE" ADD CONSTRAINT "ATTENDENCE_PK" PRIMARY KEY ("ATTENDENCEID")
+  ALTER TABLE "HR"."HR" MODIFY ("EMAIL" NOT NULL ENABLE);
+ 
+  ALTER TABLE "HR"."HR" MODIFY ("PASSWORD" NOT NULL ENABLE);
+--------------------------------------------------------
+--  Constraints for Table MAILSERVICE
+--------------------------------------------------------
+
+  ALTER TABLE "HR"."MAILSERVICE" MODIFY ("RECIEVER" NOT NULL ENABLE);
+ 
+  ALTER TABLE "HR"."MAILSERVICE" MODIFY ("SUBJECT" NOT NULL ENABLE);
+ 
+  ALTER TABLE "HR"."MAILSERVICE" MODIFY ("CONTEXT" NOT NULL ENABLE);
+ 
+  ALTER TABLE "HR"."MAILSERVICE" MODIFY ("TIME" NOT NULL ENABLE);
+--------------------------------------------------------
+--  Constraints for Table MESSAGES
+--------------------------------------------------------
+
+  ALTER TABLE "HR"."MESSAGES" ADD CONSTRAINT "MESSAGES_PK" PRIMARY KEY ("MESSSAGEID")
   USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS NOCOMPRESS LOGGING
   TABLESPACE "USERS"  ENABLE;
  
-  ALTER TABLE "HR"."ATTENDENCE" MODIFY ("ATTENDENCEID" NOT NULL ENABLE);
+  ALTER TABLE "HR"."MESSAGES" MODIFY ("MESSSAGEID" NOT NULL ENABLE);
  
-  ALTER TABLE "HR"."ATTENDENCE" MODIFY ("RFIDNUMBER" NOT NULL ENABLE);
+  ALTER TABLE "HR"."MESSAGES" MODIFY ("CONTEXT" NOT NULL ENABLE);
  
-  ALTER TABLE "HR"."ATTENDENCE" MODIFY ("CHECKIN" NOT NULL ENABLE);
+  ALTER TABLE "HR"."MESSAGES" MODIFY ("TYPE" NOT NULL ENABLE);
  
-  ALTER TABLE "HR"."ATTENDENCE" MODIFY ("CHECKOUT" NOT NULL ENABLE);
+  ALTER TABLE "HR"."MESSAGES" MODIFY ("TIME" NOT NULL ENABLE);
+--------------------------------------------------------
+--  Constraints for Table REQUEST
+--------------------------------------------------------
+
+  ALTER TABLE "HR"."REQUEST" ADD CONSTRAINT "REQUEST_PK" PRIMARY KEY ("REQUESTID")
+  USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 NOCOMPRESS LOGGING
+  TABLESPACE "USERS"  ENABLE;
+ 
+  ALTER TABLE "HR"."REQUEST" MODIFY ("REQUESTID" NOT NULL ENABLE);
+ 
+  ALTER TABLE "HR"."REQUEST" MODIFY ("REQUESTSUBJECT" NOT NULL ENABLE);
+ 
+  ALTER TABLE "HR"."REQUEST" MODIFY ("REQUESTBODY" NOT NULL ENABLE);
+
+  ALTER TABLE "HR"."REQUEST" MODIFY ("REQUESTREPLY" NOT NULL ENABLE);
+ 
+  ALTER TABLE "HR"."REQUEST" MODIFY ("EMPLOYEEID" NOT NULL ENABLE);
+ 
+  ALTER TABLE "HR"."REQUEST" MODIFY ("ADMINSTATUS" NOT NULL ENABLE);
+ 
+  ALTER TABLE "HR"."REQUEST" MODIFY ("DATETIME" NOT NULL ENABLE);
+ 
+  ALTER TABLE "HR"."REQUEST" MODIFY ("FLAG" NOT NULL ENABLE);
+--------------------------------------------------------
+--  Constraints for Table RFID
+--------------------------------------------------------
+
+  ALTER TABLE "HR"."RFID" ADD CONSTRAINT "RFIDPK" PRIMARY KEY ("RFIDNUMBER")
+  USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
+  STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
+  PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
+  TABLESPACE "USERS"  ENABLE;
+ 
+  ALTER TABLE "HR"."RFID" MODIFY ("RFIDNUMBER" NOT NULL ENABLE);
+ 
+  ALTER TABLE "HR"."RFID" MODIFY ("FLAG" NOT NULL ENABLE);
 --------------------------------------------------------
 --  Constraints for Table RFIDCARDS
 --------------------------------------------------------
@@ -411,12 +457,17 @@ Insert into HR.VERIFICATION (ID,CODE,REFERENCEID,WORK,FLAG) values (1483618063,'
   PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
   TABLESPACE "USERS"  ENABLE;
 --------------------------------------------------------
---  Constraints for Table ADMIN
+--  Constraints for Table SALARY
 --------------------------------------------------------
 
-  ALTER TABLE "HR"."ADMIN" MODIFY ("USERNAME" NOT NULL ENABLE);
+  ALTER TABLE "HR"."SALARY" MODIFY ("AMOUNT" NOT NULL ENABLE);
+--------------------------------------------------------
+--  Constraints for Table TRIGGR
+--------------------------------------------------------
+
+  ALTER TABLE "HR"."TRIGGR" MODIFY ("TIME" NOT NULL ENABLE);
  
-  ALTER TABLE "HR"."ADMIN" MODIFY ("PASSWORD" NOT NULL ENABLE);
+  ALTER TABLE "HR"."TRIGGR" MODIFY ("TASK" NOT NULL ENABLE);
 --------------------------------------------------------
 --  Ref Constraints for Table ATTENDENCE
 --------------------------------------------------------
@@ -428,6 +479,12 @@ Insert into HR.VERIFICATION (ID,CODE,REFERENCEID,WORK,FLAG) values (1483618063,'
 --------------------------------------------------------
 
   ALTER TABLE "HR"."HOLIDAY" ADD CONSTRAINT "HOLIDAY_FK1" FOREIGN KEY ("EMPLOYEEID")
+	  REFERENCES "HR"."EMPLOYEES" ("EMPLOYEEID") ENABLE;
+--------------------------------------------------------
+--  Ref Constraints for Table REQUEST
+--------------------------------------------------------
+
+  ALTER TABLE "HR"."REQUEST" ADD CONSTRAINT "REQUEST_FK1" FOREIGN KEY ("EMPLOYEEID")
 	  REFERENCES "HR"."EMPLOYEES" ("EMPLOYEEID") ENABLE;
 --------------------------------------------------------
 --  Ref Constraints for Table RFID

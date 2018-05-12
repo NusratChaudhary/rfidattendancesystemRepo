@@ -52,9 +52,14 @@ public class Constants {
     public static final String LOGGED_OUT = "logged_out";
     public static final String HOST_ADDRESS = "http://localhost:8080/RFIDAttendanceSystem/";
 
-    public static final String FLAGGED_PAGES = "EmployeeHome.jsp,EmployeeDetails.jsp,ViewAttendance.jsp,MakeaRequest.jsp";
+    public static final String FLAGGED_PAGES = "EmployeeHome.jsp,EmployeeDetails.jsp,ViewAttendance.jsp,MakeaRequest.jsp,HrDashboard.jsp";
 
     public static final String ATTENDANCE_IN = "in";
     public static final String ATTENDANCE_OUT = "out";
     public static final String ATTENDANCE_ABSENT = "absent";
+    
+    public static final String REQUEST_PENDING = "request_pending";
+    public static final String REQUEST_READ = "request_read";
+    public static final String REQUEST_RESPONDED = "request_responded";
+    public static final String REQUEST_SENT_TO_ADMIN = "request_sent_to_admin";
 }

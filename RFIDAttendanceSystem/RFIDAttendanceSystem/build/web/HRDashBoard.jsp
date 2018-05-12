@@ -30,13 +30,13 @@
             <div class="row live-counter ">
 
                 <div class="col-sm-6 " >
-                    <center> <span class="lead">Attendance Entries </span><span class="live-counter-numbers animated fadeIn" style="color: green">50</span></center>
+                    <center> <span class="lead" id="attendanceParent">Attendance Entries </span><span class="live-counter-numbers animated fadeIn" id="attendanceCounter" style="color:green">0</span></center>
                 </div>
                 <!--<div class="col-sm-1 live-counter-divider">
                     
                 </div>-->
                 <div class="col-sm-6">
-                    <center>  <span class="lead">Pending Requests </span><span class="live-counter-numbers animated fadeIn" style="color: red">62</span></center>
+                    <center>  <span class="lead" id="pendingRequestParent">Pending Requests </span><span class="live-counter-numbers animated fadeIn" id="pendingRequestCounter" style="color: red">0</span></center>
                 </div>
 
             </div>
@@ -100,8 +100,33 @@
 
             $(document).ready(function () {
                 $('.card-cursor').click(function () {
+                    clearTimeout(intervalFunction);
                     location.href = this.id + '.jsp';
                 });
+                var intervalFunction = setInterval(function () {
+                    $.ajax({
+                        type: "GET",
+                        headers: {"api_key": API_KEY},
+                        url: "LiveCounter",
+                        timeout: 3000,
+                        success: function (data) {
+                            var rawJson = JSON.parse(data);
+                            if (rawJson.Attendance !== parseInt($("#attendanceCounter").text())) {
+                                $("#attendanceCounter").remove();
+                                $("#attendanceParent").after("<span class=\"live-counter-numbers animated fadeIn\" id=\"attendanceCounter\" style=\"color:green\">" + rawJson.Attendance + "</span>");
+
+                            }
+                            if (rawJson.PendingRequest !== parseInt($("#pendingRequestCounter").text())) {
+                                $("#pendingRequestCounter").remove();
+                                $("#pendingRequestParent").after("<span class=\"live-counter-numbers animated fadeIn\" id=\"pendingRequestCounter\" style=\"color: red\">" + rawJson.PendingRequest + "</span>");
+
+                            }
+                        },
+                        error: function (e) {
+                            console.log(e);
+                        }
+                    });
+                }, 5000);
             });
             document.title = '<%=((Employee) session.getAttribute("userData")).getName()%>';
         </script>

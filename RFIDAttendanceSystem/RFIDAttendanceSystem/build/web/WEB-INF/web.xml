@@ -24,6 +24,10 @@
         <servlet-name>Attendance</servlet-name>
         <servlet-class>Main.Attendance</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>LiveCounter</servlet-name>
+        <servlet-class>Main.LiveCounter</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Registration</servlet-name>
         <url-pattern>/Registration</url-pattern>
@@ -47,6 +51,10 @@
     <servlet-mapping>
         <servlet-name>Attendance</servlet-name>
         <url-pattern>/Attendance</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>LiveCounter</servlet-name>
+        <url-pattern>/LiveCounter</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
