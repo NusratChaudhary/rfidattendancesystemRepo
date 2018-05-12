@@ -159,18 +159,16 @@ public class Login extends HttpServlet {
     }
 
     private boolean isUserHR(String email, Connection con) {
-
-//        try {
-//            Statement stmt = con.createStatement();
-//            ResultSet rs = stmt.executeQuery("select email from HR where email='" + email + "'");
-//            if (rs.next() == true) {
-//                return true;
-//            } else {
-//                return false;
-//            }
-//        } catch (Exception e) {
-//            return false;
-//        }
-        return true;
+        try {
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery("select email from HR where email='" + email + "'");
+            if (rs.next() == true) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception e) {
+            return false;
+        }      
     }
 }
