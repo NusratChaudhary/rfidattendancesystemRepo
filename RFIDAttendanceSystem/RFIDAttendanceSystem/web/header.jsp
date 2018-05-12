@@ -357,6 +357,7 @@
                 timeout: 10000,
                 success: function (data) {
                     if (data === LOGGED_OUT) {
+                        sessionStorage.removeItem('isConfirmed');
                         hideLoader('.modal');
                         window.location.replace(BASE_URL + '/welcome.jsp');
                     } else {

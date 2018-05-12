@@ -20,8 +20,9 @@ public class Employee {
     private String email;
     private String address;
     private Rfid rfid;
+    private boolean isUserHr;
 
-    public Employee(int employeeId, String dob, String firstName, String lastName, String gender, String phoneNumber, String email, String address, Rfid rfid) {
+    public Employee(int employeeId, String dob, String firstName, String lastName, String gender, String phoneNumber, String email, String address, Rfid rfid, boolean isHr) {
         this.employeeId = employeeId;
         this.dob = dob;
         this.firstName = firstName;
@@ -31,86 +32,93 @@ public class Employee {
         this.email = email;
         this.address = address;
         this.rfid = rfid;
+        this.isUserHr = isHr;
     }
 
     public Employee() {
+    }
+
+    public int getEmployeeId() {
+        return employeeId;
     }
 
     public void setEmployeeId(int employeeId) {
         this.employeeId = employeeId;
     }
 
-    public void setDob(String dob) {
-        this.dob = dob;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public void setGender(String gender) {
-        this.gender = gender;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public void setRfid(Rfid rfid) {
-        this.rfid = rfid;
-    }
-
-    
-    public int getEmployeeId() {
-        return employeeId;
-    }
-
     public String getDob() {
         return dob;
+    }
+
+    public void setDob(String dob) {
+        this.dob = dob;
     }
 
     public String getFirstName() {
         return firstName;
     }
 
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
     public String getLastName() {
         return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     public String getGender() {
         return gender;
     }
 
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
     public String getPhoneNumber() {
         return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
     public String getEmail() {
         return email;
     }
 
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     public String getAddress() {
         return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public Rfid getRfid() {
         return rfid;
     }
-    
-    public String getName(){
-        return firstName+" "+lastName;
+
+    public void setRfid(Rfid rfid) {
+        this.rfid = rfid;
     }
 
+    public boolean isUserHr() {
+        return isUserHr;
+    }
+
+    public void setisUserHr(boolean isHr) {
+        this.isUserHr = isHr;
+    }
+
+    public String getName() {
+        return firstName + " " + lastName;
+    }
 }

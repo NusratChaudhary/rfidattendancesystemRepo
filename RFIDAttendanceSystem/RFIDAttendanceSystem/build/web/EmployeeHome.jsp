@@ -17,17 +17,14 @@
         <script src="CSS/constants.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>    
-          <script src="CSS/jquery.loading.js"></script>
+        <script src="CSS/jquery.loading.js"></script>
         <link href="CSS/jquery.loading.css" rel="stylesheet">
-        <title><%=((Employee) session.getAttribute("userData")).getName()%></title>
+
     </head>
     <body> 
         <jsp:include page="header.jsp"/>
         <br/><br/>
-
-
         <div class="container" >
-
             <div class="jumbotron jumbotron-fluid" style="background-color: transparent;padding: 0">
                 <div class="container">
                     <div class="clearfix">
@@ -61,12 +58,6 @@
                     </div>
                 </div>
             </div> 
-
-
-
-
-
-
         </div>
 
         <script>
@@ -75,10 +66,50 @@
                 $('.card-cursor').click(function () {
                     location.href = this.id + '.jsp';
                 });
+                var isUserHr = (JSON.parse('<%=(String) session.getAttribute("userJson")%>')).userHr;
+                if (isUserHr) {
+                    if (!sessionStorage.getItem("isConfirmed")) {
+                        $('#navigationModal').modal('show');
+                    }
+                    if (sessionStorage.getItem("isConfirmed")) {
+                        window.location.replace(HOST_ADDRESS + '/HrDashboard.jsp');
+                    }
+                }
             });
-
-
+            function changeStatus(page) {
+                sessionStorage.setItem("isConfirmed", "false");
+                if (page === 1) {
+                    sessionStorage.setItem("isConfirmed", "true");
+                    window.location.replace(HOST_ADDRESS + '/HrDashboard.jsp');
+                }
+            }
+            document.title = '<%=((Employee) session.getAttribute("userData")).getName()%>';
         </script>
+        
+        <div class="modal fade" id="navigationModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog  modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-body p-5">
+                        <div class="row mb-3">
+                            <div class="col-2">
+                                <img src="Resources/warning.png" alt="warning"/>
+                            </div>
+                            <div class="col-10">
+                                <p class="lead ">HR User found which page you want</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6">
+                                <center><button type="button" onclick="changeStatus(1)" class="btn btn-info">HR Dashboard</button></center>
+                            </div>
+                            <div class="col-6">
+                                <center><button type="button" onclick="changeStatus(0)" class="btn btn-info" data-dismiss="modal" aria-label="Close">Employee</button></center>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" ></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" ></script>

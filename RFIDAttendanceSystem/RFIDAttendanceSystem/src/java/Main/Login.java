@@ -108,7 +108,8 @@ public class Login extends HttpServlet {
                         employeeResult.getString("PHONENUMBER"),
                         employeeResult.getString("EMAIL"),
                         employeeResult.getString("ADDRESS"),
-                        new Rfid(rfidNumber)
+                        new Rfid(rfidNumber),
+                        isUserHR(employeeResult.getString("EMAIL"), con)
                 );
 
                 ObjectMapper mapper = new ObjectMapper();
@@ -118,7 +119,7 @@ public class Login extends HttpServlet {
         } catch (Exception e) {
             System.out.println(e);
             return Constants.ERROR;
-        } 
+        }
     }
 
     private Employee getUserData(Connection con, int id, ResultSet employeeResult) {
@@ -138,7 +139,8 @@ public class Login extends HttpServlet {
                         employeeResult.getString("PHONENUMBER"),
                         employeeResult.getString("EMAIL"),
                         employeeResult.getString("ADDRESS"),
-                        new Rfid(rfidNumber)
+                        new Rfid(rfidNumber),
+                        isUserHR(employeeResult.getString("EMAIL"), con)
                 );
 
                 return employee;
@@ -156,4 +158,19 @@ public class Login extends HttpServlet {
         }
     }
 
+    private boolean isUserHR(String email, Connection con) {
+
+//        try {
+//            Statement stmt = con.createStatement();
+//            ResultSet rs = stmt.executeQuery("select email from HR where email='" + email + "'");
+//            if (rs.next() == true) {
+//                return true;
+//            } else {
+//                return false;
+//            }
+//        } catch (Exception e) {
+//            return false;
+//        }
+        return true;
+    }
 }

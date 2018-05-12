@@ -4,6 +4,7 @@
     Author     : mohnish
 --%>
 
+<%@page import="Model.Employee"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -13,7 +14,12 @@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" />
         <link rel="stylesheet" href="CSS/mystyle.css"/>
         <link rel="stylesheet" href="CSS/animate.css"/>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> 
+        <script src="CSS/constants.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>    
+        <script src="CSS/jquery.loading.js"></script>
+        <link href="CSS/jquery.loading.css" rel="stylesheet">
+
     </head>
     <body class="bg-light">
         <jsp:include page="header.jsp"/>
@@ -93,18 +99,14 @@
         <script>
 
             $(document).ready(function () {
-
-                $('.card-cursor').click(function (){
-                    location.href = this.id+'.jsp';
+                $('.card-cursor').click(function () {
+                    location.href = this.id + '.jsp';
                 });
-
-
-
             });
+            document.title = '<%=((Employee) session.getAttribute("userData")).getName()%>';
         </script>
 
 
-        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"  ></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" ></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" ></script>
     </body>

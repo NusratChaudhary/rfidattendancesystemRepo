@@ -19,8 +19,7 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>    
         <script src="CSS/jquery.loading.js"></script>
         <link href="CSS/jquery.loading.css" rel="stylesheet">
-        <title><%=((Employee) session.getAttribute("userData")).getName()%></title>
-
+      
     </head>
     <body>
         <jsp:include page="header.jsp"/>
@@ -108,7 +107,7 @@
                 });
           
 
-
+   document.title = '<%=((Employee) session.getAttribute("userData")).getName()%>';
 
         </script>
 
