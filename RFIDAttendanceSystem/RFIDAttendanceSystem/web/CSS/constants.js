@@ -35,6 +35,6 @@ const TYPE_STRING = "string";
 const TYPE_INT = "int";
 
 const LOGGED_OUT = "logged_out";
-const HOST_ADDRESS = "http://localhost:8080/RFIDAttendanceSystem/";
+const HOST_ADDRESS = "http://localhost:8080/RFIDAttendanceSystem";
 
 const FLAGGED_PAGES = "EmployeeHome.jsp,EmployeeDetails.jsp";
