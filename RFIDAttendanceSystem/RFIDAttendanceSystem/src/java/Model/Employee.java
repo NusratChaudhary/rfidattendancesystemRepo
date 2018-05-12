@@ -21,8 +21,23 @@ public class Employee {
     private String address;
     private Rfid rfid;
     private boolean isUserHr;
+    private int salary;
+    private String departmentName;
 
-    public Employee(int employeeId, String dob, String firstName, String lastName, String gender, String phoneNumber, String email, String address, Rfid rfid, boolean isHr) {
+        public Employee(int employeeId, String dob, String firstName, String lastName, String gender, String phoneNumber, String email, String address, Rfid rfid, boolean isHr) {
+            this.employeeId = employeeId;
+            this.dob = dob;
+            this.firstName = firstName;
+            this.lastName = lastName;
+            this.gender = gender;
+            this.phoneNumber = phoneNumber;
+            this.email = email;
+            this.address = address;
+            this.rfid = rfid;
+            this.isUserHr = isHr;
+        }
+
+    public Employee(int employeeId, String dob, String firstName, String lastName, String gender, String phoneNumber, String email, String address, Rfid rfid, int salary, String departmentName) {
         this.employeeId = employeeId;
         this.dob = dob;
         this.firstName = firstName;
@@ -32,7 +47,8 @@ public class Employee {
         this.email = email;
         this.address = address;
         this.rfid = rfid;
-        this.isUserHr = isHr;
+        this.salary = salary;
+        this.departmentName = departmentName;
     }
 
     public Employee() {
@@ -116,6 +132,22 @@ public class Employee {
 
     public void setisUserHr(boolean isHr) {
         this.isUserHr = isHr;
+    }
+
+    public int getsalary() {
+        return salary;
+    }
+
+    public void setsalary(int salary) {
+        this.salary = salary;
+    }
+
+    public String getdepartmentName() {
+        return departmentName;
+    }
+
+    public void setdepartmentName(String departmentName) {
+        this.departmentName = departmentName;
     }
 
     public String getName() {
