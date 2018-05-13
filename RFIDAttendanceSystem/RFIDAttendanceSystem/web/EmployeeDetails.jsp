@@ -223,19 +223,19 @@
             </div>
 
 
+            <!-- Alert -->
+            <div class="alert alert-dismissible fade show {{alertData.className}}" ng-if="alertData" id="messageAlert" role="alert" >
+                <center> {{alertData.message}} </center>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <!-- Alert End -->
         </div>
 
-
-
-
-
         <script>
-
-
             const src1 = "Resources/expand-button.png";
             const src2 = "Resources/expand-arrow.png";
-
-
             $(document).ready(function () {
                 setTimeout(function () {
                     $('#editForm').click(function () {
@@ -272,20 +272,18 @@
                     });
                 });
             });
-
-
-
+            
             showLoader('body');
             var app = angular.module('Employees', []);
             app.controller('EmployeesCtrl', function ($scope, $http) {
-                var request = {
-                    method: 'GET',
-                    url: 'EmployeeController',
-                    headers: {"api_key": API_KEY},
-                    timeout: 10000
-                };
 
                 $scope.loadEmployeesData = function () {
+                    const request = {
+                        method: 'GET',
+                        url: 'EmployeeController',
+                        headers: {"api_key": API_KEY},
+                        timeout: 10000
+                    };
                     $http(request).then(function (response) {
                         if (response !== ERROR) {
                             $scope.employeeData = JSON.parse(JSON.stringify(response.data));
@@ -294,40 +292,43 @@
                     }, function (response) {
                         console.log('Error ', response);
                         hideLoader('body');
-                    })
+                    });
                 };
                 $scope.deleteUserConfirmation = function (employee, indexPosition) {
                     $scope.confirmationData = {employeeId: employee.employeeId, name: employee.name, objectPostion: indexPosition};
                     $('#confirmationModal').modal('show')
-                }
-
+                };
                 $scope.deleteUser = function (deleteData) {
-                    var request = {
+                    showLoader('body');
+                    const request = {
                         method: 'POST',
                         url: 'EmployeeController',
                         headers: {"api_key": API_KEY},
                         timeout: 10000,
-                        params: {employeeId: deleteData.employeeId,task:DELETE_EMPLOYEE}
+                        params: {employeeId: deleteData.employeeId, task: DELETE_EMPLOYEE}
                     };
                     $http(request).then(function (response) {
                         if (response !== ERROR) {
-                            // reload call loadEmployees method of angular
-                            // $scope.employeeData = JSON.parse(JSON.stringify(response.data));
+                            $scope.loadEmployeesData();
+                            $scope.alertCreator('Successfully Deleted Employee', 'alert-success');
+                        } else {
+                            $scope.alertCreator('Error in Deleting Employee', 'alert-danger');
                         }
                         hideLoader('body');
                     }, function (response) {
                         console.log('Error ', response);
                         hideLoader('body');
-                    })
+                    });
 
                     //  delete  $scope.employeeData.employeeList[deleteData.objectPostion];// [TRY WHEN MORE THAN ONE USER]use this to delete object but card stay in html
-
-                    // API Call to Delete uSer show loader and den again recall   $scope.loadEmployeesData();
+                };
+                $scope.alertCreator = function (message, className) {
+                    $scope.alertData = {message: message, className: className};
+                    $("#messageAlert").fadeTo(2000, 500).slideUp(500, function () {
+                        $("#messageAlert").slideUp(500);
+                    });
                 }
-
             });
-
-
             /*
              *   if (!$.isNumeric($('#phoneNumber').val())) {
              $('#phoneNumber').val('');
