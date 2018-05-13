@@ -1,0 +1,28 @@
+{
+  "employeesCount": 1,
+  "employeesHoliday": 0,
+  "employeesDisabled": 0,
+  "employeeList": [
+    {
+      "employeeId": 1015584988,
+      "dob": "04-11-1996",
+      "firstName": "Mohnish",
+      "lastName": "Anjaria",
+      "gender": "male",
+      "phoneNumber": "9969742702",
+      "email": "anjariamohnish@gmail.com",
+      "address": "401/A,Neumec Heights ,Shraddhanand Road Vile Parle East",
+      "rfid": {
+        "rfidnumber": 9051449
+      },
+      "salary": 10000,
+      "departmentName": "IT",
+      "name": "Mohnish Anjaria",
+      "userHr": false
+    }
+  ]
+}
+
+
+   $scope.data=JSON.parse("\{\"employeesCount\":1,\"employeesHoliday\":0,\"employeesDisabled\":0,\"employeeList\":[{\"employeeId\":1015584988,\"dob\":\"04-11-1996\",\"firstName\":\"Mohnish\",\"lastName\":\"Anjaria\",\"gender\":\"male\",\"phoneNumber\":\"9969742702\",\"email\":\"anjariamohnish@gmail.com\",\"address\":\"401/A,Neumec Heights ,Shraddhanand Road Vile Parle East\",\"rfid\":{\"rfidnumber\":9051449},\"salary\":10000,\"departmentName\":\"IT\",\"name\":\"Mohnish Anjaria\",\"userHr\":false}]}")
+                
