@@ -36,10 +36,16 @@ public class ImageProvider extends HttpServlet {
 
         response.setContentType("image/jpeg");
         HttpSession session = request.getSession(false);
+        int rfidNumber=0;
+        if (request.getParameter("id")!=null) {
+            rfidNumber=Integer.parseInt(request.getParameter("id"));
+        }else{
+            rfidNumber=(Integer)((Employee) session.getAttribute("userData")).getRfid().getRFIDNUMBER();
+        }
         Connection con = new ConnectionManager().getConnection();
         try {
             Statement stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery("select IMAGE from RFID where RFIDNUMBER=" + (Integer) ((Employee) session.getAttribute("userData")).getRfid().getRFIDNUMBER());
+            ResultSet rs = stmt.executeQuery("select IMAGE from RFID where RFIDNUMBER=" + rfidNumber);
             if (rs.next()) {
                 Blob b = rs.getBlob(1);
                 ServletOutputStream out = response.getOutputStream();
