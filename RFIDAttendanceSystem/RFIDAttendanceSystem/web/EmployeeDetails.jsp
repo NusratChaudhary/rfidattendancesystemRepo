@@ -20,12 +20,12 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>    
         <script src="CSS/jquery.loading.js"></script>
         <link href="CSS/jquery.loading.css" rel="stylesheet">
-    </head>
+    </head> 
     <body>
         <jsp:include page="header.jsp"/>
         <br/>
 
-        <div class="container-fluid"  ng-app="Employees" ng-controller="EmployeesCtrl"  >
+        <div class="container-fluid"  ng-app="Employees" ng-controller="EmployeesCtrl" ng-init="loadEmployeesData()" >
 
 
             <div class="col-sm-2 offset-sm-10">
@@ -66,7 +66,7 @@
 
                 <div id="accordion">
 
-                    <div class="employeeCard">
+                    <div class="employeeCard" ng-if="employeeData">
                         <!-- emp sta -->
 
                         <div class="card" id="id-{{empData.employeeId}}" ng-repeat="empData in employeeData.employeeList| filter : employeeFilter">
@@ -76,12 +76,8 @@
                                         {{empData.name}}
                                     </button>
                                     <div class="float-right">
-                                        <button  class="btn collapsed" id="editForm" name="{{empData.employeeId}}"  data-toggle="collapse" data-target="\#{{empData.name}}" aria-expanded="true" aria-controls="{{empData.name}}" >
-                                            <img src="Resources/edit.png"  alt="editButton"/>
-                                        </button>
-
                                         <button  class="btn collapsed" >
-                                            <img src="Resources/rubbish-bin.png" alt="deletebutton"/>
+                                            <img src="Resources/rubbish-bin.png" ng-click="deleteUserConfirmation(empData, $index)" name="deleteEmployee"  alt="deletebutton"/>
                                         </button>
 
                                         <button  class="btn collapsed"  data-toggle="collapse" data-target="\#{{empData.name}}" aria-expanded="true" aria-controls="{{empData.name}}" >
@@ -94,9 +90,16 @@
                             <div id="{{empData.name}}" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
                                 <div class="card-body">
 
-                                    <div class="row">
-                                        <div class="col-sm-12 offset-sm-9" >
+                                    <div class=" clearfix">
+                                        <div class="float-left" >
                                             <img class="employeeImage img-thumbnail" src="ImageProvider?id={{empData.rfid.rfidnumber}}" alt="employeeImage" />
+                                        </div>
+                                        <div class="float-right" >
+                                            <label class="switch">
+                                                <input id="editForm" name="{{empData.employeeId}}" type="checkbox">
+                                                <span class="slider round"></span>
+                                            </label><br/>
+                                            <label>Edit Mode</label>
                                         </div>
                                     </div>
 
@@ -183,7 +186,7 @@
                                                 <br/>
                                                 <div class="form-group row">
                                                     <div class="col-sm-12">
-                                                        <center>  <button type="button"  id="button-empId"  class="btn btn-primary submitForm">Save Changes</button></center>
+                                                        <center>  <button type="button"  id="button-{{empData.employeeId}}"  class="btn btn-primary submitForm hidden">Save Changes</button></center>
                                                     </div>
                                                 </div>
                                             </form> 
@@ -199,42 +202,74 @@
                 </div>
             </div>
 
+            <!-- confirmation modal-->
+            <div class="modal fade" ng-if="confirmationData" id="confirmationModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLongTitle">Delete Confirmation</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Do you want to delete {{confirmationData.name}} permanently </p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline-danger" ng-click="deleteUser(confirmationData)" data-dismiss="modal">Delete Employee</button>                        
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
         </div>
 
 
 
 
 
-
         <script>
+
+
             const src1 = "Resources/expand-button.png";
             const src2 = "Resources/expand-arrow.png";
 
 
             $(document).ready(function () {
+                setTimeout(function () {
+                    $('#editForm').click(function () {
+                        if ($('#' + $(this).attr('name') + '-form').hasClass('employeeDetails-NonEditable')) {
+                            $('#' + $(this).attr('name') + '-form').removeClass('employeeDetails-NonEditable');
+                            $('#button-' + $(this).attr('name')).removeClass('hidden');
+                        } else {
+                            $('#' + $(this).attr('name') + '-form').addClass('employeeDetails-NonEditable');
+                            $('#button-' + $(this).attr('name')).addClass('hidden');
+                        }
+                    });
 
-                $('#editForm').click(function () {
-                    console.log('clicked edit');
-                    $('#' + $(this).attr('name') + '-form').removeClass('employeeDetails-NonEditable');
-                });
+                    $('#deleteEmployee').click(function () {
+                        // open modal
 
-                $('.card').on('hidden.bs.collapse', function () {
-                    var id = String(this.id).substr(3);
-                    $('#' + id + '-img').attr('src', src1);
-                    if (!$('#' + id + '-form').hasClass('employeeDetails-NonEditable')) {
-                        $('#' + id + '-form').addClass('employeeDetails-NonEditable');
-                    }
-                });
+                    });
 
-                $('.card').on('shown.bs.collapse', function () {
-                    var id = String(this.id).substr(3);
-                    $('#' + id + '-img').attr('src', src2);
-                });
+                    $('.card').on('hidden.bs.collapse', function () {
+                        var id = String(this.id).substr(3);
+                        $('#' + id + '-img').attr('src', src1);
+                        if (!$('#' + id + '-form').hasClass('employeeDetails-NonEditable')) {
+                            $('#' + id + '-form').addClass('employeeDetails-NonEditable');
+                        }
+                    });
+
+                    $('.card').on('shown.bs.collapse', function () {
+                        var id = String(this.id).substr(3);
+                        $('#' + id + '-img').attr('src', src2);
+                    });
 
 
-                $('.submitForm').click(function () {
-                    var id = String(this.id).substring(7);
-
+                    $('.submitForm').click(function () {
+                        var id = String(this.id).substring(7);
+                    });
                 });
             });
 
@@ -243,30 +278,70 @@
             showLoader('body');
             var app = angular.module('Employees', []);
             app.controller('EmployeesCtrl', function ($scope, $http) {
-                console.log('req1');
                 var request = {
                     method: 'GET',
                     url: 'EmployeeController',
                     headers: {"api_key": API_KEY},
                     timeout: 10000
                 };
-                $http(request).then(function (response) {
-                    if (response !== ERROR) {
-                        $scope.employeeData = JSON.parse(JSON.stringify(response.data));
-                    }
-                    hideLoader('body');
-                }, function (response) {
-                    console.log('Error ', response);
-                    hideLoader('body');
-                });
+
+                $scope.loadEmployeesData = function () {
+                    $http(request).then(function (response) {
+                        if (response !== ERROR) {
+                            $scope.employeeData = JSON.parse(JSON.stringify(response.data));
+                        }
+                        hideLoader('body');
+                    }, function (response) {
+                        console.log('Error ', response);
+                        hideLoader('body');
+                    })
+                };
+                $scope.deleteUserConfirmation = function (employee, indexPosition) {
+                    $scope.confirmationData = {employeeId: employee.employeeId, name: employee.name, objectPostion: indexPosition};
+                    $('#confirmationModal').modal('show')
+                }
+
+                $scope.deleteUser = function (deleteData) {
+                    var request = {
+                        method: 'POST',
+                        url: 'EmployeeController',
+                        headers: {"api_key": API_KEY},
+                        timeout: 10000,
+                        params: {employeeId: deleteData.employeeId,task:DELETE_EMPLOYEE}
+                    };
+                    $http(request).then(function (response) {
+                        if (response !== ERROR) {
+                            // reload call loadEmployees method of angular
+                            // $scope.employeeData = JSON.parse(JSON.stringify(response.data));
+                        }
+                        hideLoader('body');
+                    }, function (response) {
+                        console.log('Error ', response);
+                        hideLoader('body');
+                    })
+
+                    //  delete  $scope.employeeData.employeeList[deleteData.objectPostion];// [TRY WHEN MORE THAN ONE USER]use this to delete object but card stay in html
+
+                    // API Call to Delete uSer show loader and den again recall   $scope.loadEmployeesData();
+                }
+
             });
 
 
-
+            /*
+             *   if (!$.isNumeric($('#phoneNumber').val())) {
+             $('#phoneNumber').val('');
+             $('#phoneNumber').addClass('animated  pulse');
+             $('#phoneNumber').attr('placeholder', 'Enter Valid Phone Number');
+             return;
+             }
+             */
 
             document.title = '<%=((Employee) session.getAttribute("userData")).getName()%>';
 
         </script>
+
+
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" ></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" ></script>

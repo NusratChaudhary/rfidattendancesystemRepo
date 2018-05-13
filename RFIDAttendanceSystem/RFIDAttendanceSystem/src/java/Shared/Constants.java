@@ -58,6 +58,8 @@ public class Constants {
     public static final String ATTENDANCE_OUT = "out";
     public static final String ATTENDANCE_ABSENT = "absent";
     
+    public static final String DELETE_EMPLOYEE="delete_employee";
+    
     public static final String REQUEST_PENDING = "request_pending";
     public static final String REQUEST_READ = "request_read";
     public static final String REQUEST_RESPONDED = "request_responded";

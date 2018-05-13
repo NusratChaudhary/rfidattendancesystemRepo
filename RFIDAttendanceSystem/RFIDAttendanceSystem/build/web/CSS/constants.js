@@ -34,6 +34,8 @@ const ERROR = "ERR";
 const TYPE_STRING = "string";
 const TYPE_INT = "int";
 
+const DELETE_EMPLOYEE="delete_employee";
+
 const LOGGED_OUT = "logged_out";
 const HOST_ADDRESS = "http://localhost:8080/RFIDAttendanceSystem";
 

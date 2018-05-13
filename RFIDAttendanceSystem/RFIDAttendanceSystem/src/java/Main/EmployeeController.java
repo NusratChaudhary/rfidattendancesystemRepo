@@ -39,8 +39,8 @@ public class EmployeeController extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/plain");
         PrintWriter out = response.getWriter();
-        if (true) {
-            if (true) {
+        if (request.getHeader("api_key") != null && Helper.validateAPIKEY(request.getHeader("api_key"))) {
+            if (((Employee) request.getSession(false).getAttribute("userData")).isUserHr()) {
                 out.print(getAllEmployees());
             } else {
                 out.print("invalidRequest");
