@@ -27,7 +27,14 @@
 
         <div class="container-fluid"  ng-app="Employees" ng-controller="EmployeesCtrl" ng-init="loadEmployeesData()" >
 
-
+            <!-- Alert -->
+            <div class="alert alert-dismissible fade show  {{alertData.className}}" ng-hide="alertData === undefined"  ng-show="alertData" id="messageAlert" role="alert" >
+                <center> {{alertData.message}} </center>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <!-- Alert End -->
             <div class="col-sm-2 offset-sm-10">
                 <input class="form-control form-control-sm" type="text" placeholder="Search Employee"  ng-model="employeeFilter" id="searchBar">
             </div>
@@ -223,19 +230,12 @@
             </div>
 
 
-            <!-- Alert -->
-            <div class="alert alert-dismissible fade show {{alertData.className}}" ng-if="alertData" id="messageAlert" role="alert" >
-                <center> {{alertData.message}} </center>
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <!-- Alert End -->
+
         </div>
 
         <script>
             const src1 = "Resources/expand-button.png";
-            const src2 = "Resources/expand-arrow.png";
+            const src2 = "Resources/expand-arrow.png";       
             $(document).ready(function () {
                 setTimeout(function () {
                     $('#editForm').click(function () {
@@ -272,7 +272,7 @@
                     });
                 });
             });
-            
+
             showLoader('body');
             var app = angular.module('Employees', []);
             app.controller('EmployeesCtrl', function ($scope, $http) {
@@ -294,10 +294,12 @@
                         hideLoader('body');
                     });
                 };
+                
                 $scope.deleteUserConfirmation = function (employee, indexPosition) {
                     $scope.confirmationData = {employeeId: employee.employeeId, name: employee.name, objectPostion: indexPosition};
                     $('#confirmationModal').modal('show')
                 };
+                
                 $scope.deleteUser = function (deleteData) {
                     showLoader('body');
                     const request = {
@@ -322,12 +324,24 @@
 
                     //  delete  $scope.employeeData.employeeList[deleteData.objectPostion];// [TRY WHEN MORE THAN ONE USER]use this to delete object but card stay in html
                 };
+                
                 $scope.alertCreator = function (message, className) {
                     $scope.alertData = {message: message, className: className};
-                    $("#messageAlert").fadeTo(2000, 500).slideUp(500, function () {
-                        $("#messageAlert").slideUp(500);
-                    });
-                }
+
+                    setTimeout(function () {
+                        var element, name, arr;
+                        element = document.getElementById("messageAlert");
+                        name = "animated fadeOut";
+                        arr = element.className.split(" ");
+                        if (arr.indexOf(name) == -1) {
+                            element.className += " " + name;
+                        }
+                        setTimeout(function () {
+                            document.getElementById("messageAlert").remove();
+                        }, 1000);
+                    }, 2000);
+
+                };
             });
             /*
              *   if (!$.isNumeric($('#phoneNumber').val())) {
