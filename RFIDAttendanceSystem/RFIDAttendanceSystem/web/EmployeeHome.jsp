@@ -24,7 +24,7 @@
     <body> 
         <jsp:include page="header.jsp"/>
         <br/><br/>
-        <div class="container" >
+        <div class="container hidden" id="root">
             <div class="jumbotron jumbotron-fluid" style="background-color: transparent;padding: 0">
                 <div class="container">
                     <div class="clearfix">
@@ -71,8 +71,10 @@
                     if (!sessionStorage.getItem("isConfirmed")) {
                         $('#navigationModal').modal('show');
                     }
-                    if (sessionStorage.getItem("isConfirmed")) {
+                    if (sessionStorage.getItem("isConfirmed") === 'true') {
                         window.location.replace(HOST_ADDRESS + '/HrDashboard.jsp');
+                    } else {
+                        $('#root').removeClass("hidden");
                     }
                 }
             });
@@ -81,11 +83,13 @@
                 if (page === 1) {
                     sessionStorage.setItem("isConfirmed", "true");
                     window.location.replace(HOST_ADDRESS + '/HrDashboard.jsp');
+                } else {
+                    $('#root').removeClass("hidden");
                 }
             }
             document.title = '<%=((Employee) session.getAttribute("userData")).getName()%>';
         </script>
-        
+
         <div class="modal fade" id="navigationModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog  modal-dialog-centered" role="document">
                 <div class="modal-content">

@@ -53,7 +53,17 @@ public class EmployeeController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        response.setContentType("text/plain");
+        PrintWriter out = response.getWriter();
+        if (request.getHeader("api_key") != null && Helper.validateAPIKEY(request.getHeader("api_key"))) {
+            if (((Employee) request.getSession(false).getAttribute("userData")).isUserHr()) {
 
+            } else {
+                out.print("invalidRequest");
+            }
+        } else {
+            out.print("invalidRequest");
+        }
     }
 
     private String getAllEmployees() {
