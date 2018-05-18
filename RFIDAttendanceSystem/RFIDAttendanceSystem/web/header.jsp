@@ -244,7 +244,6 @@
             // Get form
             var form = document.getElementById('registrationForm');
             var fdata = new FormData(form);
-            console.log(fdata);
             //   fdata.append({name: 'api_key', value: API_KEY});
 
             $.ajax({

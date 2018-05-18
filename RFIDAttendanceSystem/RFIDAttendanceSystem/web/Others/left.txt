@@ -16,9 +16,7 @@ make all button look clickavble
 *** Resoponsive ness at end
 
 -------------------------------------------------------------------
-**************** ********
-Do someting for api key
-
+refactor empdetails page solve edit mode and full view isseus
 
 ----------------------------------------------------------------
 

@@ -8,166 +8,92 @@
 <!DOCTYPE html>
 <html>
     <head>
-           <link rel="shortcut icon" type="image/png" href="Resources/favicon.png"/> 
+        <link rel="shortcut icon" type="image/png" href="Resources/favicon.png"/> 
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" />
         <link rel="stylesheet" href="CSS/mystyle.css"/>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-        <link rel="stylesheet" href="CSS/animate.css">
+        <link rel="stylesheet" href="CSS/animate.css"/>
+        <script src="CSS/constants.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>    
+        <script src="CSS/jquery.loading.js"></script>
+        <link href="CSS/jquery.loading.css" rel="stylesheet">
         <title>RFID Attendance</title>
     </head>
     <body class="bg-secondary">
-
-
-
-        <div class="container">
+        <div class="container" >
             <div class="center-div">
                 <div class="bg-light shadow-nohover" >
-                    <div style="margin-left: 10px">
-
-                        <!-- Alert -->
-                        <div class="alert alert-success alert-dismissible fade show" id="alert" role="alert" >
-                            <center><strong> Successfully Checked In ! </strong></center>
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
+                    <div id="main" style="margin-left: 10px">
+                        <div id="rfidForm" class="form-group form-group-padding" >
+                            <label ><h3>Card Number</h3></label>
+                            <input type="password"  id="rfidNumber" readonly autofocus class="form-control">
                         </div>
-
-
-
-                        <div class="alert alert-danger alert-dismissible fade show" id="alert2" role="alert" >
-                            <center> <strong>Something Went Wrong Contact Administrator ! </strong></center>
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <!-- Alert End -->
-
-
-                        <form>
-                            <div class="form-group form-group-padding" >
-                                <label ><h3>Card Number</h3></label>
-                                <input type="password" class="form-control" autofocus="true">
-                            </div>
-
-
-
-
-                        </form>
                     </div>
                 </div>
 
             </div>
 
         </div>
-
-
         <script>
-            $("#alert").fadeTo(2000, 500).slideUp(500, function () {
-                $("#alert").slideUp(500);
+
+            $('html').on('keyup', function (e) {
+                if (e.keyCode >= 48 && e.keyCode <= 57 || e.keyCode >= 96 && e.keyCode <= 105) { // 46 -57 is for keypress[rfid] and 96-105 for keyup[keyboard]            
+                    $('#rfidNumber').val($('#rfidNumber').val() + e.key);
+                }
+                if (e.keyCode === 8 || e.keyCode === 46 || e.keyCode === 27) {
+                    $('#rfidNumber').val('');
+                }
+                if (e.keyCode === 13) {
+                    showLoader('body');
+                    $.ajax({
+                        type: "POST",
+                        headers: {"api_key": API_KEY},
+                        url: "abds",
+                        timeout: 5000,
+                        data: {'rfid': $('#rfidNumber').val()},
+                        success: function (data) {
+                            let alertData = null;
+                            hideLoader('body');
+                            $('#rfidNumber').val('');
+                            if (data === CHECKIN_SUCCESS) {
+                                alertData = {classType: 'alert-success', message: 'Checkin Success'}
+                            } else if (data === CHECKOUT_SUCCESS) {
+                                alertData = {classType: 'alert-success', message: 'CheckOut Success'}
+                            } else if (data === USER_HOLIDAY) {
+                                alertData = {classType: 'alert-info', message: 'Sorry Cant Checkin User On Holiday'}
+                            } else {
+                                alertData = {classType: 'alert-danger', message: 'Error Occured Please Contact Administrator'}
+                            }
+                            showAlert(alertData);
+                        },
+                        error: function (e) {
+                            console.log(e);
+                            let alertData = {classType: 'alert-danger', message: 'Error Occured Please Contact Administrator'};
+                            hideLoader('body');
+                            $('#rfidNumber').val('');
+                            showAlert(alertData);
+                        }
+                    });
+                }
             });
 
-            $("#alert2").fadeTo(2000, 500).slideUp(500, function () {
-                $("#alert2").slideUp(500);
-            });
+            function  showAlert(data) {
+                var template = "<div class='alert " + data.classType + " alert-dismissible fade show' role='alert' ><center><strong id='message'>" + data.message + "</strong></center><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button></div>";
+                $('#rfidForm').before(template);
+                hideAlert();
+                setTimeout(function () {
+                    $('.alert').remove();
+                }, 2500);
+            }
+            function hideAlert() {
+                $('.alert').fadeTo(2000, 500).slideUp(500).slideUp(500);
+            }
+
         </script>
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        <!-- Button trigger modal 
-        <button type="button"  id="modalTrigger" data-toggle="modal" style="display: none" data-target="#loginModal"></button>
-
-        
-        
-        First check if any token is recd if yes then show rfis page else show passcode den get auth token and show page
-        
-        
-
-
-     
-        <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog " role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">RFID Login</h5>
-                        <button type="button" class="close" onclick="javascript:window.history.back();" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <form  method="post" id="loginForm">
-
-                            <div class="form-group row">
-                                <label class="col-sm-4 col-form-label">Passcode</label>
-                                <div class="col-sm-8">
-                                    <input type="password" required autofocus="true"id="passcode" class="form-control"  maxlength="6" style="text-transform: capitalize;" placeholder="Passcode">
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <div class="col-sm-5" id="statusContainer">
-                                </div>
-                            </div>
-
-                        </form>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-
-
-
-
-        <script>
-            $(document).ready(function () {
-
-                $('#modalTrigger').click(); // click if no seesion found
-
-                $('#passcode').keyup(function () {
-
-                    var data = $('#passcode').val();
-
-                    if (data.length !== 6) {
-                        $('#passcode').removeClass('wrongInput');
-                        $('#status').remove();
-                    }
-                    if (data.length === 6) {
-                        $('#passcode').blur();
-                        $('#passcode').addClass('wrongInput');
-                        //  $('#passcode').addClass('rightInput');
-                        $("#statusContainer").after("<p id='status'  class='lead animated fadeIn'>Loading <span class='animated infinite fadeOutRight'>...</span></p>");
-                        /*   $.post('#', {passcode: $(#passcode).val()},
-                         function (data, status) {
-                         
-                         });*/
-                    }
-                });
-
-
-                $('#loginModal').on('hidden.bs.modal', function () {
-                    window.history.back();
-                });
-
-            });
-        </script>-->
-        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"  ></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" ></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" ></script>
 
