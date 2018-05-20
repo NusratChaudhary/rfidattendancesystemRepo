@@ -17,7 +17,7 @@ make all button look clickavble
 
 -------------------------------------------------------------------
 refactor empdetails page solve edit mode and full view isseus
-
+------CONNNECTION AUTO COMMIT OFF ON MANY QUIERIES AND COMMIT ON COMPLETED OR ROLL BACK IN CATCh
 ----------------------------------------------------------------
 
 --------------------------------------------------- TASK------------------------

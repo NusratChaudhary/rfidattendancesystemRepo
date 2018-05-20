@@ -72,4 +72,8 @@ public class Helper {
         return dateFormat.format(date);
     }
 
+    public static java.sql.Timestamp getCurrentTimeStamp() {
+        java.util.Date today = new java.util.Date();
+        return new java.sql.Timestamp(today.getTime());  // 2018-05-20 06:32:58.157
+    }
 }

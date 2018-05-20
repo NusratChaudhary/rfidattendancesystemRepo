@@ -42,6 +42,7 @@ public class Constants {
     public static final String GET_EMP_ATTENDANCE = "get_employee_attendance";
     public static final String ATTENDANCE_NOT_FOUND = "attendance_not_found";
 
+    public static final String OK = "OK";
     public static final String ERROR = "ERR";
 
     public static final String EMAIL_VERIFICATION_TEMPLATE = "Thanks for signing up!\n Your account has been created, you can login after you have activated your account \n Please click this link to activate your account: \n\n";
@@ -57,9 +58,10 @@ public class Constants {
     public static final String ATTENDANCE_IN = "in";
     public static final String ATTENDANCE_OUT = "out";
     public static final String ATTENDANCE_ABSENT = "absent";
-    
-    public static final String DELETE_EMPLOYEE="delete_employee";
-    
+    public static final String ATTENDANCE_ALREADY_COMPLETED = "already_completed";
+
+    public static final String DELETE_EMPLOYEE = "delete_employee";
+
     public static final String REQUEST_PENDING = "request_pending";
     public static final String REQUEST_READ = "request_read";
     public static final String REQUEST_RESPONDED = "request_responded";

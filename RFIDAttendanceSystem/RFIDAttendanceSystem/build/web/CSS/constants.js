@@ -36,8 +36,12 @@ const TYPE_INT = "int";
 
 const DELETE_EMPLOYEE = "delete_employee";
 
-const CHECKIN_SUCCESS = "checkin_success";
-const CHECKOUT_SUCCESS = "checkout_success";
+const ATTENDANCE_IN = "in";
+const ATTENDANCE_OUT = "out";
+const ATTENDANCE_ABSENT = "absent";
+const ATTENDANCE_ALREADY_COMPLETED = "already_completed";
+
+const OK = "OK";
 
 const LOGGED_OUT = "logged_out";
 const HOST_ADDRESS = "http://localhost:8080/RFIDAttendanceSystem";
