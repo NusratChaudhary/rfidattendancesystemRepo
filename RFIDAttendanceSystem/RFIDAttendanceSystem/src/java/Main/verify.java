@@ -109,9 +109,11 @@ public class verify extends HttpServlet {
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery("select REFERENCEID from VERIFICATION where CODE='" + code + "'");
             if (rs.next()) {
-                int counter = stmt.executeUpdate("update EMPLOYEES SET FLAG='" + Constants.USER_ACTIVE + "' where EMPLOYEEID=" + rs.getInt("REFERENCEID"));
+                int employeeId = rs.getInt("REFERENCEID");
+                int counter = stmt.executeUpdate("update EMPLOYEES SET FLAG='" + Constants.USER_ACTIVE + "' where EMPLOYEEID=" + employeeId);
                 if (counter > 0) {
                     stmt.executeUpdate("update VERIFICATION set flag='" + Constants.COMPLETED + "' where code='" + code + "'");
+                    stmt.executeUpdate("update RFID set flag='" + Constants.RFID_ACTIVE + "' where EMPLOYEEID=" + employeeId);
                     return Constants.COMPLETED;
                 } else {
                     return Constants.ERROR;
@@ -121,6 +123,11 @@ public class verify extends HttpServlet {
             }
         } catch (Exception e) {
             System.out.println(e);
+            try {
+                con.rollback();
+            } catch (SQLException ex) {
+                Logger.getLogger(verify.class.getName()).log(Level.SEVERE, null, ex);
+            }
             return Constants.ERROR;
         } finally {
             try {

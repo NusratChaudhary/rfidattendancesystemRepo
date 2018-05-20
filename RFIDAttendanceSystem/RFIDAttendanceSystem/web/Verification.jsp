@@ -21,8 +21,8 @@
     </head>
     <%
         if (request.getAttribute("message") == null) {
-               RequestDispatcher rd = request.getRequestDispatcher("welcome.jsp");
-                    rd.forward(request, response);
+            RequestDispatcher rd = request.getRequestDispatcher("welcome.jsp");
+            rd.forward(request, response);
         }
     %>
     <body class="bg-light">
@@ -32,9 +32,15 @@
                 <div class="float-left p-5">
                     <%=request.getAttribute("message")%>
                 </div>
-                <div class="float-right" hidden="<%=request.getAttribute("status")%>">
+                <%
+                    if (Boolean.valueOf(request.getAttribute("status").toString())) {
+                %>
+                <div class="float-right" >
                     <img class="img-fluid animated flip"  src="Resources/verified_img.png"  width="160px" height="100px"/>
                 </div>
+                <%
+                    }
+                %>
             </div>
         </div>
     </body>
