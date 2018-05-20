@@ -76,6 +76,8 @@
                     } else {
                         $('#root').removeClass("hidden");
                     }
+                } else {
+                    $('#root').removeClass("hidden");
                 }
             });
             function changeStatus(page) {
