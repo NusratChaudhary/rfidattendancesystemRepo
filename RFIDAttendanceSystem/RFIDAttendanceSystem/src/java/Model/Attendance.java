@@ -9,17 +9,17 @@ package Model;
  *
  * @author mohnish
  */
-public class Attendance_M {
+public class Attendance {
 
     private int AttendanceId;
     private String checkIn;
     private String checkOut;
     private String flag;
 
-    public Attendance_M() {
+    public Attendance() {
     }
 
-    public Attendance_M(int AttendanceId, String checkIn, String checkOut, String flag) {
+    public Attendance(int AttendanceId, String checkIn, String checkOut, String flag) {
         this.AttendanceId = AttendanceId;
         this.checkIn = checkIn;
         this.checkOut = checkOut;

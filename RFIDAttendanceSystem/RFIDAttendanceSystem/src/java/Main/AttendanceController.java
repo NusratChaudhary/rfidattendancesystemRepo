@@ -5,7 +5,7 @@
  */
 package Main;
 
-import Model.Attendance_M;
+import Model.Attendance;
 import Model.Employee;
 import Shared.ConnectionManager;
 import Shared.Constants;
@@ -33,7 +33,7 @@ import javax.servlet.http.HttpSession;
  *
  * @author mohnish
  */
-public class Attendance extends HttpServlet {
+public class AttendanceController extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -63,10 +63,12 @@ public class Attendance extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
+        
+        
     }
 
     private String getEmployeeAttendance(HttpSession session) {
-        List<Attendance_M> employeeAttendance = new ArrayList<>();
+        List<Attendance> employeeAttendance = new ArrayList<>();
         Connection con = new ConnectionManager().getConnection();
         String flag = Constants.ATTENDANCE_ABSENT;
         try {
@@ -84,7 +86,7 @@ public class Attendance extends HttpServlet {
                 }
                 String checkIn = Helper.convertDateToString(new Date(rs.getTimestamp("checkin").getTime()), "dd-M-yyyy hh:mm:ss");
                 String checkOut = Helper.convertDateToString(new Date(rs.getTimestamp("checkout").getTime()), "dd-M-yyyy hh:mm:ss");
-                employeeAttendance.add(new Attendance_M(rs.getInt("attendenceid"), checkIn, checkOut, flag));
+                employeeAttendance.add(new Attendance(rs.getInt("attendenceid"), checkIn, checkOut, flag));
             }
             ObjectMapper mapper = new ObjectMapper();
             return mapper.writeValueAsString(employeeAttendance);
@@ -95,7 +97,7 @@ public class Attendance extends HttpServlet {
             try {
                 con.close();
             } catch (SQLException ex) {
-                Logger.getLogger(Attendance.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(AttendanceController.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }

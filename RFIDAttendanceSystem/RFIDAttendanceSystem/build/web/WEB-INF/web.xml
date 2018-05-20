@@ -22,7 +22,7 @@
     </servlet>
     <servlet>
         <servlet-name>Attendance</servlet-name>
-        <servlet-class>Main.Attendance</servlet-class>
+        <servlet-class>Main.AttendanceController</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>LiveCounter</servlet-name>
@@ -54,7 +54,7 @@
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>Attendance</servlet-name>
-        <url-pattern>/Attendance</url-pattern>
+        <url-pattern>/AttendanceController</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>LiveCounter</servlet-name>

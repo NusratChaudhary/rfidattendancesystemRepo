@@ -335,7 +335,7 @@ Insert into HR.VERIFICATION (ID,CODE,REFERENCEID,WORK,FLAG) values (25767832,'43
  
   ALTER TABLE "HR"."ATTENDENCE" MODIFY ("CHECKIN" NOT NULL ENABLE);
  
-  ALTER TABLE "HR"."ATTENDENCE" MODIFY ("CHECKOUT" NOT NULL ENABLE);
+  ALTER TABLE "HR"."ATTENDENCE" MODIFY ("CHECKOUT" NULL ENABLE);
 --------------------------------------------------------
 --  Constraints for Table DEPARTMENT
 --------------------------------------------------------
