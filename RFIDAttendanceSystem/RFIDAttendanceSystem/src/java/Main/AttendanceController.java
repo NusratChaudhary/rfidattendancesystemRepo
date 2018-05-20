@@ -195,7 +195,6 @@ public class AttendanceController extends HttpServlet {
     private String getEmployeeStatus(Connection con, int rfidNumber) {
         try {
             Statement stmt = con.createStatement();
-            System.out.println("select flag from employees where EMPLOYEEID= (select EMPLOYEEID from rfid where rfid.RFIDNUMBER=" + rfidNumber + ")");
             ResultSet rs = stmt.executeQuery("select flag from employees where EMPLOYEEID= (select EMPLOYEEID from rfid where rfid.RFIDNUMBER=" + rfidNumber + ")");
             if (rs.next()) {
                 if (rs.getString("flag").equals(Constants.USER_HOLIDAY)) {
