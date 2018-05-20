@@ -19,7 +19,7 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>    
         <script src="CSS/jquery.loading.js"></script>
         <link href="CSS/jquery.loading.css" rel="stylesheet">
-      
+
     </head>
     <body>
         <jsp:include page="header.jsp"/>
@@ -33,7 +33,7 @@
 
             </div>
 
-            <table ng-if="status" class="table table-striped shadow-nohover employeeAttendance" >
+            <table ng-if="attendanceData" class="table table-striped shadow-nohover employeeAttendance" >
                 <thead >
                 <th>Id</th>
                 <th >Check In</th>
@@ -42,8 +42,8 @@
                 </tr>
                 </thead>
                 <tbody >
-                    <tr ng-repeat="data in attendanceData">
-                        <td>{{data.AttendanceId}}</td>
+                    <tr ng-repeat="data in attendanceData"  ng-class="{'present':data.flag === 'PRESENT','in':data.flag === 'IN','absent':data.flag === 'ABSENT'}">
+                        <td>{{data.attendanceId}}</td>
                         <td>{{data.checkIn}}</td>
                         <td>{{data.checkOut}}</td>
                         <td>{{data.flag}}</td>
@@ -71,7 +71,7 @@
                     </div>
                 </div>
             </div>
-            <center ng-if="!status"><h4>No Attendance Found</h4></center>
+            <center ng-if="!attendanceData"><h4>No Attendance Found</h4></center>
 
         </div>
 
@@ -80,34 +80,32 @@
 
         <script>
 
-      
-                showLoader('body');
 
-                var app = angular.module('Attendance', []);
-                app.controller('AttendanceCtrl', function ($scope, $http) {
-                    $scope.status = false;
-                    var request = {
-                        method: 'GET',
-                        url: 'Attendance',
-                        headers: {"api_key": API_KEY},
-                        timeout: 10000,
-                        params: {task: GET_EMP_ATTENDANCE}
-                    };
-                    $http(request).then(function (response) {
-                        if (!response.data === ATTENDANCE_NOT_FOUND) {
-                            $scope.status = true;
-                            $scope.attendanceData = response.data;
-                        }
-                        console.log(response.data);
-                        hideLoader('body');
-                    }, function (response) {
-                        console.log('Error ', response);
-                        hideLoader('body');
-                    });
+            showLoader('body');
+
+            var app = angular.module('Attendance', []);
+            app.controller('AttendanceCtrl', function ($scope, $http) {
+                $scope.status = false;
+                var request = {
+                    method: 'GET',
+                    url: 'AttendanceController',
+                    headers: {"api_key": API_KEY},
+                    timeout: 10000,
+                    params: {task: GET_EMP_ATTENDANCE}
+                };
+                $http(request).then(function (response) {
+                    if (response.data !== ATTENDANCE_NOT_FOUND) {
+                        $scope.attendanceData = JSON.parse(JSON.stringify(response.data));
+                    }
+                    hideLoader('body');
+                }, function (response) {
+                    console.log('Error ', response);
+                    hideLoader('body');
                 });
-          
+            });
 
-   document.title = '<%=((Employee) session.getAttribute("userData")).getName()%>';
+
+            document.title = '<%=((Employee) session.getAttribute("userData")).getName()%>';
 
         </script>
 

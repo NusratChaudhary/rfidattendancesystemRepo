@@ -48,8 +48,6 @@ public class AttendanceController extends HttpServlet {
                     case Constants.GET_EMP_ATTENDANCE:
                         out.print(getEmployeeAttendance(request.getSession(false)));
                         break;
-                    default:
-                        out.print("invalidRequest");
                 }
             } else {
                 out.print("invalidRequest");
@@ -99,19 +97,18 @@ public class AttendanceController extends HttpServlet {
     private String getEmployeeAttendance(HttpSession session) {
         List<Attendance> employeeAttendance = new ArrayList<>();
         Connection con = new ConnectionManager().getConnection();
-        String flag = Constants.ATTENDANCE_ABSENT;
+        String flag = null;
         try {
             int rfidNumber = ((Employee) session.getAttribute("userData")).getRfid().getRFIDNUMBER();
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery("select attendenceid,checkin,checkout,flag from ATTENDENCE where rfidnumber=" + rfidNumber);
-            if (rs.next() == false) {
-                return Constants.ATTENDANCE_NOT_FOUND;
-            }
             while (rs.next()) {
                 if (rs.getString("flag").equals(Constants.ATTENDANCE_IN)) {
                     flag = "IN";
                 } else if (rs.getString("flag").equals(Constants.ATTENDANCE_OUT)) {
-                    flag = "OUT";
+                    flag = "PRESENT";
+                } else {
+                    flag = "ABSENT";
                 }
                 String checkIn = Helper.convertDateToString(new Date(rs.getTimestamp("checkin").getTime()), "dd-M-yyyy hh:mm:ss");
                 String checkOut = Helper.convertDateToString(new Date(rs.getTimestamp("checkout").getTime()), "dd-M-yyyy hh:mm:ss");
