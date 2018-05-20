@@ -41,12 +41,12 @@
                 if (e.keyCode === 8 || e.keyCode === 46 || e.keyCode === 27) {
                     $('#rfidNumber').val('');
                 }
-                
+
                 if ($('#rfidNumber').val().length <= 10) {
                     if (e.keyCode >= 48 && e.keyCode <= 57 || e.keyCode >= 96 && e.keyCode <= 105) { // 46 -57 is for keypress[rfid] and 96-105 for keyup[keyboard]            
                         $('#rfidNumber').val($('#rfidNumber').val() + e.key);
                     }
-                    if (e.keyCode === 13) {
+                    if (e.keyCode === 13 && $('#rfidNumber').val() !== '') {
                         showLoader('body');
                         $.ajax({
                             type: "POST",
