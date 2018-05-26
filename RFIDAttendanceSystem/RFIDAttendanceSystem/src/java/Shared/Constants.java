@@ -69,4 +69,5 @@ public class Constants {
 
     public static final String GET_ALL_ATTENDANCE = "get_all_attendance";
     public static final String DELETE_ATTENDANCE = "delete_attendance";
+    public static final String UPDATE_ATTENDANCE = "update_attendance";
 }
