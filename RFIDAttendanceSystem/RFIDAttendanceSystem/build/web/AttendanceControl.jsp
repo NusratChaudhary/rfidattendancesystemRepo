@@ -27,7 +27,7 @@
         <div class="container-fluid"  ng-app="Attendance" ng-controller="AttendanceCtrl" ng-init="loadAttendanceData()">
 
             <!-- Alert -->
-            <div class="alert alert-dismissible fade show  {{alertData.className}}" ng-show="alertData !== undefined" style="position: absolute;display: block;width: 50%;left: 25%;"  ng-show="alertData" id="messageAlert" role="alert" >
+            <div class="alert alert-dismissible fade show  animated {{alertData.className}}" style="position: absolute;display: block;width: 50%;left: 25%;"  ng-show="alertData" id="messageAlert" role="alert" >
                 <center> {{alertData.message}} </center>
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
@@ -190,7 +190,7 @@
                                 url: 'AttendanceController',
                                 headers: {"api_key": API_KEY},
                                 timeout: 10000,
-                                params: {attendanceId: deleteData.attendanceId, checkIn: checkIn, checkOut: checkOut, task: UPDATE_ATTENDANCE}
+                                params: {attendanceId: attendance.attendanceId, checkIn: checkIn, checkOut: checkOut, task: UPDATE_ATTENDANCE}
                             };
                             $http(request).then(function (response) {
                                 if (response !== ERROR && response.data!=='invalidRequest') {
@@ -241,11 +241,12 @@
                 };
 
                 $scope.alertCreator = function (message, className) {
+                    document.getElementById("messageAlert").classList.remove('fadeOut');
                     $scope.alertData = {message: message, className: className};
                     setTimeout(function () {
                         var element, name, arr;
                         element = document.getElementById("messageAlert");
-                        name = "animated fadeOut";
+                        name = "fadeOut";
                         arr = element.className.split(" ");
                         if (arr.indexOf(name) == -1) {
                             element.className += " " + name;

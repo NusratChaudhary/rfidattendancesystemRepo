@@ -72,9 +72,9 @@ public class AttendanceController extends HttpServlet {
         response.setContentType("text/plain");
         PrintWriter out = response.getWriter();
 
-        if (request.getHeader("api_key") != null && Helper.validateAPIKEY(request.getHeader("api_key")) && request.getParameter("rfid") != null) {
+        if (request.getHeader("api_key") != null && Helper.validateAPIKEY(request.getHeader("api_key"))) {
             Connection con = new ConnectionManager().getConnection();
-            if (request.getParameter("task") != null) {
+            if (request.getParameter("task") != null && ((Employee) request.getSession(false).getAttribute("userData")).isUserHr()) {
                 switch (request.getParameter("task")) {
                     case Constants.UPDATE_ATTENDANCE:
                         out.print(updateRecord(con, Integer.parseInt(request.getParameter("attendanceId")), request.getParameter("checkIn"), request.getParameter("checkOut")));
@@ -82,27 +82,30 @@ public class AttendanceController extends HttpServlet {
                     case Constants.DELETE_ATTENDANCE:
                         out.print(deleteRecord(con, Integer.parseInt(request.getParameter("attendanceId"))));
                         break;
-                    default:
-                        out.print(Constants.ERROR);
                 }
             } else {
-                String employeeStatus = getEmployeeStatus(con, Integer.parseInt(request.getParameter("rfid")));
-                if (employeeStatus.equals(Constants.OK)) {
-                    switch (getEmployeeAttendanceStatus(Integer.parseInt(request.getParameter("rfid")), con)) {
-                        case Constants.ATTENDANCE_IN:
-                            out.print(CheckOutEmployee(Integer.parseInt(request.getParameter("rfid")), con));
-                            break;
-                        case Constants.ATTENDANCE_NOT_FOUND:
-                            out.print(CheckInEmployee(Integer.parseInt(request.getParameter("rfid")), con));
-                            break;
-                        case Constants.ATTENDANCE_ALREADY_COMPLETED:
-                            out.print(Constants.ATTENDANCE_ALREADY_COMPLETED);
-                            break;
-                        default:
-                            out.print(Constants.ERROR);
+                if (request.getParameter("rfid") != null) {
+
+                    String employeeStatus = getEmployeeStatus(con, Integer.parseInt(request.getParameter("rfid")));
+                    if (employeeStatus.equals(Constants.OK)) {
+                        switch (getEmployeeAttendanceStatus(Integer.parseInt(request.getParameter("rfid")), con)) {
+                            case Constants.ATTENDANCE_IN:
+                                out.print(CheckOutEmployee(Integer.parseInt(request.getParameter("rfid")), con));
+                                break;
+                            case Constants.ATTENDANCE_NOT_FOUND:
+                                out.print(CheckInEmployee(Integer.parseInt(request.getParameter("rfid")), con));
+                                break;
+                            case Constants.ATTENDANCE_ALREADY_COMPLETED:
+                                out.print(Constants.ATTENDANCE_ALREADY_COMPLETED);
+                                break;
+                            default:
+                                out.print(Constants.ERROR);
+                        }
+                    } else {
+                        out.print(employeeStatus);
                     }
                 } else {
-                    out.print(employeeStatus);
+                    out.print("invalidRequest");
                 }
             }
             try {
@@ -309,7 +312,7 @@ public class AttendanceController extends HttpServlet {
     private String updateRecord(Connection con, int attendanceId, String checkIn, String checkOut) {
         try {
             Statement stmt = con.createStatement();
-            int count = stmt.executeUpdate("update attendence set CHECKIN=TO_TIMESTAMP('"+checkIn+"', 'DD-MM-YY HH24:MI:SS'), CHECKOUT=TO_TIMESTAMP('"+checkOut+"', 'DD-MM-YY HH24:MI:SS') where ATTENDENCEID="+attendanceId);
+            int count = stmt.executeUpdate("update attendence set CHECKIN=TO_TIMESTAMP('" + checkIn + "', 'DD-MM-YY HH24:MI:SS'), CHECKOUT=TO_TIMESTAMP('" + checkOut + "', 'DD-MM-YY HH24:MI:SS') where ATTENDENCEID=" + attendanceId);
             if (count == 1) {
                 return Constants.OK;
             } else {

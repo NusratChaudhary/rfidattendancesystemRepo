@@ -28,7 +28,7 @@
         <div class="container-fluid"  ng-app="Employees" ng-controller="EmployeesCtrl" ng-init="loadEmployeesData()" >
 
              <!-- Alert -->
-            <div class="alert alert-dismissible fade show  {{alertData.className}}" ng-show="alertData !== undefined" style="position: absolute;display: block;width: 50%;left: 25%;"  ng-show="alertData" id="messageAlert" role="alert" >
+            <div class="alert alert-dismissible fade show animated  {{alertData.className}}" ng-show="alertData !== undefined" style="position: absolute;display: block;width: 50%;left: 25%;"  ng-show="alertData" id="messageAlert" role="alert" >
                 <center> {{alertData.message}} </center>
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
@@ -326,19 +326,18 @@
                     //  delete  $scope.employeeData.employeeList[deleteData.objectPostion];// [TRY WHEN MORE THAN ONE USER]use this to delete object but card stay in html
                 };
                 
-                $scope.alertCreator = function (message, className) {
+                  $scope.alertCreator = function (message, className) {
+                    document.getElementById("messageAlert").classList.remove('fadeOut');
                     $scope.alertData = {message: message, className: className};
-
                     setTimeout(function () {
                         var element, name, arr;
                         element = document.getElementById("messageAlert");
-                        name = "animated fadeOut";
+                        name = "fadeOut";
                         arr = element.className.split(" ");
                         if (arr.indexOf(name) == -1) {
                             element.className += " " + name;
                         }
                     }, 2000);
-
                 };
             });
             /*
