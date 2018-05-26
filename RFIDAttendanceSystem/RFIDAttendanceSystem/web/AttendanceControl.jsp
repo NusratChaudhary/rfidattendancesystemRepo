@@ -56,7 +56,7 @@
             </div>
 
 
-            <div class="col-sm-9 float-right"  ng-repeat="attendance in attendanceData | filter : {
+            <div class="col-sm-9 float-right"  ng-repeat="attendance in attendanceData| filter : {
                         date:dateFilter
                     }"  ng-if="attendanceData">
                 <div>
@@ -251,9 +251,12 @@
                         params: {fromDate: fromDate, toDate: toDate, task: GET_SPECIFIC_RECORDS}
                     };
                     $http(request).then(function (response) {
-                        if (response !== ERROR && response.data !== 'invalidRequest') {
+                        console.log(response);
+                        if (response.data !== ATTENDANCE_NOT_FOUND && response.data !== 'invalidRequest') {
                             $scope.attendanceData = undefined;
                             $scope.attendanceData = JSON.parse(JSON.stringify(response.data));
+                        } else if (response.data === ATTENDANCE_NOT_FOUND) {
+                            $scope.alertCreator('No such attendance found', 'alert-warning');
                         } else {
                             $scope.alertCreator('Error in Retriving Record', 'alert-danger');
                         }

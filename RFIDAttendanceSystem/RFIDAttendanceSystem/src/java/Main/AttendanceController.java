@@ -51,7 +51,7 @@ public class AttendanceController extends HttpServlet {
                         break;
                     case Constants.GET_ALL_ATTENDANCE:
                         if (((Employee) request.getSession(false).getAttribute("userData")).isUserHr()) {
-                            out.print(getAllEmployeeAttendance());
+                            out.print(getAllEmployeeAttendance(null, null));
                         } else {
                             out.print(Constants.ERROR);
                         }
@@ -74,6 +74,7 @@ public class AttendanceController extends HttpServlet {
 
         if (request.getHeader("api_key") != null && Helper.validateAPIKEY(request.getHeader("api_key"))) {
             Connection con = new ConnectionManager().getConnection();
+            //((Employee) request.getSession(false).getAttribute("userData")).isUserHr()
             if (request.getParameter("task") != null && ((Employee) request.getSession(false).getAttribute("userData")).isUserHr()) {
                 switch (request.getParameter("task")) {
                     case Constants.UPDATE_ATTENDANCE:
@@ -83,12 +84,11 @@ public class AttendanceController extends HttpServlet {
                         out.print(deleteRecord(con, Integer.parseInt(request.getParameter("attendanceId"))));
                         break;
                     case Constants.GET_SPECIFIC_RECORDS:
-                        out.print(getSpecificRecords(con, request.getParameter("fromDate"), request.getParameter("toDate")));
+                        out.print(getAllEmployeeAttendance(request.getParameter("fromDate"), request.getParameter("toDate")));
                         break;
                 }
             } else {
                 if (request.getParameter("rfid") != null) {
-
                     String employeeStatus = getEmployeeStatus(con, Integer.parseInt(request.getParameter("rfid")));
                     if (employeeStatus.equals(Constants.OK)) {
                         switch (getEmployeeAttendanceStatus(Integer.parseInt(request.getParameter("rfid")), con)) {
@@ -155,7 +155,7 @@ public class AttendanceController extends HttpServlet {
         }
     }
 
-    private String getAllEmployeeAttendance() {
+    private String getAllEmployeeAttendance(String fromDate, String toDate) {
         Connection con = new ConnectionManager().getConnection();
         List<AttendanceLists> employeesAttendanceList = new ArrayList<>();
         List<Attendance> attendanceList = new ArrayList<>();
@@ -164,7 +164,12 @@ public class AttendanceController extends HttpServlet {
             Statement stmt = con.createStatement();
             Statement stmt2 = con.createStatement();
             Statement stmt3 = con.createStatement();
-            ResultSet creationDateSet = stmt.executeQuery("select  DISTINCT to_char(CREATIONDATE,'DD-MM-YY') AS CREATIONDATE from ATTENDENCE");
+            ResultSet creationDateSet = null;
+            if (fromDate != null && toDate != null) {
+                creationDateSet = stmt.executeQuery("select  DISTINCT to_char(CREATIONDATE,'DD-MM-YY') AS CREATIONDATE from ATTENDENCE where TO_DATE(TO_CHAR(CREATIONDATE,'DD-MM-YY')) BETWEEN  TO_DATE('" + fromDate + "', 'DD-MM-YY') AND TO_DATE('" + toDate + "', 'DD-MM-YY')");
+            } else {
+                creationDateSet = stmt.executeQuery("select  DISTINCT to_char(CREATIONDATE,'DD-MM-YY') AS CREATIONDATE from ATTENDENCE");
+            }
             while (creationDateSet.next()) {
                 ResultSet attendanceSet = stmt2.executeQuery("select ATTENDENCEID,RFIDNUMBER,TO_CHAR(CHECKIN,'DD-MM-YY HH24:MI:SS') AS CHECKIN,TO_CHAR(CHECKOUT,'DD-MM-YY HH24:MI:SS') AS CHECKOUT,FLAG from attendence where to_char(CREATIONDATE,'DD-MM-YY')= '" + creationDateSet.getString("CREATIONDATE") + "'");
                 attendanceList.clear();
@@ -199,7 +204,12 @@ public class AttendanceController extends HttpServlet {
                 employeesAttendanceList.add(new AttendanceLists(creationDateSet.getString("CREATIONDATE"), attendanceList));
             }
             ObjectMapper mapper = new ObjectMapper();
-            return mapper.writeValueAsString(employeesAttendanceList);
+            if (mapper.writeValueAsString(employeesAttendanceList).equals("[]")) {
+                return Constants.ATTENDANCE_NOT_FOUND;
+            } else {
+                return mapper.writeValueAsString(employeesAttendanceList);
+            }
+
         } catch (Exception e) {
             System.out.println(e);
             return Constants.ERROR;
@@ -327,17 +337,4 @@ public class AttendanceController extends HttpServlet {
         }
     }
 
-    private String getSpecificRecords(Connection con, String fromDate, String toDate) {
-        try {
-            Statement stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery("select * from attendence where TO_DATE(TO_CHAR(CREATIONDATE,'DD-MM-YY')) BETWEEN  TO_DATE('" + fromDate + "', 'DD-MM-YY') AND TO_DATE('" + toDate + "', 'DD-MM-YY')");
-            while (rs.next()) {                
-                
-            }
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-
-        return null;
-    }
 }
