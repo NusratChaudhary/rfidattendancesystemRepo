@@ -42,21 +42,21 @@
             <div class="col-sm-3  float-left bg-light shadow-nohover">
                 <center><p class="lead">Find Attendance</p></center>
                 <div class="dropdown-divider"></div>
-                <form>
+                <form name="myForm">
                     <div class="form-group">
                         <label for="date1">From Date</label>
-                        <input type="date" class="form-control" id="date1" >
+                        <input type="date" class="form-control" onchange="setMinimumDate(this.value)" id="date1" ng-model="fromDate">
                     </div>
                     <div class="form-group">
                         <label for="date2">To Date</label>
-                        <input type="date" class="form-control" id="date2" >
+                        <input type="date" class="form-control" id="date2" ng-model="toDate">
                     </div>
-                    <center><button type="submit" class="btn btn-primary">Submit</button></center><br/><br/>
+                    <center><button type="button" ng-disabled="!(toDate && fromDate)" ng-click="searchRecords()" class="btn btn-primary">Find Records</button></center><br/><br/>
                 </form>
             </div>
 
 
-            <div class="col-sm-9 float-right"  ng-repeat="attendance in attendanceData| filter : {
+            <div class="col-sm-9 float-right"  ng-repeat="attendance in attendanceData | filter : {
                         date:dateFilter
                     }"  ng-if="attendanceData">
                 <div>
@@ -155,7 +155,6 @@
             showLoader('body');
             var app = angular.module('Attendance', []);
             app.controller('AttendanceCtrl', function ($scope, $http) {
-
                 $scope.loadAttendanceData = function () {
                     const request = {
                         method: 'GET',
@@ -193,7 +192,7 @@
                                 params: {attendanceId: attendance.attendanceId, checkIn: checkIn, checkOut: checkOut, task: UPDATE_ATTENDANCE}
                             };
                             $http(request).then(function (response) {
-                                if (response !== ERROR && response.data!=='invalidRequest') {
+                                if (response !== ERROR && response.data !== 'invalidRequest') {
                                     $scope.loadAttendanceData();
                                     $scope.alertCreator('Successfully Updated Record', 'alert-success');
                                 } else {
@@ -227,7 +226,7 @@
                         params: {attendanceId: deleteData.attendanceId, task: DELETE_ATTENDANCE}
                     };
                     $http(request).then(function (response) {
-                        if (response !== ERROR && response.data!=='invalidRequest') {
+                        if (response !== ERROR && response.data !== 'invalidRequest') {
                             $scope.loadAttendanceData();
                             $scope.alertCreator('Successfully Deleted Record', 'alert-success');
                         } else {
@@ -239,6 +238,32 @@
                         hideLoader('body');
                     });
                 };
+
+                $scope.searchRecords = function () {
+                    var fromDate = extractDate(new Date($scope.fromDate));
+                    var toDate = extractDate(new Date($scope.toDate));
+                    showLoader('body');
+                    const request = {
+                        method: 'POST',
+                        url: 'AttendanceController',
+                        headers: {"api_key": API_KEY},
+                        timeout: 10000,
+                        params: {fromDate: fromDate, toDate: toDate, task: GET_SPECIFIC_RECORDS}
+                    };
+                    $http(request).then(function (response) {
+                        if (response !== ERROR && response.data !== 'invalidRequest') {
+                            $scope.attendanceData = undefined;
+                            $scope.attendanceData = JSON.parse(JSON.stringify(response.data));
+                        } else {
+                            $scope.alertCreator('Error in Retriving Record', 'alert-danger');
+                        }
+                        hideLoader('body');
+                    }, function (response) {
+                        console.log('Error ', response);
+                        $scope.alertCreator('Error in Retriving Record', 'alert-danger');
+                        hideLoader('body');
+                    });
+                }
 
                 $scope.alertCreator = function (message, className) {
                     document.getElementById("messageAlert").classList.remove('fadeOut');
@@ -257,6 +282,24 @@
             });
 
 
+            function setMinimumDate(date) {
+                var d = new Date(date);
+                d.setDate(d.getDate() + 1);
+                var day, month, year;
+
+                year = d.getFullYear();
+                if (d.getDate() < 10) {
+                    day = '0' + String(d.getDate());
+                } else {
+                    day = String(d.getDate());
+                }
+                if (d.getMonth() + 1 < 10) {
+                    month = '0' + String(d.getMonth() + 1);
+                } else {
+                    month = String(d.getMonth() + 1);  //+1; //January is 0!
+                }
+                document.getElementById('date2').min = year + '-' + month + '-' + day;
+            }
 
             function GetOneDayPrior() {
                 var d = new Date();
@@ -278,8 +321,22 @@
                 return year + '-' + month + '-' + day;
             }
 
-
-
+            function extractDate(date) {
+                var d = new Date(date);
+                var day, month, year;
+                year = d.getFullYear();
+                if (d.getDate() < 10) {
+                    day = '0' + String(d.getDate());
+                } else {
+                    day = String(d.getDate());
+                }
+                if (d.getMonth() + 1 < 10) {
+                    month = '0' + String(d.getMonth() + 1);
+                } else {
+                    month = String(d.getMonth() + 1);  //+1; //January is 0!
+                }
+                return  day + '-' + month + '-' + year;
+            }
             document.title = '<%=((Employee) session.getAttribute("userData")).getName()%>';
 
         </script>

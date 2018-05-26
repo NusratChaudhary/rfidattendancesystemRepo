@@ -51,3 +51,4 @@ const FLAGGED_PAGES = "EmployeeHome.jsp,EmployeeDetails.jsp";
 const GET_ALL_ATTENDANCE = "get_all_attendance";
 const DELETE_ATTENDANCE = "delete_attendance";
 const UPDATE_ATTENDANCE = "update_attendance";
+const GET_SPECIFIC_RECORDS = "get_specific_records";

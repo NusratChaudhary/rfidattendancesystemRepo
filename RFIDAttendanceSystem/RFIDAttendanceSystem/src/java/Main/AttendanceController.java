@@ -82,6 +82,9 @@ public class AttendanceController extends HttpServlet {
                     case Constants.DELETE_ATTENDANCE:
                         out.print(deleteRecord(con, Integer.parseInt(request.getParameter("attendanceId"))));
                         break;
+                    case Constants.GET_SPECIFIC_RECORDS:
+                        out.print(getSpecificRecords(con, request.getParameter("fromDate"), request.getParameter("toDate")));
+                        break;
                 }
             } else {
                 if (request.getParameter("rfid") != null) {
@@ -322,5 +325,19 @@ public class AttendanceController extends HttpServlet {
             System.out.println(e);
             return Constants.ERROR;
         }
+    }
+
+    private String getSpecificRecords(Connection con, String fromDate, String toDate) {
+        try {
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery("select * from attendence where TO_DATE(TO_CHAR(CREATIONDATE,'DD-MM-YY')) BETWEEN  TO_DATE('" + fromDate + "', 'DD-MM-YY') AND TO_DATE('" + toDate + "', 'DD-MM-YY')");
+            while (rs.next()) {                
+                
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+
+        return null;
     }
 }
