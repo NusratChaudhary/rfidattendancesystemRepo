@@ -16,8 +16,9 @@
         <link rel="stylesheet" href="CSS/mystyle.css"/>
         <link rel="stylesheet" href="CSS/animate.css"/>
         <script src="CSS/constants.js"></script>
-        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>    
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> 
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>   
         <script src="CSS/jquery.loading.js"></script>
         <link href="CSS/jquery.loading.css" rel="stylesheet">
     </head> 
@@ -27,7 +28,7 @@
 
         <div class="container-fluid"  ng-app="Employees" ng-controller="EmployeesCtrl" ng-init="loadEmployeesData()" >
 
-             <!-- Alert -->
+            <!-- Alert -->
             <div class="alert alert-dismissible fade show animated  {{alertData.className}}" ng-show="alertData !== undefined" style="position: absolute;display: block;width: 50%;left: 25%;"  ng-show="alertData" id="messageAlert" role="alert" >
                 <center> {{alertData.message}} </center>
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -35,7 +36,7 @@
                 </button>
             </div>
             <!-- Alert End -->
-            
+
             <div class="col-sm-2 offset-sm-10">
                 <input class="form-control form-control-sm" type="text" placeholder="Search Employee"  ng-model="employeeFilter" id="searchBar">
             </div>
@@ -104,7 +105,7 @@
                                         </div>
                                         <div class="float-right" >
                                             <label class="switch">
-                                                <input id="editForm" name="{{empData.employeeId}}" type="checkbox">
+                                                <input  class="editMode" name="{{empData.employeeId}}" type="checkbox">
                                                 <span class="slider round"></span>
                                             </label><br/>
                                             <label>Edit Mode</label>
@@ -236,43 +237,7 @@
 
         <script>
             const src1 = "Resources/expand-button.png";
-            const src2 = "Resources/expand-arrow.png";       
-            $(document).ready(function () {
-                setTimeout(function () {
-                    $('#editForm').click(function () {
-                        if ($('#' + $(this).attr('name') + '-form').hasClass('employeeDetails-NonEditable')) {
-                            $('#' + $(this).attr('name') + '-form').removeClass('employeeDetails-NonEditable');
-                            $('#button-' + $(this).attr('name')).removeClass('hidden');
-                        } else {
-                            $('#' + $(this).attr('name') + '-form').addClass('employeeDetails-NonEditable');
-                            $('#button-' + $(this).attr('name')).addClass('hidden');
-                        }
-                    });
-
-                    $('#deleteEmployee').click(function () {
-                        // open modal
-
-                    });
-
-                    $('.card').on('hidden.bs.collapse', function () {
-                        var id = String(this.id).substr(3);
-                        $('#' + id + '-img').attr('src', src1);
-                        if (!$('#' + id + '-form').hasClass('employeeDetails-NonEditable')) {
-                            $('#' + id + '-form').addClass('employeeDetails-NonEditable');
-                        }
-                    });
-
-                    $('.card').on('shown.bs.collapse', function () {
-                        var id = String(this.id).substr(3);
-                        $('#' + id + '-img').attr('src', src2);
-                    });
-
-
-                    $('.submitForm').click(function () {
-                        var id = String(this.id).substring(7);
-                    });
-                });
-            });
+            const src2 = "Resources/expand-arrow.png";
 
             showLoader('body');
             var app = angular.module('Employees', []);
@@ -290,17 +255,48 @@
                             $scope.employeeData = JSON.parse(JSON.stringify(response.data));
                         }
                         hideLoader('body');
+                        // add event listner after data is loaded 
+                        $(document).ready(function () {
+                            $('.editMode').click(function () {
+                                if ($('#' + $(this).attr('name') + '-form').hasClass('employeeDetails-NonEditable')) {
+                                    $('#' + $(this).attr('name') + '-form').removeClass('employeeDetails-NonEditable');
+                                    $('#button-' + $(this).attr('name')).removeClass('hidden');
+                                } else {
+                                    $('#' + $(this).attr('name') + '-form').addClass('employeeDetails-NonEditable');
+                                    $('#button-' + $(this).attr('name')).addClass('hidden');
+                                }
+                            });
+
+                            $('.card').on('hidden.bs.collapse', function () {
+                                var id = String(this.id).substr(3);
+                                $('#' + id + '-img').attr('src', src1);
+                                if (!$('#' + id + '-form').hasClass('employeeDetails-NonEditable')) {
+                                    $('#' + id + '-form').addClass('employeeDetails-NonEditable');
+                                    $('input[name=' + id + ']').prop('checked', false);
+                                }
+                            });
+
+                            $('.card').on('shown.bs.collapse', function () {
+                                var id = String(this.id).substr(3);
+                                $('#' + id + '-img').attr('src', src2);
+                            });
+
+                            $('.submitForm').click(function () {
+                                var id = String(this.id).substring(7);
+                            });
+
+                        });
                     }, function (response) {
                         console.log('Error ', response);
                         hideLoader('body');
                     });
                 };
-                
+
                 $scope.deleteUserConfirmation = function (employee, indexPosition) {
                     $scope.confirmationData = {employeeId: employee.employeeId, name: employee.name, objectPostion: indexPosition};
                     $('#confirmationModal').modal('show')
                 };
-                
+
                 $scope.deleteUser = function (deleteData) {
                     showLoader('body');
                     const request = {
@@ -325,8 +321,8 @@
 
                     //  delete  $scope.employeeData.employeeList[deleteData.objectPostion];// [TRY WHEN MORE THAN ONE USER]use this to delete object but card stay in html
                 };
-                
-                  $scope.alertCreator = function (message, className) {
+
+                $scope.alertCreator = function (message, className) {
                     document.getElementById("messageAlert").classList.remove('fadeOut');
                     $scope.alertData = {message: message, className: className};
                     setTimeout(function () {
@@ -348,6 +344,7 @@
              return;
              }
              */
+
 
             document.title = '<%=((Employee) session.getAttribute("userData")).getName()%>';
 
