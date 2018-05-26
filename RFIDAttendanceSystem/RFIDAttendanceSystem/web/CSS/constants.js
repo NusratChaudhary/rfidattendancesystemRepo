@@ -47,3 +47,5 @@ const LOGGED_OUT = "logged_out";
 const HOST_ADDRESS = "http://localhost:8080/RFIDAttendanceSystem";
 
 const FLAGGED_PAGES = "EmployeeHome.jsp,EmployeeDetails.jsp";
+
+const GET_ALL_ATTENDANCE = "get_all_attendance";

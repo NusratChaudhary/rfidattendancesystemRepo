@@ -6,6 +6,7 @@
 package Main;
 
 import Model.Attendance;
+import Model.AttendanceLists;
 import Model.Employee;
 import Shared.ConnectionManager;
 import Shared.Constants;
@@ -47,6 +48,13 @@ public class AttendanceController extends HttpServlet {
                 switch (request.getParameter("task")) {
                     case Constants.GET_EMP_ATTENDANCE:
                         out.print(getEmployeeAttendance(request.getSession(false)));
+                        break;
+                    case Constants.GET_ALL_ATTENDANCE:
+                        if (((Employee) request.getSession(false).getAttribute("userData")).isUserHr()) {
+                            out.print(getAllEmployeeAttendance());
+                        } else {
+                            out.print(Constants.ERROR);
+                        }
                         break;
                 }
             } else {
@@ -116,6 +124,63 @@ public class AttendanceController extends HttpServlet {
             }
             ObjectMapper mapper = new ObjectMapper();
             return mapper.writeValueAsString(employeeAttendance);
+        } catch (Exception e) {
+            System.out.println(e);
+            return Constants.ERROR;
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(AttendanceController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+
+    private String getAllEmployeeAttendance() {
+        Connection con = new ConnectionManager().getConnection();
+        List<AttendanceLists> employeesAttendanceList = new ArrayList<>();
+        List<Attendance> attendanceList = new ArrayList<>();
+        try {
+            String flag;
+            Statement stmt = con.createStatement();
+            Statement stmt2 = con.createStatement();
+            Statement stmt3 = con.createStatement();
+            ResultSet creationDateSet = stmt.executeQuery("select  DISTINCT to_char(CREATIONDATE,'DD-MM-YY') AS CREATIONDATE from ATTENDENCE");
+            while (creationDateSet.next()) {
+                ResultSet attendanceSet = stmt2.executeQuery("select * from attendence where to_char(CREATIONDATE,'DD-MM-YY')= '" + creationDateSet.getString("CREATIONDATE") + "'");
+                attendanceList.clear();
+                while (attendanceSet.next()) {
+                    flag = attendanceSet.getString("flag");
+                    switch (flag) {
+                        case Constants.ATTENDANCE_IN:
+                            flag = "Checked In";
+                            break;
+                        case Constants.ATTENDANCE_ABSENT:
+                            flag = "Absent";
+                            break;
+                        case Constants.ATTENDANCE_OUT:
+                            flag = "Checked Out";
+                            break;
+                        default:
+                            flag = "ERR";
+                    }
+                    ResultSet employeeDataSet = stmt3.executeQuery("select employeeId,firstName||' '||lastName as \"employeeName\"  from employees where employeeId IN (select employeeId from rfid where rfidnumber=" + attendanceSet.getInt("RFIDNUMBER") + ")");
+                    employeeDataSet.next();
+                    attendanceList.add(new Attendance(
+                            attendanceSet.getInt("ATTENDENCEID"),
+                            Helper.convertDateToString(new Date(attendanceSet.getDate("CHECKIN").getTime()), "dd-MM-yyyy HH:mm:ss"),
+                            Helper.convertDateToString(new Date(attendanceSet.getDate("CHECKOUT").getTime()), "dd-MM-yyyy HH:mm:ss"),
+                            flag,
+                            employeeDataSet.getInt("employeeId"),
+                            employeeDataSet.getString("employeeName"),
+                            attendanceSet.getInt("RFIDNUMBER")
+                    ));
+
+                }
+                employeesAttendanceList.add(new AttendanceLists(creationDateSet.getString("CREATIONDATE"), attendanceList));
+            }
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.writeValueAsString(employeesAttendanceList);
         } catch (Exception e) {
             System.out.println(e);
             return Constants.ERROR;
