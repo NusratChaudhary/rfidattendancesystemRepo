@@ -105,7 +105,7 @@
                                         </div>
                                         <div class="float-right" >
                                             <label class="switch">
-                                                <input  class="editMode" name="{{empData.employeeId}}" type="checkbox">
+                                                <input  class="editMode" name="{{empData.employeeId}}" ng-model="checkBox" type="checkbox">
                                                 <span class="slider round"></span>
                                             </label><br/>
                                             <label>Edit Mode</label>
@@ -195,7 +195,7 @@
                                                 <br/>
                                                 <div class="form-group row">
                                                     <div class="col-sm-12">
-                                                        <center>  <button type="button"  id="button-{{empData.employeeId}}"  class="btn btn-primary submitForm hidden">Save Changes</button></center>
+                                                        <center>  <button type="button" ng-if="checkBox"  id="button-{{empData.employeeId}}"  class="btn btn-primary submitForm hidden">Save Changes</button></center>
                                                     </div>
                                                 </div>
                                             </form> 
