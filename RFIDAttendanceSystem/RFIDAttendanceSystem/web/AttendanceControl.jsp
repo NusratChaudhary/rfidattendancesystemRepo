@@ -4,6 +4,7 @@
     Author     : mohnish
 --%>
 
+<%@page import="Model.Employee"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -13,15 +14,31 @@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" />
         <link rel="stylesheet" href="CSS/mystyle.css"/>
         <link rel="stylesheet" href="CSS/animate.css"/>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-        <title>JSP Page</title>
+        <script src="CSS/constants.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>    
+        <script src="CSS/jquery.loading.js"></script>
+        <link href="CSS/jquery.loading.css" rel="stylesheet">
     </head>
     <body>
         <jsp:include page="header.jsp"/>
         <br/>
 
-        <div class="container-fluid">
+        <div class="container-fluid"  ng-app="Attendance" ng-controller="AttendanceCtrl" ng-init="loadAttendanceData()">
 
+            <!-- Alert -->
+            <div class="alert alert-dismissible fade show  {{alertData.className}}" ng-show="alertData !== undefined" style="position: absolute;display: block;width: 50%;left: 25%;"  ng-show="alertData" id="messageAlert" role="alert" >
+                <center> {{alertData.message}} </center>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <!-- Alert End -->
+
+            <div class="col-sm-2 offset-sm-10">
+                <input class="form-control form-control-sm" type="text" placeholder="Search Date"  ng-model="dateFilter" id="searchBar">
+            </div>
+            <br/><br/>
             <div class="col-sm-3  float-left bg-light shadow-nohover">
                 <center><p class="lead">Find Attendance</p></center>
                 <div class="dropdown-divider"></div>
@@ -39,166 +56,204 @@
             </div>
 
 
+            <div class="col-sm-9 float-right"  ng-repeat="attendance in attendanceData| filter : {
+                        date:dateFilter
+                    }"  ng-if="attendanceData">
+                <div>
+                    <div class="card shadow-nohover attendanceCard" >
+                        <h5 class="card-header">{{attendance.date}}</h5>
+                        <div class="card-body">
+                            <table class="col-sm-12 table table-hover  table-striped">
+                                <thead>
+                                    <tr>
+                                        <th >#</th>
+                                        <th >Employee Id</th>
+                                        <th >Employee Name</th>
+                                        <th >Check In</th>
+                                        <th >Check Out</th>
+                                        <th ></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr  ng-repeat="employee in attendance.attendanceList">
+                                        <td>{{$index + 1}}</td>
+                                        <td>{{employee.employeeId}}</td>
+                                        <td>{{employee.employeeName}}</td>
+                                        <td>{{employee.checkIn}}</td>
+                                        <td>{{employee.checkOut}}</td>
+                                        <td style="padding-top: 5px;">
+                                            <button type="button" ng-click="editRecordConfirmation(employee)" style="font-weight: 500;" class="btn btn-outline-info">Edit</button>
+                                            &nbsp;&nbsp;&nbsp;<button type="button" ng-click="deleteUserConfirmation(employee)" style="font-weight: 500;" class="btn btn-outline-danger">Delete</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div> 
 
-            <div class="col-sm-9 float-right" >
+                    <br/>
+                </div>
+            </div>
 
 
-                <div class="card shadow-nohover attendanceCard" >
-                    <h5 class="card-header">21/01/2013</h5>
-                    <div class="card-body">
-                        <table class="col-sm-12 table table-hover  table-striped">
-                            <thead>
-                                <tr>
-                                    <th >#</th>
-                                    <th >Employee Id</th>
-                                    <th >Employee Name</th>
-                                    <th >Check In</th>
-                                    <th >Check Out</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>1</td>
-                                    <td>0123456789</td>
-                                    <td>Mohnish Anjaria</td>
-                                    <td>8:55</td>
-                                    <td>17:05</td>
-                                </tr>
-                            </tbody>
-                        </table>
+            <div class="modal fade"  id="attendanceModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLongTitle">Edit Record</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label >Check In:</label>
+                                <input type="text"  class="form-control" ng-model="checkIn" maxlength="17"/>
+                            </div>
+                            <div class="form-group">
+                                <label >Check Out:</label>
+                                <input type="text" class="form-control" ng-model="checkOut" maxlength="17"/>
+                            </div>
+                        </div>  
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline-info" ng-click="editEmployeeAttendance(editAttendance, checkIn, checkOut)" data-dismiss="modal">Edit Record</button>                               
+                        </div>
                     </div>
-                </div> 
-
-                <br/>
-
-                <div class="card shadow-nohover attendanceCard">
-                    <h5 class="card-header">22/01/2013</h5>
-                    <div class="card-body">
-                        <table class="col-sm-12 table table-hover  table-striped">
-                            <thead>
-                                <tr>
-                                    <th >#</th>
-                                    <th >Employee Id</th>
-                                    <th >Employee Name</th>
-                                    <th >Check In</th>
-                                    <th >Check Out</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>1</td>
-                                    <td>0123456789</td>
-                                    <td>Mohnish Anjaria</td>
-                                    <td>8:55</td>
-                                    <td>17:05</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div> 
-
-                <br/>
-
-                <div class="card shadow-nohover attendanceCard">
-                    <h5 class="card-header">23/01/2013</h5>
-                    <div class="card-body">
-                        <table class="col-sm-12 table table-hover  table-striped">
-                            <thead>
-                                <tr>
-                                    <th >#</th>
-                                    <th >Employee Id</th>
-                                    <th >Employee Name</th>
-                                    <th >Check In</th>
-                                    <th >Check Out</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>1</td>
-                                    <td>0123456789</td>
-                                    <td>Mohnish Anjaria</td>
-                                    <td>8:55</td>
-                                    <td>17:05</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div> 
-                <br/>
-                
-                 <div class="card shadow-nohover attendanceCard">
-                    <h5 class="card-header">23/01/2013</h5>
-                    <div class="card-body">
-                        <table class="col-sm-12 table table-hover  table-striped">
-                            <thead>
-                                <tr>
-                                    <th >#</th>
-                                    <th >Employee Id</th>
-                                    <th >Employee Name</th>
-                                    <th >Check In</th>
-                                    <th >Check Out</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>1</td>
-                                    <td>0123456789</td>
-                                    <td>Mohnish Anjaria</td>
-                                    <td>8:55</td>
-                                    <td>17:05</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div> 
-                <br/>
-                
-                 <div class="card shadow-nohover attendanceCard">
-                    <h5 class="card-header">23/01/2013</h5>
-                    <div class="card-body">
-                        <table class="col-sm-12 table table-hover  table-striped">
-                            <thead>
-                                <tr>
-                                    <th >#</th>
-                                    <th >Employee Id</th>
-                                    <th >Employee Name</th>
-                                    <th >Check In</th>
-                                    <th >Check Out</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>1</td>
-                                    <td>0123456789</td>
-                                    <td>Mohnish Anjaria</td>
-                                    <td>8:55</td>
-                                    <td>17:05</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div> 
-                <br/>
-
+                </div>
             </div>
 
 
 
+            <div class="modal fade" ng-if="confirmationData" id="confirmationModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLongTitle">Delete Record</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Do you want to delete {{confirmationData.employeeName}} record permanently </p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline-danger" ng-click="deleteUser(confirmationData)" data-dismiss="modal">Delete Record</button>                        
+                        </div>
+                    </div>
+                </div>
+            </div>
 
         </div>
 
-
-
-
-
         <script>
             $(document).ready(function () {
-
-
             });
 
             document.getElementById('date1').max = GetOneDayPrior();
             document.getElementById('date2').max = GetOneDayPrior();
+
+            showLoader('body');
+            var app = angular.module('Attendance', []);
+            app.controller('AttendanceCtrl', function ($scope, $http) {
+
+                $scope.loadAttendanceData = function () {
+                    const request = {
+                        method: 'GET',
+                        url: 'AttendanceController',
+                        headers: {"api_key": API_KEY},
+                        params: {task: GET_ALL_ATTENDANCE},
+                        timeout: 10000
+                    };
+                    $http(request).then(function (response) {
+                        if (response !== ERROR) {
+                            $scope.attendanceData = JSON.parse(JSON.stringify(response.data));
+                        }
+                        hideLoader('body');
+                    }, function (response) {
+                        console.log('Error ', response);
+                        hideLoader('body');
+                    });
+                };
+
+                $scope.editRecordConfirmation = function (attendance) {
+                    $scope.editAttendance = attendance;
+                    $scope.checkIn = attendance.checkIn;
+                    $scope.checkOut = attendance.checkOut;
+                    $('#attendanceModal').modal('show')
+                };
+
+                $scope.editEmployeeAttendance = function (attendance, checkIn, checkOut) {
+                    if (attendance.checkIn !== checkIn || attendance.checkOut !== checkOut) {
+                        if (checkIn.length === 17 && checkOut.length === 17) {
+                            const request = {
+                                method: 'POST',
+                                url: 'AttendanceController',
+                                headers: {"api_key": API_KEY},
+                                timeout: 10000,
+                                params: {attendanceId: deleteData.attendanceId, checkIn: checkIn, checkOut: checkOut, task: UPDATE_ATTENDANCE}
+                            };
+                            $http(request).then(function (response) {
+                                if (response !== ERROR && response.data!=='invalidRequest') {
+                                    $scope.loadAttendanceData();
+                                    $scope.alertCreator('Successfully Updated Record', 'alert-success');
+                                } else {
+                                    $scope.alertCreator('Error in Updating Record', 'alert-danger');
+                                }
+                                hideLoader('body');
+                            }, function (response) {
+                                console.log('Error ', response);
+                                hideLoader('body');
+                            });
+                        } else {
+                            $scope.alertCreator('Enter Valid Date and Time', 'alert-warning');
+                        }
+                    } else {
+                        $scope.alertCreator('No Changes Were Made', 'alert-info');
+                    }
+                };
+
+                $scope.deleteUserConfirmation = function (attendance) {
+                    $scope.confirmationData = attendance;
+                    $('#confirmationModal').modal('show')
+                };
+
+                $scope.deleteUser = function (deleteData) {
+                    showLoader('body');
+                    const request = {
+                        method: 'POST',
+                        url: 'AttendanceController',
+                        headers: {"api_key": API_KEY},
+                        timeout: 10000,
+                        params: {attendanceId: deleteData.attendanceId, task: DELETE_ATTENDANCE}
+                    };
+                    $http(request).then(function (response) {
+                        if (response !== ERROR && response.data!=='invalidRequest') {
+                            $scope.loadAttendanceData();
+                            $scope.alertCreator('Successfully Deleted Record', 'alert-success');
+                        } else {
+                            $scope.alertCreator('Error in Deleting Record', 'alert-danger');
+                        }
+                        hideLoader('body');
+                    }, function (response) {
+                        console.log('Error ', response);
+                        hideLoader('body');
+                    });
+                };
+
+                $scope.alertCreator = function (message, className) {
+                    $scope.alertData = {message: message, className: className};
+                    setTimeout(function () {
+                        var element, name, arr;
+                        element = document.getElementById("messageAlert");
+                        name = "animated fadeOut";
+                        arr = element.className.split(" ");
+                        if (arr.indexOf(name) == -1) {
+                            element.className += " " + name;
+                        }
+                    }, 2000);
+                };
+
+            });
 
 
 
@@ -222,9 +277,12 @@
                 return year + '-' + month + '-' + day;
             }
 
+
+
+            document.title = '<%=((Employee) session.getAttribute("userData")).getName()%>';
+
         </script>
 
-        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"  ></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" ></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" ></script>
     </body>

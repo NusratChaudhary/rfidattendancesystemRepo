@@ -49,9 +49,9 @@ public class AttendanceController extends HttpServlet {
                     case Constants.GET_EMP_ATTENDANCE:
                         out.print(getEmployeeAttendance(request.getSession(false)));
                         break;
-                    case Constants.GET_ALL_ATTENDANCE:
+                    case Constants.GET_ALL_ATTENDANCE:                     
                         if (((Employee) request.getSession(false).getAttribute("userData")).isUserHr()) {
-                            out.print(getAllEmployeeAttendance());
+                              out.print(getAllEmployeeAttendance());
                         } else {
                             out.print(Constants.ERROR);
                         }
@@ -147,7 +147,7 @@ public class AttendanceController extends HttpServlet {
             Statement stmt3 = con.createStatement();
             ResultSet creationDateSet = stmt.executeQuery("select  DISTINCT to_char(CREATIONDATE,'DD-MM-YY') AS CREATIONDATE from ATTENDENCE");
             while (creationDateSet.next()) {
-                ResultSet attendanceSet = stmt2.executeQuery("select * from attendence where to_char(CREATIONDATE,'DD-MM-YY')= '" + creationDateSet.getString("CREATIONDATE") + "'");
+                ResultSet attendanceSet = stmt2.executeQuery("select ATTENDENCEID,RFIDNUMBER,TO_CHAR(CHECKIN,'DD-MM-YY HH24:MI:SS') AS CHECKIN,TO_CHAR(CHECKOUT,'DD-MM-YY HH24:MI:SS') AS CHECKOUT,FLAG from attendence where to_char(CREATIONDATE,'DD-MM-YY')= '" + creationDateSet.getString("CREATIONDATE") + "'");
                 attendanceList.clear();
                 while (attendanceSet.next()) {
                     flag = attendanceSet.getString("flag");
@@ -168,8 +168,8 @@ public class AttendanceController extends HttpServlet {
                     employeeDataSet.next();
                     attendanceList.add(new Attendance(
                             attendanceSet.getInt("ATTENDENCEID"),
-                            Helper.convertDateToString(new Date(attendanceSet.getDate("CHECKIN").getTime()), "dd-MM-yyyy HH:mm:ss"),
-                            Helper.convertDateToString(new Date(attendanceSet.getDate("CHECKOUT").getTime()), "dd-MM-yyyy HH:mm:ss"),
+                            attendanceSet.getString("CHECKIN"),
+                            attendanceSet.getString("CHECKOUT"),
                             flag,
                             employeeDataSet.getInt("employeeId"),
                             employeeDataSet.getString("employeeName"),

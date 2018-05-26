@@ -27,14 +27,15 @@
 
         <div class="container-fluid"  ng-app="Employees" ng-controller="EmployeesCtrl" ng-init="loadEmployeesData()" >
 
-            <!-- Alert -->
-            <div class="alert alert-dismissible fade show  {{alertData.className}}" ng-hide="alertData === undefined"  ng-show="alertData" id="messageAlert" role="alert" >
+             <!-- Alert -->
+            <div class="alert alert-dismissible fade show  {{alertData.className}}" ng-show="alertData !== undefined" style="position: absolute;display: block;width: 50%;left: 25%;"  ng-show="alertData" id="messageAlert" role="alert" >
                 <center> {{alertData.message}} </center>
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <!-- Alert End -->
+            
             <div class="col-sm-2 offset-sm-10">
                 <input class="form-control form-control-sm" type="text" placeholder="Search Employee"  ng-model="employeeFilter" id="searchBar">
             </div>
@@ -336,9 +337,6 @@
                         if (arr.indexOf(name) == -1) {
                             element.className += " " + name;
                         }
-                        setTimeout(function () {
-                            document.getElementById("messageAlert").remove();
-                        }, 1000);
                     }, 2000);
 
                 };

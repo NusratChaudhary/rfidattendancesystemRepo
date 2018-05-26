@@ -68,4 +68,5 @@ public class Constants {
     public static final String REQUEST_SENT_TO_ADMIN = "request_sent_to_admin";
 
     public static final String GET_ALL_ATTENDANCE = "get_all_attendance";
+    public static final String DELETE_ATTENDANCE = "delete_attendance";
 }
