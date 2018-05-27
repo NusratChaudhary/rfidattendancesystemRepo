@@ -32,6 +32,10 @@
         <servlet-name>EmployeeController</servlet-name>
         <servlet-class>Main.EmployeeController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>RequestController</servlet-name>
+        <servlet-class>Main.RequestController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Registration</servlet-name>
         <url-pattern>/Registration</url-pattern>
@@ -63,6 +67,10 @@
     <servlet-mapping>
         <servlet-name>EmployeeController</servlet-name>
         <url-pattern>/EmployeeController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>RequestController</servlet-name>
+        <url-pattern>/RequestController</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
