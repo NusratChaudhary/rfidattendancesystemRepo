@@ -55,4 +55,9 @@ const GET_SPECIFIC_RECORDS = "get_specific_records";
 
 const GET_REQUESTS = "get_requests";
 const REQUESTS_NOT_FOUND = "requests_not_found";
-const ADD_REQUEST="add_request";
+const ADD_REQUEST = "add_request";
+
+const REQUEST_PENDING = "request_pending";
+const REQUEST_READ = "request_read";
+const REQUEST_RESPONDED = "request_responded";
+const REQUEST_SENT_TO_ADMIN = "request_sent_to_admin";

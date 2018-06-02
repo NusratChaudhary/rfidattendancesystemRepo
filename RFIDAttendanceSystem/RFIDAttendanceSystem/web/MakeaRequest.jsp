@@ -24,7 +24,7 @@
         <jsp:include page="header.jsp"/>
         <br/>
 
-        <div ng-app="Request" ng-controller="RequestCtrl">
+        <div ng-app="Request" ng-controller="RequestCtrl" ng-init="loadRequests(false)">
 
             <!-- Alert -->
             <div class="alert alert-dismissible fade show  animated {{alertData.className}}" style="position: absolute;display: block;width: 50%;left: 25%;"  ng-show="alertData" id="messageAlert" role="alert" >
@@ -45,25 +45,16 @@
                     <div class="float-left">
 
                         <div class="list-group bg-light shadow-nohover requestsList scrollStyle" id="list-tab" role="tablist">
-                            <a class="list-group-item list-group-item-action " id="list-home-list" data-toggle="list" href="#list-home" role="tab" aria-controls="home">
+                            <a ng-repeat="request in requestData" class="list-group-item list-group-item-action " id="list-home-list" data-toggle="list" href="#list-home" role="tab" aria-controls="home">
                                 <div class="d-flex w-100 justify-content-between">
-                                    <h5 class="mb-1">Request Subject</h5>
-                                    <small>3 days ago</small>
+                                    <h5 class="mb-1">{{request.requestSubject}}</h5>
+                                    <small>{{request.dateTime}}</small>
                                 </div>
-                                <p class="mb-1">Donec id elit non mi porta gravida at eget metus......</p>
-                                <small class="float-right"><div class="pending rounded-circle" style="width: 12px;height: 12px;"></div></small>
+                                <p class="mb-1">{{request.requestBody| limitTo : 50}}....</p>
+                                <small class="float-right"><div class="rounded-circle" ng-class="{
+                                            'pending':request.flag === 'REQUEST_PENDING', 'read':request.flag === 'request_read', 'responded':request.flag === 'request_responded'}" style="width: 12px;height: 12px;"></div></small>
                             </a>
-                            <a class="list-group-item list-group-item-action" id="list-profile-list" data-toggle="list" href="#list-profile" role="tab" aria-controls="profile">Profile</a>
-                            <a class="list-group-item list-group-item-action" id="list-messages-list" data-toggle="list" href="#list-messages" role="tab" aria-controls="messages">Messages</a>
-                            <a class="list-group-item list-group-item-action" id="list-settings-list" data-toggle="list" href="#list-settings" role="tab" aria-controls="settings">Settings</a>
-                            <a class="list-group-item list-group-item-action" id="list-profile-list" data-toggle="list" href="#list-profile" role="tab" aria-controls="profile">Profile</a>
-                            <a class="list-group-item list-group-item-action" id="list-messages-list" data-toggle="list" href="#list-messages" role="tab" aria-controls="messages">Messages</a>
-                            <a class="list-group-item list-group-item-action" id="list-settings-list" data-toggle="list" href="#list-settings" role="tab" aria-controls="settings">Settings</a>
-                            <a class="list-group-item list-group-item-action" id="list-profile-list" data-toggle="list" href="#list-profile" role="tab" aria-controls="profile">Profile</a>
-                            <a class="list-group-item list-group-item-action" id="list-messages-list" data-toggle="list" href="#list-messages" role="tab" aria-controls="messages">Messages</a>
-                            <a class="list-group-item list-group-item-action" id="list-settings-list" data-toggle="list" href="#list-settings" role="tab" aria-controls="settings">Settings</a>
                         </div>
-
                     </div>
                     <div class="offset-sm-3">
                         <div class="tab-content" id="nav-tabContent">
@@ -160,8 +151,7 @@
             var app = angular.module('Request', []);
             app.controller('RequestCtrl', function ($scope, $http, $interval) {
 
-
-                $scope.loadRequests = function () {
+                $scope.loadRequests = function (alreadyExecuted) {
                     const request = {
                         method: 'GET',
                         url: 'RequestController',
@@ -170,12 +160,15 @@
                         timeout: 10000
                     };
                     $http(request).then(function (response) {
-                        if (response.data !== ERROR && response.data !== 'invalidRequest') {
+                        if (response.data !== ERROR && response.data !== 'invalidRequest' && response.data !== REQUESTS_NOT_FOUND) {
                             $scope.requestData = JSON.parse(JSON.stringify(response.data));
-                        } else if (response.data === REQUESTS_NOT_FOUND) {
+                            console.log($scope.requestData);
+                        } else if (response.data === REQUESTS_NOT_FOUND && !alreadyExecuted) {
                             $scope.alertCreator('No Request Made Till Now...', 'alert-info');
                         } else {
-                            $scope.alertCreator('Error in Retriving Requests', 'alert-danger');
+                            if (!alreadyExecuted) {
+                                $scope.alertCreator('Error in Retriving Requests', 'alert-danger');
+                            }
                         }
                         hideLoader('body');
                     }, function (response) {
@@ -185,10 +178,9 @@
                     });
                 };
 
-                $interval(function () {
-                    $.scope.loadRequests();
-                }, 5000);
-
+//                $interval(function () {
+//                    $scope.loadRequests(true);
+//                }, 5000);
 
                 $scope.sendRequest = function () {
                     if ($scope.sendSubject && $scope.sendMessage) {
@@ -219,7 +211,7 @@
                         });
                     }
                 };
-
+             
                 $scope.alertCreator = function (message, className) {
                     document.getElementById("messageAlert").classList.remove('fadeOut');
                     $scope.alertData = {message: message, className: className};
@@ -235,10 +227,7 @@
                 };
             });
 
-            setInterval(new function () {
-                console.log('hello2');
-            }, 5000);
-
+         
             document.title = '<%=((Employee) session.getAttribute("userData")).getName()%>';
         </script>
 

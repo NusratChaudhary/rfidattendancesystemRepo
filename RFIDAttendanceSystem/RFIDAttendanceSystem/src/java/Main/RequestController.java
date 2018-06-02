@@ -20,6 +20,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -46,7 +48,11 @@ public class RequestController extends HttpServlet {
         if (request.getHeader("api_key") != null && Helper.validateAPIKEY(request.getHeader("api_key"))) {
             switch (request.getParameter("task")) {
                 case Constants.GET_REQUESTS:
-                    out.print(getAllRequest(request.getSession(false), request));
+                    if (request.getParameter("id") != null) {
+                        out.print(getAllRequest(request.getSession(false), request, request.getParameter("id")));
+                    } else {
+                        out.print(getAllRequest(request.getSession(false), request, null));
+                    }
                     break;
             }
         } else {
@@ -72,27 +78,38 @@ public class RequestController extends HttpServlet {
 
     }
 
-    private String getAllRequest(HttpSession session, HttpServletRequest request) {
+    private String getAllRequest(HttpSession session, HttpServletRequest request, String requestIds) {
         Connection con = new ConnectionManager().getConnection();
         List<Request> requestList = new ArrayList<Request>();
         String query = null;
         try {
             Statement stmt = con.createStatement();
             if (request.getHeader("Referer").contains("PendingRequest.jsp") && ((Employee) request.getSession(false).getAttribute("userData")).isUserHr()) {
-                query = "select REQUESTID,REQUESTSUBJECT,REQUESTBODY,REQUESTREPLY,EMPLOYEEID,NVL(ADMINSTATUS,'-'),to_char(DATETIME,'DD-MM-YY'),NVL(to_char(REPLYDATETIME,'DD-MM-YY'),'-'),FLAG from request";
+                query = "select REQUESTID,REQUESTSUBJECT,REQUESTBODY,REQUESTREPLY,EMPLOYEEID,NVL(ADMINSTATUS,0) AS ADMINSTATUS,to_char(DATETIME,'DD-MM-YY') AS DATETIME,NVL(to_char(REPLYDATETIME,'DD-MM-YY'),'-') AS REPLYDATETIME,FLAG from request";
+                if (requestIds != null) {
+                    query = query + " WHERE REQUESTID NOT IN ( " + requestIds + " ) ORDER BY FLAG";
+                } else {
+                    query = query + " ORDER BY FLAG";
+                }
             } else {
-                query = "select REQUESTID,REQUESTSUBJECT,REQUESTBODY,REQUESTREPLY,EMPLOYEEID,NVL(ADMINSTATUS,'-'),to_char(DATETIME,'DD-MM-YY'),NVL(to_char(REPLYDATETIME,'DD-MM-YY'),'-'),FLAG from request where EMPLOYEEID=" + ((Employee) request.getSession(false).getAttribute("userData")).getEmployeeId();
+                query = "select REQUESTID,REQUESTSUBJECT,REQUESTBODY,REQUESTREPLY,EMPLOYEEID,NVL(ADMINSTATUS,0) AS ADMINSTATUS,to_char(DATETIME,'DD-MM-YY') AS DATETIME,NVL(to_char(REPLYDATETIME,'DD-MM-YY'),'-') AS REPLYDATETIME,FLAG from request where EMPLOYEEID=" + ((Employee) request.getSession(false).getAttribute("userData")).getEmployeeId() + "  ORDER BY FLAG";
             }
+            System.out.println(query);
             ResultSet rs = stmt.executeQuery(query);
+
             while (rs.next()) {
+                Statement stmt2 = con.createStatement();
+                ResultSet rs2 = stmt2.executeQuery("select FIRSTNAME ||' '|| LASTNAME AS EMPLOYEENAME FROM EMPLOYEES WHERE EMPLOYEEID=" + rs.getInt("EMPLOYEEID"));
+                rs2.next();
                 requestList.add(new Request(
                         rs.getInt("REQUESTID"),
                         rs.getString("REQUESTSUBJECT"),
                         rs.getString("REQUESTBODY"),
                         rs.getString("REQUESTREPLY"),
                         rs.getInt("EMPLOYEEID"),
+                        rs2.getString("EMPLOYEENAME"),
                         rs.getInt("ADMINSTATUS"),
-                        rs.getString("DATETIME"),
+                        dateFormatter(rs.getString("DATETIME")),
                         rs.getString("REPLYDATETIME"),
                         rs.getString("FLAG"),
                         rs.getString("FLAG").equals(Constants.REQUEST_RESPONDED)
@@ -149,6 +166,15 @@ public class RequestController extends HttpServlet {
             } catch (SQLException ex) {
                 Logger.getLogger(RequestController.class.getName()).log(Level.SEVERE, null, ex);
             }
+        }
+    }
+
+    private String dateFormatter(String date) {
+        try {
+            return new SimpleDateFormat("dd MMM yyyy").format(new SimpleDateFormat("dd-MM-yy").parse(date));
+        } catch (ParseException ex) {
+            Logger.getLogger(RequestController.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
         }
     }
 }

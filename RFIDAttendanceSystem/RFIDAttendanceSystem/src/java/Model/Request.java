@@ -16,18 +16,20 @@ public class Request {
     private String requestBody;
     private String requestReply;
     private int employeeId;
+    private String employeeName;
     private int adminStatus;
     private String dateTime;
     private String replyDateTime;
     private String flag;
     private boolean isRequestReplied;
 
-    public Request(int requestId, String requestSubject, String requestBody, String requestReply, int employeeId, int adminStatus, String dateTime, String replyDateTime, String flag, boolean isRequestReplied) {
+    public Request(int requestId, String requestSubject, String requestBody, String requestReply, int employeeId, String employeeName, int adminStatus, String dateTime, String replyDateTime, String flag, boolean isRequestReplied) {
         this.requestId = requestId;
         this.requestSubject = requestSubject;
         this.requestBody = requestBody;
         this.requestReply = requestReply;
         this.employeeId = employeeId;
+        this.employeeName = employeeName;
         this.adminStatus = adminStatus;
         this.dateTime = dateTime;
         this.replyDateTime = replyDateTime;
@@ -76,6 +78,14 @@ public class Request {
 
     public void setEmployeeId(int employeeId) {
         this.employeeId = employeeId;
+    }
+
+    public String getEmployeeName() {
+        return employeeName;
+    }
+
+    public void setEmployeeName(String employeeName) {
+        this.employeeName = employeeName;
     }
 
     public int getAdminStatus() {
