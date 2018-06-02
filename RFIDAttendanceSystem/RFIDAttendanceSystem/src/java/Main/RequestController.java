@@ -7,17 +7,24 @@ package Main;
 
 import Model.Employee;
 import Model.Request;
+import Model.RequestResponse;
 import Shared.ConnectionManager;
 import Shared.Constants;
 import Shared.Helper;
+import Shared.Mailer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -54,6 +61,11 @@ public class RequestController extends HttpServlet {
         response.setContentType("text/plain");
         PrintWriter out = response.getWriter();
         if (request.getHeader("api_key") != null && Helper.validateAPIKEY(request.getHeader("api_key"))) {
+            switch (request.getParameter("task")) {
+                case Constants.ADD_REQUEST:
+                    out.print(addRequest(request.getSession(false), request));
+                    break;
+            }
         } else {
             out.print("invalidRequest");
         }
@@ -99,6 +111,43 @@ public class RequestController extends HttpServlet {
             try {
                 con.close();
             } catch (Exception e) {
+            }
+        }
+    }
+
+    private String addRequest(HttpSession session, HttpServletRequest request) {
+        Connection con = new ConnectionManager().getConnection();
+        int requestId = Math.abs(new Random().nextInt());
+        Employee employee = (Employee) session.getAttribute("userData");
+        try {
+            PreparedStatement ps = con.prepareStatement("insert into request values (?,?,?,?,?,?,?,?,?)");
+            ps.setInt(1, requestId);
+            ps.setString(2, request.getParameter("subject"));
+            ps.setString(3, request.getParameter("message"));
+            ps.setString(4, null);
+            ps.setInt(5, employee.getEmployeeId());
+            ps.setInt(6, 0);
+            ps.setTimestamp(7, Helper.getCurrentTimeStamp());
+            ps.setString(7, Constants.REQUEST_PENDING);
+            ps.setTimestamp(9, null);
+            ObjectMapper mapper = new ObjectMapper();
+
+            if (ps.executeUpdate() == 1) {
+                new Mailer().sendMail(employee.getEmail(), "[Request received] " + request.getParameter("subject"), "Your request (" + requestId + ") has been received and is being reviewed by our HR");
+                RequestResponse response = new RequestResponse(requestId, null, Constants.OK);
+                return mapper.writeValueAsString(response);
+            } else {
+                RequestResponse response = new RequestResponse(0, "Some Error Occured", Constants.ERROR);
+                return mapper.writeValueAsString(response);
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+            return Constants.ERROR;
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(RequestController.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }

@@ -15,16 +15,25 @@
         <link rel="stylesheet" href="CSS/mystyle.css"/>
         <link rel="stylesheet" href="CSS/animate.css"/>
         <script src="CSS/constants.js"></script>
-        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>    
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>      
         <script src="CSS/jquery.loading.js"></script>
-        <link href="CSS/jquery.loading.css" rel="stylesheet">      
+        <link href="CSS/jquery.loading.css" rel="stylesheet">
     </head>
     <body>
         <jsp:include page="header.jsp"/>
         <br/>
 
         <div ng-app="Request" ng-controller="RequestCtrl">
+
+            <!-- Alert -->
+            <div class="alert alert-dismissible fade show  animated {{alertData.className}}" style="position: absolute;display: block;width: 50%;left: 25%;"  ng-show="alertData" id="messageAlert" role="alert" >
+                <center> {{alertData.message}} </center>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <!-- Alert End -->
 
             <div class="container-fluid">
                 <div class="col-sm-1 offset-sm-11">
@@ -119,16 +128,16 @@
                             <form>
                                 <div class="form-group">
                                     <label for="subject">Subject</label>
-                                    <input type="text" class="form-control" id="subject" aria-describedby="emailHelp" placeholder="Enter Subject">
+                                    <input type="text" ng-model="sendSubject" class="form-control" id="subject" aria-describedby="emailHelp" placeholder="Enter Subject">
                                 </div>
                                 <div class="form-group">
                                     <label for="message">Message</label>
-                                    <textarea class="form-control" id="message" rows="5" placeholder="Enter Message"></textarea>
+                                    <textarea class="form-control" ng-model="sendMessage" id="message" rows="5" placeholder="Enter Message"></textarea>
                                 </div>
                             </form>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-primary">Send</button>
+                            <button type="button" ng-click="sendRequest()" ng-disabled="!(sendSubject && sendMessage)" class="btn btn-primary">Send</button>
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                         </div>
                     </div>
@@ -149,16 +158,91 @@
             });
 
             var app = angular.module('Request', []);
-            app.controller('RequestCtrl', function ($scope, $http) {
+            app.controller('RequestCtrl', function ($scope, $http, $interval) {
 
 
+                $scope.loadRequests = function () {
+                    const request = {
+                        method: 'GET',
+                        url: 'RequestController',
+                        headers: {"api_key": API_KEY},
+                        params: {task: GET_REQUESTS},
+                        timeout: 10000
+                    };
+                    $http(request).then(function (response) {
+                        if (response.data !== ERROR && response.data !== 'invalidRequest') {
+                            $scope.requestData = JSON.parse(JSON.stringify(response.data));
+                        } else if (response.data === REQUESTS_NOT_FOUND) {
+                            $scope.alertCreator('No Request Made Till Now...', 'alert-info');
+                        } else {
+                            $scope.alertCreator('Error in Retriving Requests', 'alert-danger');
+                        }
+                        hideLoader('body');
+                    }, function (response) {
+                        $scope.alertCreator('Error in Retriving Requests', 'alert-danger');
+                        console.log('Error ', response);
+                        hideLoader('body');
+                    });
+                };
+
+                $interval(function () {
+                    $.scope.loadRequests();
+                }, 5000);
+
+
+                $scope.sendRequest = function () {
+                    if ($scope.sendSubject && $scope.sendMessage) {
+                        showLoader('body');
+                        const request = {
+                            method: 'POST',
+                            url: 'RequestController',
+                            headers: {"api_key": API_KEY},
+                            params: {task: ADD_REQUEST, subject: $scope.sendSubject, message: $scope.sendMessage},
+                            timeout: 10000
+                        };
+                        $http(request).then(function (response) {
+                            if (response.data !== ERROR && response.data !== 'invalidRequest') {
+                                $scope.sendRequestStatus = JSON.parse(JSON.stringify(response.data));
+                                if ($scope.sendRequestStatus.status === OK) {
+                                    $scope.alertCreator('Your request will be replied soon, your request id is ' + $scope.sendRequestStatus.id, 'alert-success');
+                                } else {
+                                    $scope.alertCreator($scope.sendRequestStatus.message, 'alert-danger');
+                                }
+                            } else {
+                                $scope.alertCreator('Error in Sending Requests', 'alert-danger');
+                            }
+                            hideLoader('body');
+                        }, function (response) {
+                            $scope.alertCreator('Error in Sending Requests', 'alert-danger');
+                            console.log('Error ', response);
+                            hideLoader('body');
+                        });
+                    }
+                };
+
+                $scope.alertCreator = function (message, className) {
+                    document.getElementById("messageAlert").classList.remove('fadeOut');
+                    $scope.alertData = {message: message, className: className};
+                    setTimeout(function () {
+                        var element, name, arr;
+                        element = document.getElementById("messageAlert");
+                        name = "fadeOut";
+                        arr = element.className.split(" ");
+                        if (arr.indexOf(name) == -1) {
+                            element.className += " " + name;
+                        }
+                    }, 2000);
+                };
             });
 
+            setInterval(new function () {
+                console.log('hello2');
+            }, 5000);
 
             document.title = '<%=((Employee) session.getAttribute("userData")).getName()%>';
         </script>
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" ></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" ></script>       
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" ></script> 
     </body>
 </html>

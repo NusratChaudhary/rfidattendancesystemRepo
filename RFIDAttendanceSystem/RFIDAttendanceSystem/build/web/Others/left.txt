@@ -16,7 +16,9 @@ make all button look clickavble
 *** Resoponsive ness at end
 
 -------------------------------------------------------------------
-refactor empdetails page solve edit mode and full view isseus
+
+IMPIMPIMP check column made null and thier inserts like in request controller when insert
+
 ------CONNNECTION AUTO COMMIT OFF ON MANY QUIERIES AND COMMIT ON COMPLETED OR ROLL BACK IN CATCh
 ----------------------------------------------------------------
 

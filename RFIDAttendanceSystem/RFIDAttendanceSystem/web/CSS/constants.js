@@ -55,3 +55,4 @@ const GET_SPECIFIC_RECORDS = "get_specific_records";
 
 const GET_REQUESTS = "get_requests";
 const REQUESTS_NOT_FOUND = "requests_not_found";
+const ADD_REQUEST="add_request";
