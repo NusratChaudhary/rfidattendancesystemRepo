@@ -22,8 +22,9 @@ public class Request {
     private String replyDateTime;
     private String flag;
     private boolean isRequestReplied;
+    private boolean isRequestRead;
 
-    public Request(int requestId, String requestSubject, String requestBody, String requestReply, int employeeId, String employeeName, int adminStatus, String dateTime, String replyDateTime, String flag, boolean isRequestReplied) {
+    public Request(int requestId, String requestSubject, String requestBody, String requestReply, int employeeId, String employeeName, int adminStatus, String dateTime, String replyDateTime, String flag, boolean isRequestReplied, boolean isRequestRead) {
         this.requestId = requestId;
         this.requestSubject = requestSubject;
         this.requestBody = requestBody;
@@ -35,6 +36,7 @@ public class Request {
         this.replyDateTime = replyDateTime;
         this.flag = flag;
         this.isRequestReplied = isRequestReplied;
+        this.isRequestRead = isRequestRead;
     }
 
     public Request() {
@@ -128,4 +130,11 @@ public class Request {
         this.isRequestReplied = isRequestReplied;
     }
 
+    public boolean isIsRequestRead() {
+        return isRequestRead;
+    }
+
+    public void setIsRequestRead(boolean isRequestRead) {
+        this.isRequestRead = isRequestRead;
+    }
 }

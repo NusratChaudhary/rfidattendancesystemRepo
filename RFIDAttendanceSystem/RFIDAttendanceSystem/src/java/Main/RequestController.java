@@ -112,7 +112,8 @@ public class RequestController extends HttpServlet {
                         dateFormatter(rs.getString("DATETIME")),
                         rs.getString("REPLYDATETIME"),
                         rs.getString("FLAG"),
-                        rs.getString("FLAG").equals(Constants.REQUEST_RESPONDED)
+                        rs.getString("FLAG").equals(Constants.REQUEST_RESPONDED),
+                        rs.getString("FLAG").equals(Constants.REQUEST_READ) ||  rs.getString("FLAG").equals(Constants.REQUEST_RESPONDED)
                 ));
             }
             ObjectMapper mapper = new ObjectMapper();

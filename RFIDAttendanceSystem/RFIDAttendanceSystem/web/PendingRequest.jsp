@@ -55,7 +55,8 @@
 
                 <div  ng-repeat="request in requestsData" class="animated fadeInUp">
                     <div class="card requestCard shadow-nohover" style="clear: right">
-                        <div class="card-header pending" ng-class="{'pending':request.flag === 'request_pending', 'read':request.flag === 'request_read', 'responded':request.flag === 'request_responded'}">
+                        <div class="card-header pending" ng-class="{
+                                    'pending':request.flag === 'request_pending', 'read':request.flag === 'request_read', 'responded':request.flag === 'request_responded'}">
                             <span class="float-left">{{request.requestSubject}}</span> 
                             <span class="float-right">Request Id : {{request.requestId}}</span>
                         </div>
@@ -69,7 +70,9 @@
                             </div>
                             <br/>
                             <div style="clear: right">
-                                <p class="requestBody">{{request.requestBody}}</p>
+                                <p class="requestBody" ng-if="!(request.isRequestRead || request.isRequestReplied)">{{request.requestBody| limitTo:2 }}<button type="button" ng-click="expandView(request)" class="btn btn-link readmoreless">...Read More</button></p>
+                                <p class="requestBody" ng-if="request.isRequestRead || request.isRequestReplied">{{request.requestBody}}</p>
+
                             </div>
 
                             <div>
@@ -99,7 +102,8 @@
 
             var app = angular.module('Request', []);
             app.controller('RequestCtrl', function ($scope, $http, $interval) {
-
+                $scope.pause = false;
+                 
                 $scope.loadRequestsData = function () {
                     const request = {
                         method: 'GET',
@@ -120,9 +124,32 @@
                     });
                 };
 
+                $expandView = function(data,replyMode){
+                    $scope.pause=true;
+                    const request={
+                        method: 'POST',
+                        url: 'RequestController',
+                        headers: {"api_key": API_KEY},
+                        params: {task: CHANGE_REQUEST_STATUS,id:data.requestId},
+                        timeout: 10000
+                    };
+                    $http(request).then(function (response) {
+                        if (response !== OK) {
+                         data.isRequestRead=true;
+                         data.flag=REQUEST_READ;
+                         $scope.alertCreator('You made the Conversation Read', 'alert-info');
+                         $scope.pause=false;
+                        }
+                    }, function (response) {
+                        console.log('Error ', response);
+                        $scope.alertCreator('Error Occured', 'alert-info');
+                        $scope.pause=false;
+                    });
+    
+                };
 
                 $interval(function () {
-                    if ($scope.requestsData) {
+                    if ($scope.requestsData && !$scope.pause) {
                         var requestIds = new Array();
                         angular.forEach($scope.requestsData, function (value) {
                             requestIds.push(value.requestId);
