@@ -45,57 +45,56 @@
                     <div class="float-left">
 
                         <div class="list-group bg-light shadow-nohover requestsList scrollStyle" id="list-tab" role="tablist">
-                            <a ng-repeat="request in requestData" class="list-group-item list-group-item-action " id="list-home-list" data-toggle="list" href="#list-home" role="tab" aria-controls="home">
+                            <a ng-repeat="request in requestData" class="list-group-item list-group-item-action " id="list-home-list" data-toggle="list" href="{{'#' + request.requestId}}" role="tab" aria-controls="home">
                                 <div class="d-flex w-100 justify-content-between">
                                     <h5 class="mb-1">{{request.requestSubject}}</h5>
                                     <small>{{request.dateTime}}</small>
                                 </div>
                                 <p class="mb-1">{{request.requestBody| limitTo : 50}}....</p>
-                                <small class="float-right"><div class="rounded-circle" ng-class="{
-                                            'pending':request.flag === 'REQUEST_PENDING', 'read':request.flag === 'request_read', 'responded':request.flag === 'request_responded'}" style="width: 12px;height: 12px;"></div></small>
+                                <small class="float-right">
+                                    <div class="rounded-circle" ng-class="{'pending':request.flag === 'request_pending', 'read':request.flag === 'request_read', 'responded':request.flag === 'request_responded'}" style="width: 12px;height: 12px;"></div></small>
                             </a>
                         </div>
                     </div>
                     <div class="offset-sm-3">
                         <div class="tab-content" id="nav-tabContent">
-                            <div class="tab-pane fade show " id="list-home" role="tabpanel" aria-labelledby="list-home-list">
+
+                            <div ng-repeat="request in requestData" class="tab-pane fade show " id="{{request.requestId}}" role="tabpanel" aria-labelledby="list-home-list">
 
                                 <div class="card requestCard shadow-nohover" style="clear: right">
-                                    <div class="card-header pending">
-                                        <span class="float-left">request Subject</span> 
-                                        <span class="float-right">Request Id : 1234</span>
+                                    <div class="card-header" style="font-weight: 500 !important;" ng-class="{'pending':request.flag === 'request_pending', 'read':request.flag === 'request_read', 'responded':request.flag === 'request_responded'}">
+                                        <span class="float-left">{{request.requestSubject}}</span> 
+                                        <span class="float-right">Request Id : {{request.requestId}}</span>
                                     </div>
                                     <div class="card-body">
                                         <div class="float-right">
-                                            <h6>Date : 01/04/2016</h6>
+                                            <h6>Date : {{request.dateTime}}</h6>
                                         </div>
                                         <br/>
                                         <div style="clear: right">
                                             <p class="requestBody">
-                                                It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).
+                                                {{request.requestBody}} 
                                             </p>
                                         </div>
-                                        <hr class="dashed"/>
-                                        <div class="clearfix">
-                                            <div class="float-left">
-                                                <h6>Replied By - abc</h6>
+                                        <div ng-show="request.isRequestReplied">
+                                            <hr class="dashed"/>
+                                            <div class="clearfix">
+                                                <div class="float-left">
+                                                    <h6>Replied By - HR</h6>
+                                                </div>
+                                                <div class="float-right">
+                                                    <h6>Date : {{request.replyDateTime}}</h6>
+                                                </div>
                                             </div>
-                                            <div class="float-right">
-                                                <h6>Date : 01/04/2016</h6>
+                                            <div>
+                                                <p class="requestBody">
+                                                    {{request.requestReply}}    
+                                                </p>
                                             </div>
-                                        </div>
-
-                                        <div>
-                                            <p class="requestBody">
-                                                It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).
-                                            </p>
                                         </div>
                                     </div>
                                 </div> 
                             </div>
-                            <div class="tab-pane fade" id="list-profile" role="tabpanel" aria-labelledby="list-profile-list">...</div>
-                            <div class="tab-pane fade" id="list-messages" role="tabpanel" aria-labelledby="list-messages-list">...</div>
-                            <div class="tab-pane fade" id="list-settings" role="tabpanel" aria-labelledby="list-settings-list">...</div>
                         </div>
                     </div>
 
@@ -147,11 +146,11 @@
                     $('#message').val('');
                 });
             });
-
             var app = angular.module('Request', []);
             app.controller('RequestCtrl', function ($scope, $http, $interval) {
-
+                $scope.response;
                 $scope.loadRequests = function (alreadyExecuted) {
+
                     const request = {
                         method: 'GET',
                         url: 'RequestController',
@@ -161,8 +160,10 @@
                     };
                     $http(request).then(function (response) {
                         if (response.data !== ERROR && response.data !== 'invalidRequest' && response.data !== REQUESTS_NOT_FOUND) {
-                            $scope.requestData = JSON.parse(JSON.stringify(response.data));
-                            console.log($scope.requestData);
+                            if (!(alreadyExecuted && ($scope.response === JSON.stringify(response.data)))) {
+                                $scope.requestData = JSON.parse(JSON.stringify(response.data));
+                                $scope.response = JSON.stringify(response.data);
+                            }
                         } else if (response.data === REQUESTS_NOT_FOUND && !alreadyExecuted) {
                             $scope.alertCreator('No Request Made Till Now...', 'alert-info');
                         } else {
@@ -177,14 +178,13 @@
                         hideLoader('body');
                     });
                 };
-
-//                $interval(function () {
-//                    $scope.loadRequests(true);
-//                }, 5000);
+                $interval(function () {
+                    $scope.loadRequests(true);
+                }, 5000);
 
                 $scope.sendRequest = function () {
                     if ($scope.sendSubject && $scope.sendMessage) {
-                        showLoader('body');
+                        showLoader('modal');
                         const request = {
                             method: 'POST',
                             url: 'RequestController',
@@ -203,15 +203,14 @@
                             } else {
                                 $scope.alertCreator('Error in Sending Requests', 'alert-danger');
                             }
-                            hideLoader('body');
+                            hideLoader('modal');
                         }, function (response) {
                             $scope.alertCreator('Error in Sending Requests', 'alert-danger');
                             console.log('Error ', response);
-                            hideLoader('body');
+                            hideLoader('modal');
                         });
                     }
                 };
-             
                 $scope.alertCreator = function (message, className) {
                     document.getElementById("messageAlert").classList.remove('fadeOut');
                     $scope.alertData = {message: message, className: className};
@@ -226,8 +225,6 @@
                     }, 2000);
                 };
             });
-
-         
             document.title = '<%=((Employee) session.getAttribute("userData")).getName()%>';
         </script>
 
