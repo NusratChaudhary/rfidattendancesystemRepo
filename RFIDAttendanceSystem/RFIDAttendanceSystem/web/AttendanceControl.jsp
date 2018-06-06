@@ -271,6 +271,7 @@
                 $scope.alertCreator = function (message, className) {
                     document.getElementById("messageAlert").classList.remove('fadeOut');
                     $scope.alertData = {message: message, className: className};
+                     $("html, body").animate({scrollTop: 0}, "fast");
                     setTimeout(function () {
                         var element, name, arr;
                         element = document.getElementById("messageAlert");

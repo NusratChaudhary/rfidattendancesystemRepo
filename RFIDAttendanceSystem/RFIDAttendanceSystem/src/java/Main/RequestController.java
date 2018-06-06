@@ -49,9 +49,9 @@ public class RequestController extends HttpServlet {
             switch (request.getParameter("task")) {
                 case Constants.GET_REQUESTS:
                     if (request.getParameter("id") != null) {
-                        out.print(getAllRequest(request.getSession(false), request, request.getParameter("id")));
+                        out.print(getAllRequest(request, request.getParameter("id")));
                     } else {
-                        out.print(getAllRequest(request.getSession(false), request, null));
+                        out.print(getAllRequest(request, null));
                     }
                     break;
             }
@@ -71,6 +71,12 @@ public class RequestController extends HttpServlet {
                 case Constants.ADD_REQUEST:
                     out.print(addRequest(request.getSession(false), request));
                     break;
+                case Constants.CHANGE_REQUEST_STATUS:
+                    out.print(makeRequestRead(request.getSession(false), request));
+                    break;
+                case Constants.POST_REPLY:
+                    out.print(postReply(request.getSession(false), request));
+                    break;
             }
         } else {
             out.print("invalidRequest");
@@ -78,7 +84,7 @@ public class RequestController extends HttpServlet {
 
     }
 
-    private String getAllRequest(HttpSession session, HttpServletRequest request, String requestIds) {
+    private String getAllRequest(HttpServletRequest request, String requestIds) {
         Connection con = new ConnectionManager().getConnection();
         List<Request> requestList = new ArrayList<Request>();
         String query = null;
@@ -94,7 +100,6 @@ public class RequestController extends HttpServlet {
             } else {
                 query = "select REQUESTID,REQUESTSUBJECT,REQUESTBODY,REQUESTREPLY,EMPLOYEEID,NVL(ADMINSTATUS,0) AS ADMINSTATUS,to_char(DATETIME,'DD-MM-YY') AS DATETIME,NVL(to_char(REPLYDATETIME,'DD-MM-YY'),'-') AS REPLYDATETIME,FLAG from request where EMPLOYEEID=" + ((Employee) request.getSession(false).getAttribute("userData")).getEmployeeId() + "  ORDER BY FLAG";
             }
-            System.out.println(query);
             ResultSet rs = stmt.executeQuery(query);
 
             while (rs.next()) {
@@ -113,7 +118,7 @@ public class RequestController extends HttpServlet {
                         rs.getString("REPLYDATETIME"),
                         rs.getString("FLAG"),
                         rs.getString("FLAG").equals(Constants.REQUEST_RESPONDED),
-                        rs.getString("FLAG").equals(Constants.REQUEST_READ) ||  rs.getString("FLAG").equals(Constants.REQUEST_RESPONDED)
+                        rs.getString("FLAG").equals(Constants.REQUEST_READ) || rs.getString("FLAG").equals(Constants.REQUEST_RESPONDED)
                 ));
             }
             ObjectMapper mapper = new ObjectMapper();
@@ -167,6 +172,46 @@ public class RequestController extends HttpServlet {
             } catch (SQLException ex) {
                 Logger.getLogger(RequestController.class.getName()).log(Level.SEVERE, null, ex);
             }
+        }
+    }
+
+    private String makeRequestRead(HttpSession session, HttpServletRequest request) {
+        Connection con = new ConnectionManager().getConnection();
+        try {
+            if (((Employee) session.getAttribute("userData")).isUserHr()) {
+                Statement stmt = con.createStatement();
+                int count = stmt.executeUpdate("update request set FLAG='" + Constants.REQUEST_READ + "' where REQUESTID=" + Integer.parseInt(request.getParameter("id")));
+                if (count == 1) {
+                    return Constants.OK;
+                } else {
+                    return Constants.ERROR;
+                }
+            } else {
+                return Constants.ERROR;
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+            return Constants.ERROR;
+        }
+    }
+
+    private String postReply(HttpSession session, HttpServletRequest request) {
+        Connection con = new ConnectionManager().getConnection();
+        try {
+            if (((Employee) session.getAttribute("userData")).isUserHr()) {
+                Statement stmt = con.createStatement();
+                int count = stmt.executeUpdate("update request set FLAG='" + Constants.REQUEST_RESPONDED + "', REQUESTREPLY='" + request.getParameter("reply") + "', REPLYDATETIME=CURRENT_TIMESTAMP where REQUESTID=" + Integer.parseInt(request.getParameter("id")));
+                if (count == 1) {
+                    return Constants.OK;
+                } else {
+                    return Constants.ERROR;
+                }
+            } else {
+                return Constants.ERROR;
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+            return Constants.ERROR;
         }
     }
 

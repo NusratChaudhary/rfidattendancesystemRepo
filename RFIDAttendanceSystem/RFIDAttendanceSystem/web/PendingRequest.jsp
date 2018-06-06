@@ -26,7 +26,7 @@
         <div ng-app="Request" ng-controller="RequestCtrl" ng-init="loadRequestsData()">
 
             <!-- Alert -->
-            <div class="alert alert-dismissible fade show  animated {{alertData.className}}" style="position: absolute;display: block;width: 50%;left: 25%;"  ng-show="alertData" id="messageAlert" role="alert" >
+            <div class="alert alert-dismissible fade show  animated {{alertData.className}}" on style="position: absolute;display: block;width: 50%;left: 25%;"  ng-show="alertData" id="messageAlert" role="alert" >
                 <center> {{alertData.message}} </center>
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
@@ -55,8 +55,7 @@
 
                 <div  ng-repeat="request in requestsData" class="animated fadeInUp">
                     <div class="card requestCard shadow-nohover" style="clear: right">
-                        <div class="card-header pending" ng-class="{
-                                    'pending':request.flag === 'request_pending', 'read':request.flag === 'request_read', 'responded':request.flag === 'request_responded'}">
+                        <div class="card-header pending" ng-class="{'pending':request.flag === 'request_pending', 'read':request.flag === 'request_read', 'responded':request.flag === 'request_responded'}">
                             <span class="float-left">{{request.requestSubject}}</span> 
                             <span class="float-right">Request Id : {{request.requestId}}</span>
                         </div>
@@ -76,16 +75,19 @@
                             </div>
 
                             <div>
-                                <button class="btn btn-primary float-right" ng-hide="request.isRequestReplied" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" >
+                                <button class="btn btn-primary float-right" ng-hide="request.isRequestReplied"  data-toggle="collapse" href="{{'#' + request.requestId}}" role="button" aria-expanded="false" >
                                     Reply
                                 </button>
                             </div>
                             <br/><br/>
-                            <div class="collapse" id="collapseExample" style="clear: right">
+                            <div class="collapse" ng-class="{'show':request.isRequestReplied}" id="{{request.requestId}}" style="clear: right">
                                 <div class="replyCard">
-                                    <textarea class="form-control" rows="3" placeholder="Reply ...."></textarea>
+                                    <textarea class="form-control" ng-model="replyBody" id="replyBody"  ng-hide="request.isRequestReplied" rows="3" placeholder="Reply ...."></textarea>
                                     <br/>
-                                    <button class="btn btn-success float-right">Send</button>
+                                    <button class="btn btn-success float-right" ng-disabled="!replyBody" ng-hide="request.isRequestReplied" ng-click="sendReply(request,document.getElementById('replyBody').innerHTML)">Send</button>
+                                    <hr class="dashed" ng-hide="!request.isRequestReplied"/>
+                                    <h6 ng-hide="!request.isRequestReplied">Date : {{request.replyDateTime}}</h6>
+                                    <p ng-hide="!request.isRequestReplied">{{request.requestReply}}</p>
                                 </div>
                             </div>
                         </div>
@@ -103,7 +105,7 @@
             var app = angular.module('Request', []);
             app.controller('RequestCtrl', function ($scope, $http, $interval) {
                 $scope.pause = false;
-                 
+                $scope.replyBody = "";
                 $scope.loadRequestsData = function () {
                     const request = {
                         method: 'GET',
@@ -124,29 +126,66 @@
                     });
                 };
 
-                $expandView = function(data,replyMode){
-                    $scope.pause=true;
-                    const request={
+                $scope.expandView = function (data) {
+                    $scope.pause = true;
+                    const request = {
                         method: 'POST',
                         url: 'RequestController',
                         headers: {"api_key": API_KEY},
-                        params: {task: CHANGE_REQUEST_STATUS,id:data.requestId},
+                        params: {task: CHANGE_REQUEST_STATUS, id: data.requestId},
                         timeout: 10000
                     };
                     $http(request).then(function (response) {
-                        if (response !== OK) {
-                         data.isRequestRead=true;
-                         data.flag=REQUEST_READ;
-                         $scope.alertCreator('You made the Conversation Read', 'alert-info');
-                         $scope.pause=false;
+                        if (response.data === OK) {
+                            data.isRequestRead = true;
+                            data.flag = REQUEST_READ;
+                            $scope.alertCreator('You made the Conversation Read', 'alert-info');
+                            $scope.pause = false;
+                        } else {
+                            $scope.alertCreator('Unable to Connect To Server', 'alert-danger');
+                            $scope.pause = false;
                         }
                     }, function (response) {
                         console.log('Error ', response);
                         $scope.alertCreator('Error Occured', 'alert-info');
-                        $scope.pause=false;
+                        $scope.pause = false;
                     });
-    
+
                 };
+
+                $scope.sendReply = function (data,reply) {
+                    $scope.pause = true;
+                    console.log(reply);
+//                    const request = {
+//                        method: 'POST',
+//                        url: 'RequestController',
+//                        headers: {"api_key": API_KEY},
+//                        params: {task: POST_REPLY, id: data.requestId, reply: $scope.replyBody},
+//                        timeout: 10000
+//                    };
+//                    $http(request).then(function (response) {
+//                        var todayTime = new Date();
+//                        var month = format(todayTime.getMonth() + 1);
+//                        var day = format(todayTime.getDate());
+//                        var year = format(todayTime.getFullYear());
+//                        if (response.data === OK) {
+//                            data.isRequestRead = true;
+//                            data.isRequestReplied = true;
+//                            data.replyDateTime = day + "/" + month + "/" + year;
+//                            data.requestReply = $scope.replyBody;
+//                            data.flag = REQUEST_RESPONDED;
+//                            $scope.alertCreator('Reply has been sent to User', 'alert-success');
+//                            $scope.pause = false;
+//                        } else {
+//                            $scope.alertCreator('Unable to Connect To Server', 'alert-danger');
+//                            $scope.pause = false;
+//                        }
+//                    }, function (response) {
+//                        console.log('Error ', response);
+//                        $scope.alertCreator('Error Occured', 'alert-info');
+//                        $scope.pause = false;
+//                    });
+                }
 
                 $interval(function () {
                     if ($scope.requestsData && !$scope.pause) {
@@ -175,8 +214,9 @@
                 }, 5000);
 
                 $scope.alertCreator = function (message, className) {
-                    document.getElementById("messageAlert").classList.remove('fadeOut');
+                    document.getElementById('messageAlert').classList.remove('fadeOut');
                     $scope.alertData = {message: message, className: className};
+                    $("html, body").animate({scrollTop: 0}, "fast");
                     setTimeout(function () {
                         var element, name, arr;
                         element = document.getElementById("messageAlert");

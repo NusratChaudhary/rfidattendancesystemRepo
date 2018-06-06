@@ -71,11 +71,11 @@ public class Constants {
     public static final String DELETE_ATTENDANCE = "delete_attendance";
     public static final String UPDATE_ATTENDANCE = "update_attendance";
     public static final String GET_SPECIFIC_RECORDS = "get_specific_records";
-    
-    
-    public static final String GET_REQUESTS ="get_requests";
-    public static final String REQUESTS_NOT_FOUND ="requests_not_found";
-    public static final String ADD_REQUEST="add_request";
-    public static final String CHANGE_REQUEST_STATUS="change_request_status";
-    
+
+    public static final String GET_REQUESTS = "get_requests";
+    public static final String REQUESTS_NOT_FOUND = "requests_not_found";
+    public static final String ADD_REQUEST = "add_request";
+    public static final String CHANGE_REQUEST_STATUS = "change_request_status";
+    public static final String POST_REPLY = "post_reply";
+
 }
