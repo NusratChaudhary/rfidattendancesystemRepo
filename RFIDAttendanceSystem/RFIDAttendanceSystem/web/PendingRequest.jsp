@@ -82,12 +82,13 @@
                             <br/><br/>
                             <div class="collapse" ng-class="{'show':request.isRequestReplied}" id="{{request.requestId}}" style="clear: right">
                                 <div class="replyCard">
-                                    <textarea class="form-control" ng-model="replyBody" id="replyBody"  ng-hide="request.isRequestReplied" rows="3" placeholder="Reply ...."></textarea>
+                                    <textarea class="form-control" ng-model="replyBody" id="{{'reply' + request.requestId}}" ng-hide="request.isRequestReplied" rows="3" placeholder="Reply ...."></textarea>
                                     <br/>
-                                    <button class="btn btn-success float-right" ng-disabled="!replyBody" ng-hide="request.isRequestReplied" ng-click="sendReply(request,document.getElementById('replyBody').innerHTML)">Send</button>
+                                    <button class="btn btn-success float-right" ng-disabled="!replyBody" ng-hide="request.isRequestReplied" ng-click="sendReply(request)">Send</button>
                                     <hr class="dashed" ng-hide="!request.isRequestReplied"/>
                                     <h6 ng-hide="!request.isRequestReplied">Date : {{request.replyDateTime}}</h6>
                                     <p ng-hide="!request.isRequestReplied">{{request.requestReply}}</p>
+                                    <button ng-hide="request.adminStatus === 1" ng-click="sendToAdmin(request)" type="button" class="btn btn-outline-success btn-sm float-right">Send a Copy to Admin</button>
                                 </div>
                             </div>
                         </div>
@@ -153,39 +154,73 @@
 
                 };
 
-                $scope.sendReply = function (data,reply) {
+                $scope.sendReply = function (data) {
                     $scope.pause = true;
-                    console.log(reply);
-//                    const request = {
-//                        method: 'POST',
-//                        url: 'RequestController',
-//                        headers: {"api_key": API_KEY},
-//                        params: {task: POST_REPLY, id: data.requestId, reply: $scope.replyBody},
-//                        timeout: 10000
-//                    };
-//                    $http(request).then(function (response) {
-//                        var todayTime = new Date();
-//                        var month = format(todayTime.getMonth() + 1);
-//                        var day = format(todayTime.getDate());
-//                        var year = format(todayTime.getFullYear());
-//                        if (response.data === OK) {
-//                            data.isRequestRead = true;
-//                            data.isRequestReplied = true;
-//                            data.replyDateTime = day + "/" + month + "/" + year;
-//                            data.requestReply = $scope.replyBody;
-//                            data.flag = REQUEST_RESPONDED;
-//                            $scope.alertCreator('Reply has been sent to User', 'alert-success');
-//                            $scope.pause = false;
-//                        } else {
-//                            $scope.alertCreator('Unable to Connect To Server', 'alert-danger');
-//                            $scope.pause = false;
-//                        }
-//                    }, function (response) {
-//                        console.log('Error ', response);
-//                        $scope.alertCreator('Error Occured', 'alert-info');
-//                        $scope.pause = false;
-//                    });
+                    showLoader('body');
+                    const request = {
+                        method: 'POST',
+                        url: 'RequestController',
+                        headers: {"api_key": API_KEY},
+                        params: {task: POST_REPLY, id: data.requestId, reply: document.getElementById('reply' + data.requestId).value},
+                        timeout: 10000
+                    };
+                    $http(request).then(function (response) {
+                        var todayTime = new Date();
+                        var month = todayTime.getMonth() + 1;
+                        var day = todayTime.getDate();
+                        var year = todayTime.getFullYear();
+                        if (response.data === OK) {
+                            data.isRequestRead = true;
+                            data.isRequestReplied = true;
+                            data.replyDateTime = day + "/" + month + "/" + year;
+                            data.requestReply = document.getElementById('reply' + data.requestId).value;
+                            data.flag = REQUEST_RESPONDED;
+                            $scope.alertCreator('Reply has been sent to User', 'alert-success');
+                            $scope.pause = false;
+                        } else {
+                            $scope.alertCreator('Unable to Connect To Server', 'alert-danger');
+                            $scope.pause = false;
+                        }
+                        hideLoader('body');
+                    }, function (response) {
+                        console.log('Error ', response);
+                        $scope.alertCreator('Error Occured', 'alert-info');
+                        $scope.pause = false;
+                        hideLoader('body');
+                    });
                 }
+
+
+                $scope.sendToAdmin = function (data) {
+                    $scope.pause = true;
+                    showLoader('body');
+                    const request = {
+                        method: 'POST',
+                        url: 'RequestController',
+                        headers: {"api_key": API_KEY},
+                        params: {task: POST_ADMIN, id: data.requestId},
+                        timeout: 10000
+                    };
+                    $http(request).then(function (response) {
+                        if (response.data === OK) {
+                            data.adminStatus = 1;
+                            $scope.alertCreator('A Copy has been sent to Admin', 'alert-success');
+                            $scope.pause = false;
+                        } else {
+                            $scope.alertCreator('Unable to Connect To Server', 'alert-danger');
+                            $scope.pause = false;
+                        }
+                        hideLoader('body');
+                    }, function (response) {
+                        console.log('Error ', response);
+                        $scope.alertCreator('Error Occured', 'alert-info');
+                        $scope.pause = false;
+                        hideLoader('body');
+                    });
+                }
+
+
+
 
                 $interval(function () {
                     if ($scope.requestsData && !$scope.pause) {

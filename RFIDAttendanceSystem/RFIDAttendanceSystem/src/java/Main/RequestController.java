@@ -77,6 +77,9 @@ public class RequestController extends HttpServlet {
                 case Constants.POST_REPLY:
                     out.print(postReply(request.getSession(false), request));
                     break;
+                case Constants.POST_ADMIN:
+                    out.print(sendToAdmin(request.getSession(false), request));
+                    break;
             }
         } else {
             out.print("invalidRequest");
@@ -182,6 +185,8 @@ public class RequestController extends HttpServlet {
                 Statement stmt = con.createStatement();
                 int count = stmt.executeUpdate("update request set FLAG='" + Constants.REQUEST_READ + "' where REQUESTID=" + Integer.parseInt(request.getParameter("id")));
                 if (count == 1) {
+                    String emailId = getMailId(Integer.parseInt(request.getParameter("id")), con);
+                    new Mailer().sendMail(emailId, "Request Status : Read [Request Id: " + request.getParameter("id") + "]", "Your request.... red");
                     return Constants.OK;
                 } else {
                     return Constants.ERROR;
@@ -192,6 +197,12 @@ public class RequestController extends HttpServlet {
         } catch (Exception e) {
             System.out.println(e);
             return Constants.ERROR;
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(RequestController.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
 
@@ -202,6 +213,8 @@ public class RequestController extends HttpServlet {
                 Statement stmt = con.createStatement();
                 int count = stmt.executeUpdate("update request set FLAG='" + Constants.REQUEST_RESPONDED + "', REQUESTREPLY='" + request.getParameter("reply") + "', REPLYDATETIME=CURRENT_TIMESTAMP where REQUESTID=" + Integer.parseInt(request.getParameter("id")));
                 if (count == 1) {
+                    String emailId = getMailId(Integer.parseInt(request.getParameter("id")), con);
+                    new Mailer().sendMail(emailId, "Request Status : Replied [Request Id: " + request.getParameter("id") + "]", "Your request.... rep");
                     return Constants.OK;
                 } else {
                     return Constants.ERROR;
@@ -212,7 +225,42 @@ public class RequestController extends HttpServlet {
         } catch (Exception e) {
             System.out.println(e);
             return Constants.ERROR;
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(RequestController.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
+    }
+
+    private String sendToAdmin(HttpSession session, HttpServletRequest request) {
+        Connection con = new ConnectionManager().getConnection();
+        try {
+            if (((Employee) session.getAttribute("userData")).isUserHr()) {
+                Statement stmt = con.createStatement();
+                int count = stmt.executeUpdate("update request set ADMINSTATUS=1 where REQUESTID=" + Integer.parseInt(request.getParameter("id")));
+                if (count == 1) {
+                    String emailId = getMailId(Integer.parseInt(request.getParameter("id")), con);
+                    new Mailer().sendMail(emailId, "Request Status : Sent To Admin [Request Id: " + request.getParameter("id") + "]", "Your request.... sent to admin");
+                    return Constants.OK;
+                } else {
+                    return Constants.ERROR;
+                }
+            } else {
+                return Constants.ERROR;
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+            return Constants.ERROR;
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(RequestController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
     }
 
     private String dateFormatter(String date) {
@@ -220,6 +268,18 @@ public class RequestController extends HttpServlet {
             return new SimpleDateFormat("dd MMM yyyy").format(new SimpleDateFormat("dd-MM-yy").parse(date));
         } catch (ParseException ex) {
             Logger.getLogger(RequestController.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
+    }
+
+    private String getMailId(int requestId, Connection con) {
+        try {
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery("select email from EMPLOYEES where employeeId in (select employeeId from request where request.REQUESTID=" + requestId + ")");
+            rs.next();
+            return rs.getString("email");
+        } catch (Exception e) {
+            System.out.println(e);
             return null;
         }
     }

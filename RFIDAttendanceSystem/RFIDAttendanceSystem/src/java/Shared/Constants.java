@@ -77,5 +77,5 @@ public class Constants {
     public static final String ADD_REQUEST = "add_request";
     public static final String CHANGE_REQUEST_STATUS = "change_request_status";
     public static final String POST_REPLY = "post_reply";
-
+    public static final String POST_ADMIN = "post_admin";
 }
