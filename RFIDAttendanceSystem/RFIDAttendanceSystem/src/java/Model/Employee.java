@@ -24,19 +24,25 @@ public class Employee {
     private int salary;
     private String departmentName;
 
-        public Employee(int employeeId, String dob, String firstName, String lastName, String gender, String phoneNumber, String email, String address, Rfid rfid, boolean isHr) {
-            this.employeeId = employeeId;
-            this.dob = dob;
-            this.firstName = firstName;
-            this.lastName = lastName;
-            this.gender = gender;
-            this.phoneNumber = phoneNumber;
-            this.email = email;
-            this.address = address;
-            this.rfid = rfid;
-            this.isUserHr = isHr;
-        }
+    public Employee(int employeeId, String dob, String firstName, String lastName, String gender, String phoneNumber, String email, String address, Rfid rfid, boolean isHr) {
+        this.employeeId = employeeId;
+        this.dob = dob;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.gender = gender;
+        this.phoneNumber = phoneNumber;
+        this.email = email;
+        this.address = address;
+        this.rfid = rfid;
+        this.isUserHr = isHr;
+    }
 
+    public Employee(int employeeId, String firstName, String lastName) {
+        this.employeeId = employeeId;
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
+    
     public Employee(int employeeId, String dob, String firstName, String lastName, String gender, String phoneNumber, String email, String address, Rfid rfid, int salary, String departmentName) {
         this.employeeId = employeeId;
         this.dob = dob;

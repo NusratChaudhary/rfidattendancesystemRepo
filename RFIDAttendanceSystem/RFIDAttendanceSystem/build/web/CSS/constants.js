@@ -64,3 +64,10 @@ const REQUEST_SENT_TO_ADMIN = "request_sent_to_admin";
 const CHANGE_REQUEST_STATUS = "change_request_status";
 const POST_REPLY = "post_reply";
 const POST_ADMIN = "post_admin";
+
+const LOAD_BROADCASTDATA = "load_broadcastdata";
+const INDIVIDUAL_MODE = "individual_mode";
+const BROADCAST_MODE = "broadcast_mode";
+const BROADCAST_ACTIVE = "broadcast_active";
+const BROADCAST_INACTIVE = "broadcast_inactive";
+const POST_BROADCAST = "post_broadcast";

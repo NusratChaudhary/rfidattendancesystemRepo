@@ -357,6 +357,10 @@ hr.dashed {
     padding-top: 0px;
     padding-left: 0px;
 }
+.broadcastEmployeeList{
+    max-height: 190px;
+    overflow-y: auto;
+}
 
 @media print{
     #controlButton{

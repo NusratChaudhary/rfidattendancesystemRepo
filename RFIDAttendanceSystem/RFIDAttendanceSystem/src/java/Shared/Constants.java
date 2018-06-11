@@ -78,4 +78,12 @@ public class Constants {
     public static final String CHANGE_REQUEST_STATUS = "change_request_status";
     public static final String POST_REPLY = "post_reply";
     public static final String POST_ADMIN = "post_admin";
+
+    public static final String LOAD_BROADCASTDATA = "load_broadcastdata";
+    public static final String INDIVIDUAL_MODE = "individual_mode";
+    public static final String BROADCAST_MODE = "broadcast_mode";
+    public static final String BROADCAST_ACTIVE = "broadcast_active";
+    public static final String BROADCAST_INACTIVE = "broadcast_inactive";
+    public static final String POST_BROADCAST = "post_broadcast";
+    
 }

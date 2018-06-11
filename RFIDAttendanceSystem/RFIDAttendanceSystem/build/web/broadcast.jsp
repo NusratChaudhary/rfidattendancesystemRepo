@@ -4,6 +4,7 @@
     Author     : mohnish
 --%>
 
+<%@page import="Model.Employee"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -13,146 +14,184 @@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" />
         <link rel="stylesheet" href="CSS/mystyle.css"/>
         <link rel="stylesheet" href="CSS/animate.css"/>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-        <title>Broadcast</title>
+        <script src="CSS/constants.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>    
+        <script src="CSS/jquery.loading.js"></script>
+        <link href="CSS/jquery.loading.css" rel="stylesheet">
 
     </head>
 
     <body>
         <jsp:include page="header.jsp"/>
         <br/><br/>
-        <div class="container-fluid" >
+        <div class="container-fluid" ng-app="Broadcast" ng-controller="BroadcastCtrl" ng-init="loadBroadcasts()">
 
+            <!-- Alert -->
+            <div class="alert alert-dismissible fade show  animated {{alertData.className}}" style="position: absolute;display: block;width: 50%;left: 25%;"  ng-show="alertData" id="messageAlert" role="alert" >
+                <center> {{alertData.message}} </center>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <!-- Alert End -->
 
-
-            <div class="" style="margin-left: 5px;margin-right: 5px;">
-
-
+            <div  style="margin-left: 5px;margin-right: 5px;">
                 <div class="float-left bg-light shadow-nohover" >
-                    <div style="margin-left: 10px">
-
-                        <!-- Alert -->
-                        <div class="alert alert-success alert-dismissible fade show" id="messageAlert"role="alert" >
-                            <center> Message Sent Succesfully ! </center>
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
+                    <div style="margin-left: 10px">      
+                        <div class="form-group form-group-padding" >
+                            <label>Message</label>
+                            <textarea class="form-control" ng-model="messageTextArea" rows="5" ></textarea>
                         </div>
-                        <!-- Alert End -->
-
-
-                        <form>
-                            <div class="form-group form-group-padding" >
-                                <label>Message</label>
-                                <textarea class="form-control" rows="5" ></textarea>
+                        <center> <div class="form-check form-check-inline " style="font-size: 20px;">
+                                <input class="form-check-input" ng-model="messageType" type="radio" name="messageType" id="broadcast" value="0" >
+                                <label class="form-check-label" for="broadcast">Broadcast Message</label>
+                            </div> 
+                            <div class="form-check form-check-inline" style="font-size: 20px;">
+                                <input class="form-check-input" ng-model="messageType" type="radio" name="messageType" id="individual"  value="1">
+                                <label class="form-check-label" for="individual">Individual Message</label>
                             </div>
+                        </center>
+                        <div class="form-group form-group-padding animated fadeIn" id="employeeSelector" style="display: none">
+                            <label for="exampleInputPassword1" >Receipt</label>
+                            <select multiple class="form-control" ng-model="employeesMultiselect" id="exampleFormControlSelect2">
+                                <option ng-repeat="employee in broadcastData.employeesList" value="{{employee.employeeId}}">
+                                    {{employee.firstName}} {{employee.lastName}} {{'[' + employee.employeeId + ']'}}
+                                </option>
 
-
-                            <center> <div class="form-check form-check-inline " style="font-size: 20px;">
-                                    <input class="form-check-input"  type="radio" name="messageType" id="broadcast" value="0" >
-                                    <label class="form-check-label" for="broadcast">Broadcast Message</label>
-                                </div> 
-                                <div class="form-check form-check-inline" style="font-size: 20px;">
-                                    <input class="form-check-input" type="radio" name="messageType" id="individual"  value="1">
-                                    <label class="form-check-label" for="individual">Individual Message</label>
-                                </div>
-                            </center>
-
-
-                            <div class="form-group form-group-padding animated fadeIn" id="employeeSelector" style="display: none">
-                                <label for="exampleInputPassword1">Receipt</label>
-                                <select multiple class="form-control" id="exampleFormControlSelect2">
-                                    <option>1</option>
-                                    <option>2</option>
-                                    <option>3</option>
-                                    <option>4</option>
-                                    <option>5</option>
-                                </select>
-                            </div>
-
-                            <div class="form-group form-group-padding">
-                                <center> <button type="submit" class="btn btn-primary">Submit</button></center>
-                            </div>
-
-                        </form>
+                            </select>
+                        </div>
+                        <div class="form-group form-group-padding">
+                            <center> <button type="button" ng-click="postBroadcast()" ng-disabled="!(messageTextArea && employeesMultiselect || messageType === '0')" class="btn btn-primary">Submit</button></center>
+                        </div>
                     </div>
                 </div>
 
                 <div class="float-right col-sm-8">
-
-                    <div class="alert alert-success alert-dismissible fade show" id="commonAlert"role="alert" >
-                        <center> Message Deleted Succesfully! </center>
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-
                     <div style="overflow-y:auto;padding: 10px">
-                        <div class="card">
-                            <div class="card-header">
-                                <h5>   Message Type : Broadcast
-                                </h5>
+                        <div ng-repeat="broadcast in broadcastData.broadcastList" ng-if="broadcastData">
+                            <div class="card">
+                                <div class="card-header clearfix">
+                                    <h5 class="float-left">{{broadcast.broadcastType==='individual_mode'?'Individual':'Broadcast'}}</h5>
+                                    <h6 class="float-right text-muted mb-0 mt-1" ng-hide="{{broadcast.flag === 'broadcast_active'}}">Deleted</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="clearfix">
+                                        <p class="card-text float-left">{{broadcast.message}}</p>
+                                        <ul ng-if="broadcast.employeesList" class="list-group float-right scrollStyle mb-5  p-2 broadcastEmployeeList">
+                                            <li ng-repeat="employee in broadcast.employeesList" class="list-group-item">
+                                                {{employee.firstName}} {{employee.lastName}} {{'[' + employee.employeeId + ']'}}
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <a href="#"  class="btn btn-danger  float-right" ng-hide="{{broadcast.flag !== 'broadcast_active'}}">Delete</a>
+                                </div>
                             </div>
-                            <div class="card-body">
-
-                                <p class="card-text">Office will be closed from 21st March till 25th March due to painting work</p>
-                                <a href="#"  class="btn btn-danger  float-right  ">Delete</a>
-                            </div>
+                            <br/>
                         </div>
-                        <br/>
-                        <div class="card">
-                            <div class="card-header">
-                                <h5>   Message Type : Individual [Rajesh Jain (0012548)] </h5>
-                            </div>
-                            <div class="card-body">
-
-                                <p class="card-text">PLease meet Mr Dubey [HR Dept] to talk about salary issues</p>
-                                <a href="#" class="btn btn-danger float-right">Delete</a>
-                            </div>
-                        </div>
-
                     </div>
                 </div>
-
-
-
-
             </div>
-
-
         </div>
 
-
-
-
         <script>
-
-
-            $("#messageAlert").fadeTo(2000, 500).slideUp(500, function () {
-                $("#messageAlert").slideUp(500);
-            });
-
-            $("#commonAlert").fadeTo(2000, 500).slideUp(500, function () {
-                $("#commonAlert").slideUp(500);
-            });
-
             $(document).ready(function () {
-
                 $('#individual').click(function () {
                     $('#employeeSelector').css('display', 'block');
-
                 });
 
                 $('#broadcast').click(function () {
                     $('#employeeSelector').css('display', 'none');
-
                 });
+            });
 
+
+            showLoader('body');
+            var app = angular.module('Broadcast', []);
+            app.controller('BroadcastCtrl', function ($scope, $http) {
+
+                $scope.loadBroadcasts = function () {
+                    const request = {
+                        method: 'GET',
+                        url: 'BroadcastController',
+                        headers: {"api_key": API_KEY},
+                        params: {task: LOAD_BROADCASTDATA},
+                        timeout: 10000
+                    };
+                    $http(request).then(function (response) {
+                        if (response.data !== ERROR) {
+                            console.log(JSON.parse(JSON.stringify(response.data)));
+                            $scope.broadcastData = JSON.parse(JSON.stringify(response.data));
+                        }
+                        hideLoader('body');
+                    }, function (response) {
+                        console.log('Error ', response);
+                        hideLoader('body');
+                    });
+                };
+
+                $scope.postBroadcast = function () {
+                    var broadcast = {
+                        id : 1,
+                        message : 'hee',
+                        broadcastType : 'broadcast_mode',
+                        flag : 'broadcast_active',
+                        employeesList : null
+                    };
+                    console.log(broadcast);
+                    
+                    var spliced=JSON.parse(JSON.stringify($scope.broadcastData.broadcastList));
+                   
+                    console.log(spliced.splice(0,0,broadcast));
+//                    showLoader('body');
+//                    var multiselect = null;
+//                    if ($scope.employeesMultiselect !== null && $scope.messageType === "1") {
+//                        multiselect = $scope.employeesMultiselect.toString();
+//                    }
+//                    const request = {
+//                        method: 'POST',
+//                        url: 'BroadcastController',
+//                        headers: {"api_key": API_KEY},
+//                        params: {task: POST_BROADCAST, multiselect: multiselect, message: $scope.messageTextArea},
+//                        timeout: 10000
+//                    };
+//                    $http(request).then(function (response) {
+//                        if (response.data === OK) {
+//                            $scope.alertCreator('Broadcast Posted Successfully', 'alert-success');
+//
+//                        } else {
+//                            $scope.alertCreator('Unable to Contact Server', 'alert-danger');
+//                        }
+//                        hideLoader('body');
+//                    }, function (response) {
+//                        console.log('Error ', response);
+//                        hideLoader('body');
+//                    });
+
+                };
+
+
+
+                $scope.alertCreator = function (message, className) {
+                    document.getElementById("messageAlert").classList.remove('fadeOut');
+                    $scope.alertData = {message: message, className: className};
+                    $("html, body").animate({scrollTop: 0}, "fast");
+                    setTimeout(function () {
+                        var element, name, arr;
+                        element = document.getElementById("messageAlert");
+                        name = "fadeOut";
+                        arr = element.className.split(" ");
+                        if (arr.indexOf(name) == -1) {
+                            element.className += " " + name;
+                        }
+                    }, 2000);
+                };
 
             });
+
+            document.title = '<%=((Employee) session.getAttribute("userData")).getName()%>';
         </script>
 
-        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"  ></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" ></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" ></script>
     </body>
