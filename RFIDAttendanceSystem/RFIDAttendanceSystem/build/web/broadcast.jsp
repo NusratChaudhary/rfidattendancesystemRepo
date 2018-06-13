@@ -28,7 +28,7 @@
         <div class="container-fluid" ng-app="Broadcast" ng-controller="BroadcastCtrl" ng-init="loadBroadcasts()">
 
             <!-- Alert -->
-            <div class="alert alert-dismissible fade show  animated {{alertData.className}}" style="position: absolute;display: block;width: 50%;left: 25%;"  ng-show="alertData" id="messageAlert" role="alert" >
+            <div class="alert alert-dismissible fade show  animated {{alertData.className}}" style="position: absolute;display: block;width: 50%;left: 25%; z-index: 999"  ng-show="alertData" id="messageAlert" role="alert" >
                 <center> {{alertData.message}} </center>
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
@@ -69,7 +69,7 @@
 
                 <div class="float-right col-sm-8">
                     <div style="overflow-y:auto;padding: 10px">
-                        <div ng-repeat="broadcast in broadcastData.broadcastList" ng-if="broadcastData">
+                        <div ng-repeat="broadcast in broadcastData.broadcastList| reverse" ng-if="broadcastData">
                             <div class="card">
                                 <div class="card-header clearfix">
                                     <h5 class="float-left">{{broadcast.broadcastType==='individual_mode'?'Individual':'Broadcast'}}</h5>
@@ -108,6 +108,11 @@
 
             showLoader('body');
             var app = angular.module('Broadcast', []);
+            app.filter('reverse', function () {
+                return function (items) {
+                    return items.slice().reverse();
+                };
+            });
             app.controller('BroadcastCtrl', function ($scope, $http) {
 
                 $scope.loadBroadcasts = function () {
@@ -120,7 +125,6 @@
                     };
                     $http(request).then(function (response) {
                         if (response.data !== ERROR) {
-                            console.log(JSON.parse(JSON.stringify(response.data)));
                             $scope.broadcastData = JSON.parse(JSON.stringify(response.data));
                         }
                         hideLoader('body');
@@ -131,46 +135,31 @@
                 };
 
                 $scope.postBroadcast = function () {
-                    var broadcast = {
-                        id : 1,
-                        message : 'hee',
-                        broadcastType : 'broadcast_mode',
-                        flag : 'broadcast_active',
-                        employeesList : null
+                    showLoader('body');
+                    var multiselect = null;
+                    if ($scope.employeesMultiselect !== null && $scope.messageType === "1") {
+                        multiselect = $scope.employeesMultiselect.toString();
+                    }
+                    const request = {
+                        method: 'POST',
+                        url: 'BroadcastController',
+                        headers: {"api_key": API_KEY},
+                        params: {task: POST_BROADCAST, multiselect: multiselect, message: $scope.messageTextArea},
+                        timeout: 10000
                     };
-                    console.log(broadcast);
-                    
-                    var spliced=JSON.parse(JSON.stringify($scope.broadcastData.broadcastList));
-                   
-                    console.log(spliced.splice(0,0,broadcast));
-//                    showLoader('body');
-//                    var multiselect = null;
-//                    if ($scope.employeesMultiselect !== null && $scope.messageType === "1") {
-//                        multiselect = $scope.employeesMultiselect.toString();
-//                    }
-//                    const request = {
-//                        method: 'POST',
-//                        url: 'BroadcastController',
-//                        headers: {"api_key": API_KEY},
-//                        params: {task: POST_BROADCAST, multiselect: multiselect, message: $scope.messageTextArea},
-//                        timeout: 10000
-//                    };
-//                    $http(request).then(function (response) {
-//                        if (response.data === OK) {
-//                            $scope.alertCreator('Broadcast Posted Successfully', 'alert-success');
-//
-//                        } else {
-//                            $scope.alertCreator('Unable to Contact Server', 'alert-danger');
-//                        }
-//                        hideLoader('body');
-//                    }, function (response) {
-//                        console.log('Error ', response);
-//                        hideLoader('body');
-//                    });
-
+                    $http(request).then(function (response) {
+                        if (response.data !== ERROR) {
+                            $scope.broadcastData.broadcastList.push(JSON.parse(JSON.stringify(response.data)));
+                            $scope.alertCreator('Broadcast Posted Successfully', 'alert-success');
+                        } else {
+                            $scope.alertCreator('Unable to Contact Server', 'alert-danger');
+                        }
+                        hideLoader('body');
+                    }, function (response) {
+                        console.log('Error ', response);
+                        hideLoader('body');
+                    });
                 };
-
-
 
                 $scope.alertCreator = function (message, className) {
                     document.getElementById("messageAlert").classList.remove('fadeOut');

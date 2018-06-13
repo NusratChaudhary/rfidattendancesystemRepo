@@ -84,7 +84,7 @@ public class BroadcastController extends HttpServlet {
             Connection con = new ConnectionManager().getConnection();
             try {
                 Statement stmt = con.createStatement();
-                ResultSet rs = stmt.executeQuery("select * from broadcast ORDER BY FLAG");
+                ResultSet rs = stmt.executeQuery("select * from broadcast ORDER BY DATETIME");
                 while (rs.next()) {
 
                     List<Employee> employeesList = new ArrayList<>();
@@ -141,20 +141,21 @@ public class BroadcastController extends HttpServlet {
         if (((Employee) session.getAttribute("userData")).isUserHr()) {
             String type = Constants.BROADCAST_MODE;
             String[] listofEmployeeId = null;
+            List<Employee> employeeIds = new ArrayList<>();
+            Broadcast broadcast = new Broadcast();
             Connection con = new ConnectionManager().getConnection();
             try {
-                System.out.println(multiselect != null);
-                System.out.println(multiselect);
                 if (multiselect != null) {
                     type = Constants.INDIVIDUAL_MODE;
                     listofEmployeeId = multiselect.split(",");
                 }
-                PreparedStatement ps = con.prepareStatement("insert into broadcast values (?,?,?,?)");
+                PreparedStatement ps = con.prepareStatement("insert into broadcast values (?,?,?,?,?)");
                 int broadcastId = Math.abs(new Random().nextInt());
                 ps.setInt(1, broadcastId);
                 ps.setString(2, message);
                 ps.setString(3, type);
                 ps.setString(4, Constants.BROADCAST_ACTIVE);
+                ps.setTimestamp(5, Helper.getCurrentTimeStamp());
                 ps.executeUpdate();
                 if (type.equals(Constants.INDIVIDUAL_MODE)) {
                     for (String employeeId : listofEmployeeId) {
@@ -163,8 +164,25 @@ public class BroadcastController extends HttpServlet {
                         ps2.setInt(2, Integer.parseInt(employeeId));
                         ps2.executeUpdate();
                     }
+                    Statement stmt = con.createStatement();
+                    ResultSet rs = stmt.executeQuery("select EMPLOYEEID, FIRSTNAME, LASTNAME FROM EMPLOYEES WHERE EMPLOYEEID IN (select EMPLOYEEID from BROADCASTEMPLOYEEMAPPER WHERE ID=" + broadcastId + ")");
+                    while (rs.next()) {
+                        employeeIds.add(new Employee(
+                                rs.getInt("EMPLOYEEID"),
+                                rs.getString("FIRSTNAME"),
+                                rs.getString("LASTNAME"))
+                        );
+                    }
+                } else {
+                    employeeIds = null;
                 }
-                return Constants.OK;
+                broadcast.setBroadcastType(type);
+                broadcast.setFlag(Constants.BROADCAST_ACTIVE);
+                broadcast.setId(broadcastId);
+                broadcast.setMessage(message);
+                broadcast.setEmployeesList(employeeIds);
+                ObjectMapper mapper = new ObjectMapper();
+                return mapper.writeValueAsString(broadcast);
             } catch (Exception e) {
                 System.out.println(e);
                 return Constants.ERROR;
