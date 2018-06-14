@@ -1,5 +1,5 @@
 --------------------------------------------------------
---  File created - Wednesday-June-13-2018   
+--  File created - Thursday-June-14-2018   
 --------------------------------------------------------
 --------------------------------------------------------
 --  DDL for Table ADMIN
@@ -245,20 +245,18 @@ SET DEFINE OFF;
 Insert into HR.ATTENDENCE (ATTENDENCEID,RFIDNUMBER,CHECKIN,CHECKOUT,FLAG,CREATIONDATE) values (1956896220,9051449,to_timestamp('20-05-18 04:17:36.000000000 PM','DD-MM-RR HH12:MI:SSXFF AM'),to_timestamp('20-05-18 04:18:22.000000000 PM','DD-MM-RR HH12:MI:SSXFF AM'),'out',to_timestamp('20-05-18 04:18:10.000000000 AM','DD-MM-RR HH12:MI:SSXFF AM'));
 REM INSERTING into HR.BROADCAST
 SET DEFINE OFF;
-Insert into HR.BROADCAST (ID,MESSAGE,BROADCASTTYPE,FLAG,DATETIME) values (1590643171,'test indi 4','broadcast_mode','broadcast_active',to_timestamp('13-06-18 08:28:46.944000000 PM','DD-MM-RR HH12:MI:SSXFF AM'));
-Insert into HR.BROADCAST (ID,MESSAGE,BROADCASTTYPE,FLAG,DATETIME) values (961174261,'test s','individual_mode','broadcast_active',to_timestamp('13-06-18 08:29:26.003000000 PM','DD-MM-RR HH12:MI:SSXFF AM'));
-Insert into HR.BROADCAST (ID,MESSAGE,BROADCASTTYPE,FLAG,DATETIME) values (1963870376,'asdf','broadcast_mode','broadcast_active',to_timestamp('13-06-18 08:29:33.460000000 PM','DD-MM-RR HH12:MI:SSXFF AM'));
-Insert into HR.BROADCAST (ID,MESSAGE,BROADCASTTYPE,FLAG,DATETIME) values (1045976676,'test indi 1','broadcast_mode','broadcast_active',to_timestamp('13-06-18 08:22:21.102000000 PM','DD-MM-RR HH12:MI:SSXFF AM'));
-Insert into HR.BROADCAST (ID,MESSAGE,BROADCASTTYPE,FLAG,DATETIME) values (1953008876,'test indi 3','broadcast_mode','broadcast_active',to_timestamp('13-06-18 08:26:36.166000000 PM','DD-MM-RR HH12:MI:SSXFF AM'));
-Insert into HR.BROADCAST (ID,MESSAGE,BROADCASTTYPE,FLAG,DATETIME) values (1080683088,'test indi 2','broadcast_mode','broadcast_active',to_timestamp('13-06-18 08:25:53.135000000 PM','DD-MM-RR HH12:MI:SSXFF AM'));
-Insert into HR.BROADCAST (ID,MESSAGE,BROADCASTTYPE,FLAG,DATETIME) values (50052318,'test','individual_mode','broadcast_active',to_timestamp('13-06-18 08:29:17.748000000 PM','DD-MM-RR HH12:MI:SSXFF AM'));
+Insert into HR.BROADCAST (ID,MESSAGE,BROADCASTTYPE,FLAG,DATETIME) values (1659710737,'ghjkljhgf','broadcast_mode','broadcast_active',to_timestamp('14-06-18 08:03:08.017000000 PM','DD-MM-RR HH12:MI:SSXFF AM'));
+Insert into HR.BROADCAST (ID,MESSAGE,BROADCASTTYPE,FLAG,DATETIME) values (110609273,'dfghj','broadcast_mode','broadcast_active',to_timestamp('14-06-18 08:05:44.656000000 PM','DD-MM-RR HH12:MI:SSXFF AM'));
+Insert into HR.BROADCAST (ID,MESSAGE,BROADCASTTYPE,FLAG,DATETIME) values (1550031842,'dfghjhgbbh','broadcast_mode','broadcast_active',to_timestamp('14-06-18 08:05:52.822000000 PM','DD-MM-RR HH12:MI:SSXFF AM'));
+Insert into HR.BROADCAST (ID,MESSAGE,BROADCASTTYPE,FLAG,DATETIME) values (1688167605,'sdfghjk,.','broadcast_mode','broadcast_active',to_timestamp('14-06-18 08:04:52.601000000 PM','DD-MM-RR HH12:MI:SSXFF AM'));
+Insert into HR.BROADCAST (ID,MESSAGE,BROADCASTTYPE,FLAG,DATETIME) values (2099514417,'dfghjhgbbhytgh','broadcast_mode','broadcast_active',to_timestamp('14-06-18 08:05:58.390000000 PM','DD-MM-RR HH12:MI:SSXFF AM'));
+Insert into HR.BROADCAST (ID,MESSAGE,BROADCASTTYPE,FLAG,DATETIME) values (1811270355,'sdf','broadcast_mode','broadcast_active',to_timestamp('14-06-18 08:04:37.448000000 PM','DD-MM-RR HH12:MI:SSXFF AM'));
+Insert into HR.BROADCAST (ID,MESSAGE,BROADCASTTYPE,FLAG,DATETIME) values (1398659510,'test','broadcast_mode','broadcast_active',to_timestamp('14-06-18 08:02:41.773000000 PM','DD-MM-RR HH12:MI:SSXFF AM'));
+Insert into HR.BROADCAST (ID,MESSAGE,BROADCASTTYPE,FLAG,DATETIME) values (936804634,'sdfg','broadcast_mode','broadcast_active',to_timestamp('14-06-18 08:04:14.585000000 PM','DD-MM-RR HH12:MI:SSXFF AM'));
+Insert into HR.BROADCAST (ID,MESSAGE,BROADCASTTYPE,FLAG,DATETIME) values (674729376,'sdfghjk,.gv','broadcast_mode','broadcast_active',to_timestamp('14-06-18 08:05:18.498000000 PM','DD-MM-RR HH12:MI:SSXFF AM'));
+Insert into HR.BROADCAST (ID,MESSAGE,BROADCASTTYPE,FLAG,DATETIME) values (2082815394,'sdfghjk,.gv','broadcast_mode','broadcast_active',to_timestamp('14-06-18 08:05:33.039000000 PM','DD-MM-RR HH12:MI:SSXFF AM'));
 REM INSERTING into HR.BROADCASTEMPLOYEEMAPPER
 SET DEFINE OFF;
-Insert into HR.BROADCASTEMPLOYEEMAPPER (ID,EMPLOYEEID) values (961174261,1015584988);
-Insert into HR.BROADCASTEMPLOYEEMAPPER (ID,EMPLOYEEID) values (961174261,444921366);
-Insert into HR.BROADCASTEMPLOYEEMAPPER (ID,EMPLOYEEID) values (961174261,959711844);
-Insert into HR.BROADCASTEMPLOYEEMAPPER (ID,EMPLOYEEID) values (50052318,1015584988);
-Insert into HR.BROADCASTEMPLOYEEMAPPER (ID,EMPLOYEEID) values (50052318,444921366);
 REM INSERTING into HR.CUSTOMER
 SET DEFINE OFF;
 Insert into HR.CUSTOMER (NAME,GENDER,PHONENUMBER,EMAIL,DOB) values ('Mohnish Anjaria','Male',9969742702,'anjariamohnish','04/11/1996');
@@ -581,7 +579,7 @@ Insert into HR.VERIFICATION (ID,CODE,REFERENCEID,WORK,FLAG) values (103753681,'4
 --------------------------------------------------------
 
   ALTER TABLE "HR"."BROADCASTEMPLOYEEMAPPER" ADD CONSTRAINT "BROADCASTEMPLOYEEMAPPER_FK1" FOREIGN KEY ("ID")
-	  REFERENCES "HR"."BROADCAST" ("ID") ENABLE;
+	  REFERENCES "HR"."BROADCAST" ("ID") ON DELETE CASCADE ENABLE;
  
   ALTER TABLE "HR"."BROADCASTEMPLOYEEMAPPER" ADD CONSTRAINT "BROADCASTEMPLOYEEMAPPER_FK2" FOREIGN KEY ("EMPLOYEEID")
 	  REFERENCES "HR"."EMPLOYEES" ("EMPLOYEEID") ENABLE;
