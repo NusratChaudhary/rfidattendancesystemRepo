@@ -71,3 +71,5 @@ const BROADCAST_MODE = "broadcast_mode";
 const BROADCAST_ACTIVE = "broadcast_active";
 const BROADCAST_INACTIVE = "broadcast_inactive";
 const POST_BROADCAST = "post_broadcast";
+const DELETE_BROADCAST = "delete_broadcast";
+const LOAD_BROADCAST_EMPLOYEE="load_broadcast_employee";

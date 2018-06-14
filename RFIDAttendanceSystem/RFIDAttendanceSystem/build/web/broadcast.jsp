@@ -29,10 +29,7 @@
 
             <!-- Alert -->
             <div class="alert alert-dismissible fade show  animated {{alertData.className}}" style="position: absolute;display: block;width: 50%;left: 25%; z-index: 999"  ng-show="alertData" id="messageAlert" role="alert" >
-                <center> {{alertData.message}} </center>
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                <center> {{alertData.message}} </center>                
             </div>
             <!-- Alert End -->
 
@@ -84,7 +81,7 @@
                                             </li>
                                         </ul>
                                     </div>
-                                    <a href="#"  class="btn btn-danger  float-right" ng-hide="{{broadcast.flag !== 'broadcast_active'}}">Delete</a>
+                                    <a href="#"  class="btn btn-danger  float-right" ng-click="deleteBroadcast(broadcast)" ng-hide="{{broadcast.flag !== 'broadcast_active'}}">Delete</a>
                                 </div>
                             </div>
                             <br/>
@@ -161,6 +158,32 @@
                     });
                 };
 
+                $scope.deleteBroadcast = function (data) {
+                    const request = {
+                        method: 'POST',
+                        url: 'BroadcastController',
+                        headers: {"api_key": API_KEY},
+                        params: {task: DELETE_BROADCAST, id: data.id},
+                        timeout: 10000
+                    };
+                    $http(request).then(function (response) {
+                        if (response.data === OK) {
+                            $scope.broadcastData.broadcastList.forEach(function (item, index, object) {
+                                if (data.id === item.id) {
+                                    object.splice(index, 1);
+                                }
+                            });
+                            $scope.alertCreator('Broadcast Deleted Successfully', 'alert-success');
+                        } else {
+                            $scope.alertCreator('Unable to Contact Server', 'alert-danger');
+                        }
+                        hideLoader('body');
+                    }, function (response) {
+                        console.log('Error ', response);
+                        hideLoader('body');
+                    });
+                };
+
                 $scope.alertCreator = function (message, className) {
                     document.getElementById("messageAlert").classList.remove('fadeOut');
                     $scope.alertData = {message: message, className: className};
@@ -173,6 +196,7 @@
                         if (arr.indexOf(name) == -1) {
                             element.className += " " + name;
                         }
+                        $scope.alertData = null;
                     }, 2000);
                 };
 

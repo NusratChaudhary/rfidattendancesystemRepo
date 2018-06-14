@@ -68,6 +68,9 @@ public class BroadcastController extends HttpServlet {
                     case Constants.POST_BROADCAST:
                         out.print(postBroadcast(request.getSession(false), request.getParameter("multiselect"), request.getParameter("message")));
                         break;
+                    case Constants.DELETE_BROADCAST:
+                        out.print(deleteBroadcast(request.getSession(false), request.getParameter("id")));
+                        break;
                 }
             } else {
                 out.print("invalidRequest");
@@ -192,6 +195,26 @@ public class BroadcastController extends HttpServlet {
                 } catch (SQLException ex) {
                     Logger.getLogger(BroadcastController.class.getName()).log(Level.SEVERE, null, ex);
                 }
+            }
+        } else {
+            return Constants.ERROR;
+        }
+    }
+
+    private String deleteBroadcast(HttpSession session, String id) {
+        if (((Employee) session.getAttribute("userData")).isUserHr()) {
+            Connection con = new ConnectionManager().getConnection();
+            try {
+                Statement stmt = con.createStatement();
+                int count = stmt.executeUpdate("delete from broadcast where id=" + Integer.parseInt(id));
+                if (count == 1) {
+                    return Constants.OK;
+                } else {
+                    return Constants.ERROR;
+                }
+            } catch (Exception e) {
+                System.out.println(e);
+                return Constants.ERROR;
             }
         } else {
             return Constants.ERROR;

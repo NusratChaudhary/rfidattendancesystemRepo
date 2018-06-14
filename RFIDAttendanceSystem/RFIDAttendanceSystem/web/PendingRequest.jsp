@@ -28,9 +28,6 @@
             <!-- Alert -->
             <div class="alert alert-dismissible fade show  animated {{alertData.className}}" on style="position: absolute;display: block;width: 50%;left: 25%;"  ng-show="alertData" id="messageAlert" role="alert" >
                 <center> {{alertData.message}} </center>
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
             </div>
             <!-- Alert End -->
             <div class="container-fluid">

@@ -85,5 +85,6 @@ public class Constants {
     public static final String BROADCAST_ACTIVE = "broadcast_active";
     public static final String BROADCAST_INACTIVE = "broadcast_inactive";
     public static final String POST_BROADCAST = "post_broadcast";
-    
+    public static final String DELETE_BROADCAST = "delete_broadcast";
+    public static final String LOAD_BROADCAST_EMPLOYEE = "load_broadcast_employee";
 }

@@ -54,9 +54,33 @@
 
     </div>
 </nav>
+<marquee  ng-app="EmployeeBroadcast" ng-controller="EmployeeBroadcastCtrl" ng-init="showBroadcast()">
+    <p ng-repeat="data in employeeBroadcast">{{data.message}}</p>
+</marquee>      
 
+<script>
+    var app = angular.module('EmployeeBroadcast', []);
+    app.controller('BroadcastCtrl', function ($scope, $http) {
 
-
+        $scope.showBroadcast = function () {
+            const request = {
+                method: 'GET',
+                url: 'BroadcastController',
+                headers: {"api_key": API_KEY},
+                params: {task: LOAD_BROADCAST_EMPLOYEE},
+                timeout: 10000
+            };
+            $http(request).then(function (response) {
+                if (response.data !== ERROR) {
+                    console.log(response.data);
+                    $scope.employeeBroadcast = JSON.parse(JSON.stringify(response.data));
+                }
+            }, function (response) {
+                console.log('Error ', response);
+            });
+        };
+    });
+</script>
 
 
 
