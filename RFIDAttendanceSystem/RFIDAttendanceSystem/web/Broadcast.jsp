@@ -111,7 +111,6 @@
                 };
             });
             app.controller('BroadcastCtrl', function ($scope, $http) {
-
                 $scope.loadBroadcasts = function () {
                     const request = {
                         method: 'GET',
@@ -202,6 +201,7 @@
 
             });
 
+            angular.bootstrap(document.getElementById('broadcastMarquee'), ['EmployeeBroadcast']);
             document.title = '<%=((Employee) session.getAttribute("userData")).getName()%>';
         </script>
 

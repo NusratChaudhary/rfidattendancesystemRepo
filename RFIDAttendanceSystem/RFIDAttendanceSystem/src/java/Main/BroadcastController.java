@@ -48,6 +48,9 @@ public class BroadcastController extends HttpServlet {
                     case Constants.LOAD_BROADCASTDATA:
                         out.print(loadBroadcastData(request.getSession(false)));
                         break;
+                    case Constants.LOAD_BROADCAST_EMPLOYEE:
+                        out.print(getEmployeeBroadcast(request.getSession(false)));
+                        break;
                 }
             } else {
                 out.print("invalidRequest");
@@ -215,6 +218,43 @@ public class BroadcastController extends HttpServlet {
             } catch (Exception e) {
                 System.out.println(e);
                 return Constants.ERROR;
+            }
+        } else {
+            return Constants.ERROR;
+        }
+    }
+
+    private String getEmployeeBroadcast(HttpSession session) {
+        if (((Employee) session.getAttribute("userData")).getEmployeeId() != 0) {
+            int employeeId = ((Employee) session.getAttribute("userData")).getEmployeeId();
+            List<Broadcast> broadcastList = new ArrayList<>();
+            Connection con = new ConnectionManager().getConnection();
+            try {
+                Statement stmt = con.createStatement();
+                ResultSet rs = stmt.executeQuery("select ID,MESSAGE,BROADCASTTYPE from broadcast where FLAG='" + Constants.BROADCAST_ACTIVE + "'");
+                while (rs.next()) {
+                    if (rs.getString("BROADCASTTYPE").equals(Constants.INDIVIDUAL_MODE)) {
+                        Statement stmt2 = con.createStatement();
+                        ResultSet rs2 = stmt2.executeQuery("select count(*) AS COUNT from BROADCASTEMPLOYEEMAPPER where id=" + rs.getInt("ID") + " AND EMPLOYEEID=" + employeeId);
+                        rs2.next();
+                        if (rs2.getInt("count") == 1) {
+                            broadcastList.add(new Broadcast(rs.getInt("ID"), rs.getString("MESSAGE"), null, null, null));
+                        }
+                    } else {
+                        broadcastList.add(new Broadcast(rs.getInt("ID"), rs.getString("MESSAGE"), null, null, null));
+                    }
+                }
+                ObjectMapper mapper = new ObjectMapper();
+                return mapper.writeValueAsString(broadcastList);
+            } catch (Exception e) {
+                System.out.println(e);
+                return Constants.ERROR;
+            } finally {
+                try {
+                    con.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(BroadcastController.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         } else {
             return Constants.ERROR;
