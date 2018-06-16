@@ -200,8 +200,6 @@
                 };
 
             });
-
-            angular.bootstrap(document.getElementById('broadcastMarquee'), ['EmployeeBroadcast']);
             document.title = '<%=((Employee) session.getAttribute("userData")).getName()%>';
         </script>
 

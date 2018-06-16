@@ -54,36 +54,7 @@
 
     </div>
 </nav>
-<marquee id='broadcastMarquee' ng-app="EmployeeBroadcast" ng-controller="EmployeeBroadcastCtrl" ng-init="showBroadcast()">
-    <p ><span ng-repeat="data in employeeBroadcast" style="margin-right: 80%">{{data.message}}</span> </p>
-</marquee>      
 
-<script>
-    var headerApp = angular.module('EmployeeBroadcast', []);
-    headerApp.controller('EmployeeBroadcastCtrl', function ($scope, $http) {
-
-        $scope.showBroadcast = function () {
-            if ((sessionStorage.getItem('isConfirmed') == 'false' || !sessionStorage.getItem('isConfirmed')))
-            {
-                const request = {
-                    method: 'GET',
-                    url: 'BroadcastController',
-                    headers: {"api_key": API_KEY},
-                    params: {task: LOAD_BROADCAST_EMPLOYEE},
-                    timeout: 10000
-                };
-                $http(request).then(function (response) {
-                    if (response.data !== ERROR) {
-                        console.log(response.data);
-                        $scope.employeeBroadcast = JSON.parse(JSON.stringify(response.data));
-                    }
-                }, function (response) {
-                    console.log('Error ', response);
-                });
-            }
-        };
-    });
-</script>
 
 
 

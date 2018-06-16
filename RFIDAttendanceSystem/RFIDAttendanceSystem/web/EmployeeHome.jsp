@@ -23,101 +23,129 @@
     </head>
     <body> 
         <jsp:include page="header.jsp"/>
-        <br/><br/>
-        <div class="container hidden" id="root">
-            <div class="jumbotron jumbotron-fluid" style="background-color: transparent;padding: 0">
-                <div class="container">
-                    <div class="clearfix">
-                        <h1 class="employeeNameDisplay float-left mt-2 ml-4">Welcome <%=((Employee) session.getAttribute("userData")).getFirstName()%></h1>
-                        <img src="ImageProvider" id="userProfile" class="img-fluid img-thumbnail profilePicture mr-5 float-right" alt="Profile Picture">
+    <marquee id='broadcastMarquee' ng-app="EmployeeBroadcast" ng-controller="EmployeeBroadcastCtrl" ng-init="showBroadcast()">
+        <p ><span ng-repeat="data in employeeBroadcast" style="margin-right: 80%">{{data.message}}</span> </p>
+    </marquee>      
+
+    <br/><br/>
+    <div class="container hidden" id="root">
+        <div class="jumbotron jumbotron-fluid" style="background-color: transparent;padding: 0">
+            <div class="container">
+                <div class="clearfix">
+                    <h1 class="employeeNameDisplay float-left mt-2 ml-4">Welcome <%=((Employee) session.getAttribute("userData")).getFirstName()%></h1>
+                    <img src="ImageProvider" id="userProfile" class="img-fluid img-thumbnail profilePicture mr-5 float-right" alt="Profile Picture">
+                </div>
+            </div>
+        </div>
+
+        <div class="row dashboard-card-row " style="margin-top: 8%" >
+            <div class="col-sm-6 ">
+                <div class="card shadow card-cursor" id="ViewAttendance">
+                    <div class="card-body">
+
+                        <img src="Resources/attendanceIcon.png" style="height: 140px;width: auto" class="rounded mx-auto d-block img-fluid" alt="attendanceIcon">
+
+                        <h3 class="card-title " align="center">Attendance Records</h3>
+
+
                     </div>
                 </div>
             </div>
+            <div class="col-sm-6 ">
+                <div class="card shadow card-cursor" id="MakeaRequest">
+                    <div class="card-body">
 
-            <div class="row dashboard-card-row " style="margin-top: 8%" >
-                <div class="col-sm-6 ">
-                    <div class="card shadow card-cursor" id="ViewAttendance">
-                        <div class="card-body">
+                        <img src="Resources/employeeRequestIcon.png" style="height: 140px;width: auto" class="rounded mx-auto d-block img-fluid" alt="employeeRequestIcon">
 
-                            <img src="Resources/attendanceIcon.png" style="height: 140px;width: auto" class="rounded mx-auto d-block img-fluid" alt="attendanceIcon">
-
-                            <h3 class="card-title " align="center">Attendance Records</h3>
-
-
-                        </div>
+                        <h3 class="card-title " align="center">Requests</h3>
                     </div>
                 </div>
-                <div class="col-sm-6 ">
-                    <div class="card shadow card-cursor" id="MakeaRequest">
-                        <div class="card-body">
+            </div>
+        </div> 
+    </div>
 
-                            <img src="Resources/employeeRequestIcon.png" style="height: 140px;width: auto" class="rounded mx-auto d-block img-fluid" alt="employeeRequestIcon">
+    <script>
 
-                            <h3 class="card-title " align="center">Requests</h3>
-                        </div>
-                    </div>
-                </div>
-            </div> 
-        </div>
-
-        <script>
-
-            $(document).ready(function () {
-                $('.card-cursor').click(function () {
-                    location.href = this.id + '.jsp';
-                });
-                var isUserHr = (JSON.parse('<%=(String) session.getAttribute("userJson")%>')).userHr;
-                if (isUserHr) {
-                    if (!sessionStorage.getItem("isConfirmed")) {
-                        $('#navigationModal').modal('show');
-                    }
-                    if (sessionStorage.getItem("isConfirmed") === 'true') {
-                        window.location.replace(HOST_ADDRESS + '/HrDashboard.jsp');
-                    } else {
-                        $('#root').removeClass("hidden");
-                    }
-                } else {
-                    $('#root').removeClass("hidden");
-                }
+        $(document).ready(function () {
+            $('.card-cursor').click(function () {
+                location.href = this.id + '.jsp';
             });
-            function changeStatus(page) {
-                sessionStorage.setItem("isConfirmed", "false");
-                if (page === 1) {
-                    sessionStorage.setItem("isConfirmed", "true");
+            var isUserHr = (JSON.parse('<%=(String) session.getAttribute("userJson")%>')).userHr;
+            if (isUserHr) {
+                if (!sessionStorage.getItem("isConfirmed")) {
+                    $('#navigationModal').modal('show');
+                }
+                if (sessionStorage.getItem("isConfirmed") === 'true') {
                     window.location.replace(HOST_ADDRESS + '/HrDashboard.jsp');
                 } else {
                     $('#root').removeClass("hidden");
                 }
+            } else {
+                $('#root').removeClass("hidden");
             }
-            document.title = '<%=((Employee) session.getAttribute("userData")).getName()%>';
-        </script>
+        });
+        function changeStatus(page) {
+            sessionStorage.setItem("isConfirmed", "false");
+            if (page === 1) {
+                sessionStorage.setItem("isConfirmed", "true");
+                window.location.replace(HOST_ADDRESS + '/HrDashboard.jsp');
+            } else {
+                $('#root').removeClass("hidden");
+            }
+        }
 
-        <div class="modal fade" id="navigationModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog  modal-dialog-centered" role="document">
-                <div class="modal-content">
-                    <div class="modal-body p-5">
-                        <div class="row mb-3">
-                            <div class="col-2">
-                                <img src="Resources/warning.png" alt="warning"/>
-                            </div>
-                            <div class="col-10">
-                                <p class="lead ">HR User found which page you want</p>
-                            </div>
+        var headerApp = angular.module('EmployeeBroadcast', []);
+        headerApp.controller('EmployeeBroadcastCtrl', function ($scope, $http) {
+            $scope.showBroadcast = function () {
+                if ((sessionStorage.getItem('isConfirmed') == 'false' || !sessionStorage.getItem('isConfirmed')))
+                {
+                    const request = {
+                        method: 'GET',
+                        url: 'BroadcastController',
+                        headers: {"api_key": API_KEY},
+                        params: {task: LOAD_BROADCAST_EMPLOYEE},
+                        timeout: 10000
+                    };
+                    $http(request).then(function (response) {
+                        if (response.data !== ERROR) {
+                            console.log(response.data);
+                            $scope.employeeBroadcast = JSON.parse(JSON.stringify(response.data));
+                        }
+                    }, function (response) {
+                        console.log('Error ', response);
+                    });
+                }
+            };
+        });
+        document.title = '<%=((Employee) session.getAttribute("userData")).getName()%>';
+    </script>
+
+    <div class="modal fade" id="navigationModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog  modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body p-5">
+                    <div class="row mb-3">
+                        <div class="col-2">
+                            <img src="Resources/warning.png" alt="warning"/>
                         </div>
-                        <div class="row">
-                            <div class="col-6">
-                                <center><button type="button" onclick="changeStatus(1)" class="btn btn-info">HR Dashboard</button></center>
-                            </div>
-                            <div class="col-6">
-                                <center><button type="button" onclick="changeStatus(0)" class="btn btn-info" data-dismiss="modal" aria-label="Close">Employee</button></center>
-                            </div>
+                        <div class="col-10">
+                            <p class="lead ">HR User found which page you want</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <center><button type="button" onclick="changeStatus(1)" class="btn btn-info">HR Dashboard</button></center>
+                        </div>
+                        <div class="col-6">
+                            <center><button type="button" onclick="changeStatus(0)" class="btn btn-info" data-dismiss="modal" aria-label="Close">Employee</button></center>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
 
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" ></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" ></script>
-    </body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" ></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" ></script>
+</body>
 </html>
