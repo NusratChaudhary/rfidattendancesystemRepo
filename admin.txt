@@ -1,0 +1,10 @@
+admin -
+
+check mails
+check attendance
+change employye status [holiday active deactive]
+change hr credentials and status 
+check current checkins checkouts
+
+admin passwords are changed everday which will be mailed and msg everyday
+

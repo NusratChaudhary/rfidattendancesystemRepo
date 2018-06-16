@@ -15,7 +15,7 @@
         </ul>
         <%
             // Session COntroller 
-            if (session.getAttribute("id") != null) {
+            if (session.getAttribute("id") != null || session.getAttribute("isUserAdmin") != null) {
         %>
         <div class="login" >
             <div class="notification-item">
@@ -31,7 +31,7 @@
         } else {
             String uri = request.getRequestURI();
             String currentPage = uri.substring(uri.lastIndexOf("/") + 1);
-            if (Constants.FLAGGED_PAGES.contains(currentPage)) {
+            if (!Constants.ALLOWED_PAGES.contains(currentPage)) {
         %>
         <script>
             window.location.href = "welcome.jsp";
@@ -76,15 +76,15 @@
             <div class="modal-body">
                 <form action="post" id="loginForm">
                     <div class="form-group row">
-                        <label for="inputEmail3" class="col-sm-2 col-form-label">Email</label>
+                        <label for="loginemail" class="col-sm-2 col-form-label">Email</label>
                         <div class="col-sm-10">
-                            <input type="email" class="form-control" id="inputEmail3" name="email" placeholder="Email" required autofocus>
+                            <input type="email" class="form-control" id="loginemail" name="email" placeholder="Email" required autofocus>
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label for="inputPassword3" class="col-sm-2 col-form-label">Password</label>
+                        <label for="loginpassword" class="col-sm-2 col-form-label">Password</label>
                         <div class="col-sm-10">
-                            <input type="password" class="form-control" id="inputPassword3" name="password"  placeholder="Password" required>
+                            <input type="password" class="form-control" id="loginpassword" name="password"  placeholder="Password" required>
                         </div>
                     </div>
 
@@ -315,7 +315,11 @@
                 success: function (data) {
                     if (data === LOGIN_SUCCESS) {
                         hideLoader('.modal');
-                        window.location.replace(BASE_URL + 'EmployeeHome.jsp');
+                        if ($('#loginemail').val() === 'admin@symphid.com') {
+                            window.location.replace(BASE_URL + 'AdminHome.jsp');
+                        } else {
+                            window.location.replace(BASE_URL + 'EmployeeHome.jsp');
+                        }
                     } else if (data === LOGIN_HOLIDAY) {
                         hideLoader('.modal');
                         $("#loginModal .modal-dialog .modal-content .modal-header").before("<div class='alert alert-danger' id='modalAlert' role='alert'><center>Login is disabled as user is on holiday !!!</center></div>");
@@ -356,7 +360,7 @@
                     if (data === LOGGED_OUT) {
                         sessionStorage.removeItem('isConfirmed');
                         hideLoader('.modal');
-                        window.location.replace(BASE_URL + '/welcome.jsp');
+                        window.location.replace(BASE_URL + 'welcome.jsp');
                     } else {
                         hideLoader('body');
                     }

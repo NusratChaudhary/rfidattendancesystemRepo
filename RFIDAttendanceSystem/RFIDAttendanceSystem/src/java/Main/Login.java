@@ -45,7 +45,6 @@ public class Login extends HttpServlet {
 
         if (request.getHeader("api_key") != null && Helper.validateAPIKEY(request.getHeader("api_key"))) {
             out.print(loginUser(request));
-
         } else {
             out.print("invalidRequest");
         }
@@ -55,29 +54,42 @@ public class Login extends HttpServlet {
     private String loginUser(HttpServletRequest request) {
         Connection con = new ConnectionManager().getConnection();
         try {
-            Statement stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery("select * from EMPLOYEES where EMAIL='" + request.getParameter("email") + "' AND PASSWORD='" + request.getParameter("password") + "'");
-            while (rs.next()) {
-                if (!rs.getString("FLAG").isEmpty()) {
-                    if (rs.getString("FLAG").equals(Constants.USER_ACTIVE)) {
-                        HttpSession loginSession = request.getSession();
-                        loginSession.setAttribute("id", rs.getInt("EMPLOYEEID"));
-                        loginSession.setAttribute("userJson", getUserJson(con, rs.getInt("EMPLOYEEID"), rs));
-                        loginSession.setAttribute("userData", getUserData(con, rs.getInt("EMPLOYEEID"), rs));
-                        return Constants.LOGIN_SUCCESS;
+            if (!request.getParameter("email").equals("admin@symphid.com")) {
+                Statement stmt = con.createStatement();
+                ResultSet rs = stmt.executeQuery("select * from EMPLOYEES where EMAIL='" + request.getParameter("email") + "' AND PASSWORD='" + request.getParameter("password") + "'");
+                while (rs.next()) {
+                    if (!rs.getString("FLAG").isEmpty()) {
+                        if (rs.getString("FLAG").equals(Constants.USER_ACTIVE)) {
+                            HttpSession loginSession = request.getSession();
+                            loginSession.setAttribute("id", rs.getInt("EMPLOYEEID"));
+                            loginSession.setAttribute("userJson", getUserJson(con, rs.getInt("EMPLOYEEID"), rs));
+                            loginSession.setAttribute("userData", getUserData(con, rs.getInt("EMPLOYEEID"), rs));
+                            return Constants.LOGIN_SUCCESS;
+                        }
+                        if (rs.getString("FLAG").equals(Constants.USER_HOLIDAY)) {
+                            return Constants.LOGIN_HOLIDAY;
+                        }
+                        if (rs.getString("FLAG").equals(Constants.USER_VERIFY)) {
+                            return Constants.USER_VERIFY;
+                        }
+                    } else {
+                        return Constants.LOGIN_INSUCCESS;
                     }
-                    if (rs.getString("FLAG").equals(Constants.USER_HOLIDAY)) {
-                        return Constants.LOGIN_HOLIDAY;
-                    }
-                    if (rs.getString("FLAG").equals(Constants.USER_VERIFY)) {
-                        return Constants.USER_VERIFY;
-                    }
+
+                }
+                return Constants.LOGIN_INSUCCESS;
+            } else {
+                Statement stmt = con.createStatement();
+                ResultSet rs = stmt.executeQuery("select count(*) as COUNT from admin where password='" + request.getParameter("password") + "'");
+                rs.next();
+                if (rs.getInt("COUNT") == 1) {
+                    HttpSession loginSession = request.getSession();
+                    loginSession.setAttribute("isUserAdmin", true);
+                    return Constants.LOGIN_SUCCESS;
                 } else {
                     return Constants.LOGIN_INSUCCESS;
                 }
-
             }
-            return Constants.LOGIN_INSUCCESS;
         } catch (Exception e) {
             System.out.println(e);
             return Constants.LOGIN_INSUCCESS;
@@ -169,6 +181,6 @@ public class Login extends HttpServlet {
             }
         } catch (Exception e) {
             return false;
-        }      
+        }
     }
 }

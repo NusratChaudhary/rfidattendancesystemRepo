@@ -1,43 +1,6 @@
 ------Left Changes File -----------
 
 
-make all button look clickavble
-
-
-*******************create enums for flags 
-// when card opens it get data from server once collapsed it should clear of variables
-// check if form values are changed or not
-
-
-// search bar in pending request to search for request
-*********$(this).parent().parent().attr('id');  TO ACCESS PARENT ACITIVITY
-
-
-*** Resoponsive ness at end
-
--------------------------------------------------------------------
-
-IMPIMPIMP check column made null and thier inserts like in request controller when insert
-
-------CONNNECTION AUTO COMMIT OFF ON MANY QUIERIES AND COMMIT ON COMPLETED OR ROLL BACK IN CATCh
-----------------------------------------------------------------
-
---------------------------------------------------- TASK------------------------
-** SIGNUP page should have upload picture for RFID
-***Any changes made in Data will be recorded inDB
-MakeaRequest PAGE [Should have View Sent Request PAge Also] left ****
-Add JQuery Loader and loading gif
-Java Model of All Tables
-
-1) Registration ~~~~~ COMPLETED
-	Validation of values using Angular
-	Send Post using Angular or JQuery
-
-2) Login~~~~COMPLETED
-	Validation 
-	Send Post request using angular or JQuery
-	onLogin create a token [login id and user name] 
-	
 3) Rfid
 	PIN
 	rfid input will take  input and
@@ -45,42 +8,12 @@ Java Model of All Tables
 	data and its own gen security pin 
 	to server using angular or JQuery.
 	
-4) Broadcast 
-	ONclick send request to server using angular or jquery
-	on response referesh showMessage Component
-	OnDelete ***Think
-	
-5) Emp Details [HR]
-        DELTE AND EDIT CONTROLLERS LEFT 
-	Rework on Button of edit and open card thing and onEdit click save change button should be active 
-	Use angular to load the employees so that search button works COMPLETED
-	Show More or on scroll page should load more emps ***THink 
-	
-	
-6) PendingRequest [HR]
-	Use anglur to load only load few on scroll load more [optional]
-	On Click send [reply] Page should again referesh to change card color
-	
-7) AttendanceControl[HR]
-	*Change color of card header not looking good
-	Use angular to load attendance record on click of submit
-	**Think where to place make changes button on admin request
-	
-8) HrDashboard[HR]
-	Use angular to update Attendance Entries and Pending Requests
 
-9) ViewAttendance[Emp]
-	Load Attendance of User using Angular and add filter to find using date
-	Load More Option **Think
-
-10) MakeaRequest[Emp]
-
-
-11) Admin []
-
-	
-	
-	
+**SMS sending integration
+** SMS TABLE which shows sent sms DB
+all sent mail should be added to DB
+rfid pin gen sms
+login send user sms
 
 //***
 
