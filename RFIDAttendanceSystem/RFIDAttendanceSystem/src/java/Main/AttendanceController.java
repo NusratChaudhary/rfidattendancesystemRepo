@@ -155,7 +155,7 @@ public class AttendanceController extends HttpServlet {
         }
     }
 
-    private String getAllEmployeeAttendance(String fromDate, String toDate) {
+    protected String getAllEmployeeAttendance(String fromDate, String toDate) {
         Connection con = new ConnectionManager().getConnection();
         List<AttendanceLists> employeesAttendanceList = new ArrayList<>();
         List<Attendance> attendanceList = new ArrayList<>();

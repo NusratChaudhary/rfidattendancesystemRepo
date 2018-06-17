@@ -40,6 +40,10 @@
         <servlet-name>BroadcastController</servlet-name>
         <servlet-class>Main.BroadcastController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>AdminController</servlet-name>
+        <servlet-class>Main.AdminController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Registration</servlet-name>
         <url-pattern>/Registration</url-pattern>
@@ -79,6 +83,10 @@
     <servlet-mapping>
         <servlet-name>BroadcastController</servlet-name>
         <url-pattern>/BroadcastController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AdminController</servlet-name>
+        <url-pattern>/AdminController</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

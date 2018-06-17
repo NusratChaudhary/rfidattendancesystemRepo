@@ -66,13 +66,13 @@ public class EmployeeController extends HttpServlet {
         }
     }
 
-    private String getAllEmployees() {
+    protected String getAllEmployees() {
         Connection con = new ConnectionManager().getConnection();
         List<Employee> employeeList = new ArrayList<>();
         int totalEmployees = 0, employeesHoliday = 0, employeesDisabled = 0;
         try {
             Statement stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery("select * from EMPLOYEES WHERE ROWNUM <= 10");
+            ResultSet rs = stmt.executeQuery("select * from EMPLOYEES");
             while (rs.next()) {
                 int salary = 0;
                 String departmentName = null;
