@@ -111,30 +111,30 @@
 
                                     <div class="row">
                                         <div class=" col-sm-12" style="padding: 50px;padding-bottom: 0px;">
-                                            <form class="employeeDetails-NonEditable" id="{{empData.employeeId}}-form">
+                                            <form class="employeeDetails-NonEditable" name="{{empData.employeeId}}" id="{{empData.employeeId}}-form">
                                                 <div class="form-group row">
                                                     <label for="firstName" class="col-sm-2 col-form-label">First Name</label>
                                                     <div class="col-sm-10">
-                                                        <input type="text" class="form-control" id="firstName" value="{{empData.firstName}}">
+                                                        <input type="text" class="form-control" name="firstName" value="{{empData.firstName}}">
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
                                                     <label for="lastName" class="col-sm-2 col-form-label">Last Name</label>
                                                     <div class="col-sm-10">
-                                                        <input type="text" class="form-control" id="lastName" value="{{empData.lastName}}">
+                                                        <input type="text" class="form-control" name="lastName" value="{{empData.lastName}}">
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
                                                     <label for="email" class="col-sm-2 col-form-label">E-mail Id</label>
                                                     <div class="col-sm-10">
-                                                        <input type="email" class="form-control" value="{{empData.email}}" id="email" >
+                                                        <input type="email" class="form-control" value="{{empData.email}}" name="email" >
                                                     </div>
                                                 </div>
 
                                                 <div class="form-group row">
                                                     <label for="mobileNumber" class="col-sm-2 col-form-label">Mobile No</label>
                                                     <div class="col-sm-10">
-                                                        <input type="text" class="form-control" value="{{empData.phoneNumber}}" id="mobileNumber" >
+                                                        <input type="text" class="form-control" value="{{empData.phoneNumber}}" name="mobileNumber" >
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
@@ -151,28 +151,28 @@
                                                 <div class="form-group row">
                                                     <label for="Address" class="col-sm-2 col-form-label">Address</label>
                                                     <div class="col-sm-10">
-                                                        <textarea class="form-control" id="Address" rows="1">{{empData.address}}</textarea>
+                                                        <textarea class="form-control" name="Address" rows="1">{{empData.address}}</textarea>
                                                     </div>
                                                 </div>
 
                                                 <div class="form-group row">
                                                     <label for="DOB" class="col-sm-2 col-form-label">DOB</label>
                                                     <div class="col-sm-10">
-                                                        <input type="date" class="form-control" id="DOB" value="{{empData.dob}}" >
+                                                        <input type="date" class="form-control" name="DOB" value="{{empData.dob}}" >
                                                     </div>
                                                 </div>
 
                                                 <div class="form-group row">
                                                     <label for="rfid" class="col-sm-2 col-form-label">RFID TAG</label>
                                                     <div class="col-sm-10">
-                                                        <input type="text" class="form-control" id="rfid" value="{{empData.rfid.rfidnumber}}">
+                                                        <input type="text" class="form-control" name="rfid" value="{{empData.rfid.rfidnumber}}">
                                                     </div>
                                                 </div>
 
                                                 <div class="form-group row">
                                                     <label for="sal" class="col-sm-2 col-form-label">Salary</label>
                                                     <div class="col-sm-10">
-                                                        <input type="text" class="form-control" id="sal" value="{{empData.salary}}" >
+                                                        <input type="text" class="form-control" name="sal" value="{{empData.salary}}" >
                                                     </div>
                                                 </div>
 
@@ -192,7 +192,7 @@
                                                 <br/>
                                                 <div class="form-group row">
                                                     <div class="col-sm-12">
-                                                        <center>  <button type="button" ng-if="checkBox"  id="button-{{empData.employeeId}}"  class="btn btn-primary submitForm hidden">Save Changes</button></center>
+                                                        <center>  <button type="button" ng-if="checkBox"  id="button-{{empData.employeeId}}" ng-click="editUserConfirmation(empData, $index)"   class="btn btn-primary submitForm hidden">Save Changes</button></center>
                                                     </div>
                                                 </div>
                                             </form> 
@@ -213,16 +213,19 @@
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLongTitle">Delete Confirmation</h5>
+                            <h5 class="modal-title" ng-hide="confirmationData.mode === 'edit'" id="exampleModalLongTitle">Delete Confirmation</h5>
+                            <h5 class="modal-title" ng-hide="confirmationData.mode === 'delete'" id="exampleModalLongTitle">Edit Confirmation</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
                         <div class="modal-body">
-                            <p>Do you want to delete {{confirmationData.name}} permanently </p>
+                            <p ng-hide="confirmationData.mode === 'edit'">Do you want to delete {{confirmationData.name}} permanently </p>
+                            <p ng-hide="confirmationData.mode === 'delete'" >Do you want to edit {{confirmationData.name}} </p>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-outline-danger" ng-click="deleteUser(confirmationData)" data-dismiss="modal">Delete Employee</button>                        
+                            <button type="button" class="btn btn-outline-danger" ng-hide="confirmationData.mode === 'edit'" ng-click="deleteUser(confirmationData)" data-dismiss="modal">Delete Employee</button>                        
+                            <button type="button" class="btn btn-outline-info" ng-hide="confirmationData.mode === 'delete'" ng-click="editUser(confirmationData)" data-dismiss="modal">Edit Employee</button>                        
                         </div>
                     </div>
                 </div>
@@ -290,7 +293,12 @@
                 };
 
                 $scope.deleteUserConfirmation = function (employee, indexPosition) {
-                    $scope.confirmationData = {employeeId: employee.employeeId, name: employee.name, objectPostion: indexPosition};
+                    $scope.confirmationData = {employeeId: employee.employeeId, name: employee.name, objectPostion: indexPosition, mode: 'delete'};
+                    $('#confirmationModal').modal('show')
+                };
+
+                $scope.editUserConfirmation = function (employee, indexPosition) {
+                    $scope.confirmationData = {employeeId: employee.employeeId, name: employee.name, objectPostion: indexPosition, mode: 'edit'};
                     $('#confirmationModal').modal('show')
                 };
 
@@ -305,18 +313,46 @@
                     };
                     $http(request).then(function (response) {
                         if (response !== ERROR) {
-                            $scope.loadEmployeesData();
+                            $scope.employeeData.employeeList.splice(deleteData.objectPostion, 1);
                             $scope.alertCreator('Successfully Deleted Employee', 'alert-success');
                         } else {
-                            $scope.alertCreator('Error in Deleting Employee', 'alert-danger');
+                            $scope.alertCreator('Unable to Contact Server', 'alert-danger');
                         }
                         hideLoader('body');
                     }, function (response) {
                         console.log('Error ', response);
                         hideLoader('body');
                     });
+                };
 
-                    //  delete  $scope.employeeData.employeeList[deleteData.objectPostion];// [TRY WHEN MORE THAN ONE USER]use this to delete object but card stay in html
+
+                $scope.editUser = function (employee) {
+                    var id = employee.employeeId;
+                    var fData = $('#' + id + '-form').serializeArray();
+                   angular.forEach(fData,function(data){
+                       console.log(data.name,data.value);
+                   });
+                    console.log($scope.employeeData.employeeList[employee.objectPostion]);
+//                    showLoader('body');
+//                    const request = {
+//                        method: 'POST',
+//                        url: 'EmployeeController',
+//                        headers: {"api_key": API_KEY},
+//                        timeout: 10000,
+//                        params: {employee: employee, task: EDIT_EMPLOYEE}
+//                    };
+//                    $http(request).then(function (response) {
+//                        if (response !== ERROR) {
+//                            // $scope.employeeData.employeeList.splice(deleteData.objectPostion,1);
+//                            $scope.alertCreator('Successfully Edited Employee', 'alert-success');
+//                        } else {
+//                            $scope.alertCreator('Unable to Contact Server', 'alert-danger');
+//                        }
+//                        hideLoader('body');
+//                    }, function (response) {
+//                        console.log('Error ', response);
+//                        hideLoader('body');
+//                    });
                 };
 
                 $scope.alertCreator = function (message, className) {
@@ -333,16 +369,6 @@
                     }, 2000);
                 };
             });
-            /*
-             *   if (!$.isNumeric($('#phoneNumber').val())) {
-             $('#phoneNumber').val('');
-             $('#phoneNumber').addClass('animated  pulse');
-             $('#phoneNumber').attr('placeholder', 'Enter Valid Phone Number');
-             return;
-             }
-             */
-
-
             document.title = '<%=((Employee) session.getAttribute("userData")).getName()%>';
 
         </script>

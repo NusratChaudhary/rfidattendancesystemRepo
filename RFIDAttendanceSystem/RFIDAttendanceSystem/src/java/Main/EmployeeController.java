@@ -57,7 +57,14 @@ public class EmployeeController extends HttpServlet {
         PrintWriter out = response.getWriter();
         if (request.getHeader("api_key") != null && Helper.validateAPIKEY(request.getHeader("api_key"))) {
             if (((Employee) request.getSession(false).getAttribute("userData")).isUserHr()) {
-
+                switch (request.getParameter("task")) {
+                    case Constants.DELETE_EMPLOYEE:
+                        out.print(deleteEmployee(request));
+                        break;
+                    case Constants.EDIT_EMPLOYEE:
+                        out.print(editEmployee(request));
+                        break;
+                }
             } else {
                 out.print("invalidRequest");
             }
@@ -74,42 +81,44 @@ public class EmployeeController extends HttpServlet {
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery("select * from EMPLOYEES");
             while (rs.next()) {
-                int salary = 0;
-                String departmentName = null;
-                int rfidNumber = 0;
-                Statement stmt2 = con.createStatement();
-                ResultSet rs2 = stmt2.executeQuery("select RFIDNUMBER from RFID where EMPLOYEEID=" + rs.getInt("EMPLOYEEID"));
-                while (rs2.next()) {
-                    rfidNumber = rs2.getInt("RFIDNUMBER");
-                }
-                Statement stmt3 = con.createStatement();
-                ResultSet rs3 = stmt3.executeQuery("select * from SALARY where EMPLOYEEID=" + rs.getInt("EMPLOYEEID"));
-                while (rs3.next()) {
-                    salary = rs3.getInt("AMOUNT");
-                    Statement stmt4 = con.createStatement();
-                    ResultSet rs4 = stmt4.executeQuery("select DEPTNAME from DEPARTMENT where DEPTID=" + rs3.getInt("DEPTID"));
-                    while (rs4.next()) {
-                        departmentName = rs4.getString("DEPTNAME");
+                if (!rs.getString("FLAG").equals(Constants.USER_DELETED)) {
+                    int salary = 0;
+                    String departmentName = null;
+                    int rfidNumber = 0;
+                    Statement stmt2 = con.createStatement();
+                    ResultSet rs2 = stmt2.executeQuery("select RFIDNUMBER from RFID where EMPLOYEEID=" + rs.getInt("EMPLOYEEID"));
+                    while (rs2.next()) {
+                        rfidNumber = rs2.getInt("RFIDNUMBER");
                     }
-                }
-                employeeList.add(new Employee(
-                        rs.getInt("EMPLOYEEID"),
-                        Helper.convertDateToString(new Date(rs.getDate("DOB").getTime()), "yyyy-MM-dd"),
-                        rs.getString("FIRSTNAME"),
-                        rs.getString("LASTNAME"),
-                        rs.getString("GENDER"),
-                        rs.getString("PHONENUMBER"),
-                        rs.getString("EMAIL"),
-                        rs.getString("ADDRESS"),
-                        new Rfid(rfidNumber),
-                        salary,
-                        departmentName
-                ));
-                if (rs.getString("FLAG").equals(Constants.USER_HOLIDAY)) {
-                    employeesHoliday++;
-                }
-                if (rs.getString("FLAG").equals(Constants.USER_INACTIVE)) {
-                    employeesDisabled++;
+                    Statement stmt3 = con.createStatement();
+                    ResultSet rs3 = stmt3.executeQuery("select * from SALARY where EMPLOYEEID=" + rs.getInt("EMPLOYEEID"));
+                    while (rs3.next()) {
+                        salary = rs3.getInt("AMOUNT");
+                        Statement stmt4 = con.createStatement();
+                        ResultSet rs4 = stmt4.executeQuery("select DEPTNAME from DEPARTMENT where DEPTID=" + rs3.getInt("DEPTID"));
+                        while (rs4.next()) {
+                            departmentName = rs4.getString("DEPTNAME");
+                        }
+                    }
+                    employeeList.add(new Employee(
+                            rs.getInt("EMPLOYEEID"),
+                            Helper.convertDateToString(new Date(rs.getDate("DOB").getTime()), "yyyy-MM-dd"),
+                            rs.getString("FIRSTNAME"),
+                            rs.getString("LASTNAME"),
+                            rs.getString("GENDER"),
+                            rs.getString("PHONENUMBER"),
+                            rs.getString("EMAIL"),
+                            rs.getString("ADDRESS"),
+                            new Rfid(rfidNumber),
+                            salary,
+                            departmentName
+                    ));
+                    if (rs.getString("FLAG").equals(Constants.USER_HOLIDAY)) {
+                        employeesHoliday++;
+                    }
+                    if (rs.getString("FLAG").equals(Constants.USER_INACTIVE)) {
+                        employeesDisabled++;
+                    }
                 }
             }
             totalEmployees = employeeList.size();
@@ -126,5 +135,45 @@ public class EmployeeController extends HttpServlet {
                 Logger.getLogger(EmployeeController.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+    }
+
+    protected String deleteEmployee(HttpServletRequest request) {
+        Connection con = new ConnectionManager().getConnection();
+        try {
+            Statement stmt = con.createStatement();
+            int count = stmt.executeUpdate("update employees set flag='" + Constants.USER_DELETED + "' where EMPLOYEEID=" + Integer.parseInt(request.getParameter("employeeId")));
+            if (count == 1) {
+                return Constants.OK;
+            } else {
+                return Constants.ERROR;
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+            return Constants.ERROR;
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(EmployeeController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+
+    protected String editEmployee(HttpServletRequest request) {
+        Connection con = new ConnectionManager().getConnection();
+        try {
+            Statement stmt = con.createStatement();
+
+        } catch (Exception e) {
+            System.out.println(e);
+            return Constants.ERROR;
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(EmployeeController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return null;
     }
 }

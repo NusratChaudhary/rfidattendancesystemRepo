@@ -35,6 +35,7 @@ const TYPE_STRING = "string";
 const TYPE_INT = "int";
 
 const DELETE_EMPLOYEE = "delete_employee";
+const EDIT_EMPLOYEE = "edit_employee";
 
 const ATTENDANCE_IN = "in";
 const ATTENDANCE_OUT = "out";
@@ -72,4 +73,4 @@ const BROADCAST_ACTIVE = "broadcast_active";
 const BROADCAST_INACTIVE = "broadcast_inactive";
 const POST_BROADCAST = "post_broadcast";
 const DELETE_BROADCAST = "delete_broadcast";
-const LOAD_BROADCAST_EMPLOYEE="load_broadcast_employee";
+const LOAD_BROADCAST_EMPLOYEE = "load_broadcast_employee";

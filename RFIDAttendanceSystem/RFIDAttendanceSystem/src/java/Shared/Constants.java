@@ -17,6 +17,7 @@ public class Constants {
     public static final String USER_VERIFY = "user_verify";
     public static final String USER_HOLIDAY = "user_holiday";
     public static final String USER_INACTIVE = "user_deactive";
+    public static final String USER_DELETED = "user_deleted";
 
     public static final String RFID_ACTIVE = "rfid_active";
     public static final String RFID_INACTIVE = "rfid_deactive";
@@ -61,6 +62,7 @@ public class Constants {
     public static final String ATTENDANCE_ALREADY_COMPLETED = "already_completed";
 
     public static final String DELETE_EMPLOYEE = "delete_employee";
+    public static final String EDIT_EMPLOYEE = "edit_employee";
 
     public static final String REQUEST_PENDING = "request_pending";
     public static final String REQUEST_READ = "request_read";
