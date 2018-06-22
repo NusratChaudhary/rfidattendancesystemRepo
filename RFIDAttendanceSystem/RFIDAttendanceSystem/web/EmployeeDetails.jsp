@@ -16,7 +16,6 @@
         <link rel="stylesheet" href="CSS/mystyle.css"/>
         <link rel="stylesheet" href="CSS/animate.css"/>
         <script src="CSS/constants.js"></script>
-
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> 
         <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>   
         <script src="CSS/jquery.loading.js"></script>
@@ -134,16 +133,16 @@
                                                 <div class="form-group row">
                                                     <label for="mobileNumber" class="col-sm-2 col-form-label">Mobile No</label>
                                                     <div class="col-sm-10">
-                                                        <input type="text" class="form-control" value="{{empData.phoneNumber}}" name="mobileNumber" >
+                                                        <input type="text" class="form-control" value="{{empData.phoneNumber}}" name="phoneNumber" >
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
                                                     <label  class="col-sm-2 col-form-label" style="padding-right: 0px;">Gender</label>
                                                     <div class="col-sm-10">
-                                                        <select class="form-control ">
-                                                            <option ng-selected="empData.gender === 'male'" >Male</option>
+                                                        <select class="form-control " name="gender">
+                                                            <option ng-selected="empData.gender === 'male'" >male</option>
 
-                                                            <option ng-selected="empData.gender === 'female'">Female</option>
+                                                            <option ng-selected="empData.gender === 'female'">female</option>
 
                                                         </select>
                                                     </div>
@@ -151,14 +150,14 @@
                                                 <div class="form-group row">
                                                     <label for="Address" class="col-sm-2 col-form-label">Address</label>
                                                     <div class="col-sm-10">
-                                                        <textarea class="form-control" name="Address" rows="1">{{empData.address}}</textarea>
+                                                        <textarea class="form-control" name="address" rows="1">{{empData.address}}</textarea>
                                                     </div>
                                                 </div>
 
                                                 <div class="form-group row">
                                                     <label for="DOB" class="col-sm-2 col-form-label">DOB</label>
                                                     <div class="col-sm-10">
-                                                        <input type="date" class="form-control" name="DOB" value="{{empData.dob}}" >
+                                                        <input type="date" class="form-control" name="dob" value="{{empData.dob}}" >
                                                     </div>
                                                 </div>
 
@@ -172,20 +171,21 @@
                                                 <div class="form-group row">
                                                     <label for="sal" class="col-sm-2 col-form-label">Salary</label>
                                                     <div class="col-sm-10">
-                                                        <input type="text" class="form-control" name="sal" value="{{empData.salary}}" >
+                                                        <input type="text" class="form-control" name="salary" value="{{empData.salary}}" >
                                                     </div>
                                                 </div>
 
                                                 <div class="form-group row">
                                                     <label  class="col-sm-2 col-form-label">Department</label>
                                                     <div class="col-sm-10">
-                                                        <select class="form-control">
-                                                            <option value="1" ng-selected="empData.departmentName === 'Production'" >Production</option>
-                                                            <option value="2" ng-selected="empData.departmentName === 'Research and Development'">Research and Development</option>
-                                                            <option value="3" ng-selected="empData.departmentName === 'Purchase'">Purchase</option>
-                                                            <option value="4" ng-selected="empData.departmentName === 'Marketing'">Marketing</option>
-                                                            <option value="5" ng-selected="empData.departmentName === 'Accounting and Finance'">Accounting and Finance</option>
-                                                            <option value="6" ng-selected="empData.departmentName === 'IT'">IT</option>
+                                                        <select class="form-control" name="departmentName">
+                                                            <option value="null" ng-selected="empData.departmentName === 'null'" >Select Department</option>                                                            
+                                                            <option value="Production" ng-selected="empData.departmentName === 'Production'" >Production</option>
+                                                            <option value="Research and Development" ng-selected="empData.departmentName === 'Research and Development'">Research and Development</option>
+                                                            <option value="Purchase" ng-selected="empData.departmentName === 'Purchase'">Purchase</option>
+                                                            <option value="Marketing" ng-selected="empData.departmentName === 'Marketing'">Marketing</option>
+                                                            <option value="Accounting and Finance" ng-selected="empData.departmentName === 'Accounting and Finance'">Accounting and Finance</option>
+                                                            <option value="IT" ng-selected="empData.departmentName === 'IT'">IT</option>
                                                         </select>
                                                     </div>
                                                 </div>
@@ -314,6 +314,8 @@
                     $http(request).then(function (response) {
                         if (response !== ERROR) {
                             $scope.employeeData.employeeList.splice(deleteData.objectPostion, 1);
+                            let employeeCount = parseInt($scope.employeeData.employeesCount);
+                            $scope.employeeData.employeesCount = --employeeCount;
                             $scope.alertCreator('Successfully Deleted Employee', 'alert-success');
                         } else {
                             $scope.alertCreator('Unable to Contact Server', 'alert-danger');
@@ -325,34 +327,53 @@
                     });
                 };
 
-
                 $scope.editUser = function (employee) {
-                    var id = employee.employeeId;
+                    const id = employee.employeeId;
                     var fData = $('#' + id + '-form').serializeArray();
-                   angular.forEach(fData,function(data){
-                       console.log(data.name,data.value);
-                   });
-                    console.log($scope.employeeData.employeeList[employee.objectPostion]);
-//                    showLoader('body');
-//                    const request = {
-//                        method: 'POST',
-//                        url: 'EmployeeController',
-//                        headers: {"api_key": API_KEY},
-//                        timeout: 10000,
-//                        params: {employee: employee, task: EDIT_EMPLOYEE}
-//                    };
-//                    $http(request).then(function (response) {
-//                        if (response !== ERROR) {
-//                            // $scope.employeeData.employeeList.splice(deleteData.objectPostion,1);
-//                            $scope.alertCreator('Successfully Edited Employee', 'alert-success');
-//                        } else {
-//                            $scope.alertCreator('Unable to Contact Server', 'alert-danger');
-//                        }
-//                        hideLoader('body');
-//                    }, function (response) {
-//                        console.log('Error ', response);
-//                        hideLoader('body');
-//                    });
+                    const emp = $scope.employeeData.employeeList[employee.objectPostion];
+                    var changes = 0;
+                    angular.forEach(fData, function (data) {
+                        if (data.name !== 'rfid') {
+                            if (data.value != emp[data.name]) {
+                                emp[data.name] = data.value;
+                                changes += 1;
+                            }
+                        } else {
+                            if (data.value != emp[data.name].rfidnumber) {
+                                emp[data.name].rfidnumber = data.value;
+                                changes += 1;
+                            }
+                        }
+                    });
+                    console.log(JSON.stringify(emp));
+                    if (changes > 0) {
+                        delete emp.$$hashKey;
+                        delete emp.name;
+                        emp.isUserHr = emp.userHr;
+                        delete emp.userHr;
+                        showLoader('body');
+                        const request = {
+                            method: 'POST',
+                            url: 'EmployeeController',
+                            headers: {"api_key": API_KEY},
+                            timeout: 10000,
+                            params: {employee: JSON.stringify(emp), task: EDIT_EMPLOYEE}
+                        };
+                        $http(request).then(function (response) {
+                            if (response !== ERROR) {
+                                $scope.alertCreator('Successfully Edited Employee', 'alert-success');
+                            } else {
+                                $scope.alertCreator('Unable to Contact Server', 'alert-danger');
+                            }
+                            hideLoader('body');
+                        }, function (response) {
+                            console.log('Error ', response);
+                            hideLoader('body');
+                        });
+                    } else {
+                        $scope.alertCreator('No Changes were made', 'alert-warning');
+                    }
+                    $('.editMode[name=' + id + ']').click();
                 };
 
                 $scope.alertCreator = function (message, className) {

@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.Date;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -62,7 +63,8 @@ public class EmployeeController extends HttpServlet {
                         out.print(deleteEmployee(request));
                         break;
                     case Constants.EDIT_EMPLOYEE:
-                        out.print(editEmployee(request));
+                        Employee employee = new ObjectMapper().readValue(request.getParameter("employee"), Employee.class);
+                        out.print(editEmployee(employee));
                         break;
                 }
             } else {
@@ -159,11 +161,42 @@ public class EmployeeController extends HttpServlet {
         }
     }
 
-    protected String editEmployee(HttpServletRequest request) {
+    protected String editEmployee(Employee employee) {
         Connection con = new ConnectionManager().getConnection();
         try {
+            int count = 0;
             Statement stmt = con.createStatement();
-
+            count = stmt.executeUpdate("update employees set  FIRSTNAME=?,LASTNAME=?,GENDER=?,PHONENUMBER=?,EMAIL=?,ADDRESS=?,DOB=? where EMPLOYEEID=" + employee.getEmployeeId());
+            if (!employee.getdepartmentName().equals("null") && employee.getsalary() != 0) {
+                boolean exist = Helper.checkIfExist(
+                        con,
+                        "select count(*) as counter from SALARY where employeeId=" + employee.getEmployeeId(),
+                        "counter",
+                        Constants.TYPE_INT,
+                        "1"
+                );
+                Statement stmt2 = con.createStatement();
+                int departmentId = 0;
+                for (Departments department : Departments.values()) {
+                    if (department.toString().equals(employee.getdepartmentName())) {
+                        departmentId = department.getDeptCode();
+                    }
+                }
+                if (exist) {
+                    // update
+                    count = stmt2.executeUpdate("update salary set AMOUNT=" + employee.getsalary() + "  DEPTID=" + departmentId + "  where  EMPLOYEEID=" + employee.getEmployeeId());
+                } else {
+                    // insert
+                    count = stmt2.executeUpdate("insert into salary values(" + employee.getEmployeeId() + "," + employee.getsalary() + "," + departmentId + ")");
+                }
+            } else {
+                count++; // just to show that we checked dept salary part too for below if
+            }
+            if (count == 2) {
+                return Constants.OK;
+            } else {
+                return Constants.ERROR;
+            }
         } catch (Exception e) {
             System.out.println(e);
             return Constants.ERROR;
@@ -174,6 +207,24 @@ public class EmployeeController extends HttpServlet {
                 Logger.getLogger(EmployeeController.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        return null;
+    }
+}
+
+enum Departments {
+    Production(1),
+    Purchase(3),
+    Marketing(4),
+    IT(6),
+    ResearchandDevelopment(2),
+    AccountingandFinance(5);
+
+    private int value;
+
+    private Departments(int value) {
+        this.value = value;
+    }
+
+    public int getDeptCode() {
+        return this.value;
     }
 }
