@@ -178,7 +178,7 @@ public class EmployeeController extends HttpServlet {
                 Statement stmt2 = con.createStatement();
                 int departmentId = 0;
                 for (Departments department : Departments.values()) {
-                    if (department.toString().equals(employee.getdepartmentName())) {
+                    if (department.toString().equals(employee.getdepartmentName().replaceAll("\\s+", ""))) { // .replaceAll("\\s+","") removes spaces 
                         departmentId = department.getDeptCode();
                     }
                 }
