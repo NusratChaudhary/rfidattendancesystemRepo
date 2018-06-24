@@ -8,6 +8,7 @@ package Main;
 import Model.Employee;
 import Shared.Constants;
 import Shared.Helper;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -28,14 +29,18 @@ public class AdminController extends HttpServlet {
         PrintWriter out = response.getWriter();
         if (request.getHeader("api_key") != null && Helper.validateAPIKEY(request.getHeader("api_key"))) {
             if (request.getParameter("task") != null) {
-                switch (request.getParameter("task")) {
-                    case Constants.GET_ALL_ATTENDANCE:
-                        if (request.getSession(false).getAttribute("isUserAdmin") != null && (Boolean) request.getSession(false).getAttribute("isUserAdmin")) {
+                if (request.getSession(false).getAttribute("isUserAdmin") != null && (Boolean) request.getSession(false).getAttribute("isUserAdmin")) {
+                    switch (request.getParameter("task")) {
+                        case Constants.GET_ALL_ATTENDANCE:
                             out.print(new AttendanceController().getAllEmployeeAttendance(null, null));
-                        } else {
-                            out.print(Constants.ERROR);
-                        }
-                        break;
+
+                            break;
+                        case Constants.GET_ALL_EMPLOYEES:
+                            out.print(new EmployeeController().getAllEmployees());
+                            break;
+                    }
+                } else {
+                    out.print(Constants.ERROR);
                 }
             } else {
                 out.print("invalidRequest");
@@ -52,7 +57,19 @@ public class AdminController extends HttpServlet {
         PrintWriter out = response.getWriter();
         if (request.getHeader("api_key") != null && Helper.validateAPIKEY(request.getHeader("api_key"))) {
             if (request.getParameter("task") != null) {
-
+                if (request.getSession(false).getAttribute("isUserAdmin") != null && (Boolean) request.getSession(false).getAttribute("isUserAdmin")) {
+                    switch (request.getParameter("task")) {
+                        case Constants.DELETE_EMPLOYEE:
+                            out.print(new EmployeeController().deleteEmployee(request));
+                            break;
+                        case Constants.EDIT_EMPLOYEE:
+                            Employee employee = new ObjectMapper().readValue(request.getParameter("employee"), Employee.class);
+                            out.print(new EmployeeController().editEmployee(employee));
+                            break;
+                    }
+                } else {
+                    out.print(Constants.ERROR);
+                }
             } else {
                 out.print("invalidRequest");
             }

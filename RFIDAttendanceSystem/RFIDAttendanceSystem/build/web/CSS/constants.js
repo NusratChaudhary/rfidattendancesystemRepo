@@ -74,3 +74,4 @@ const BROADCAST_INACTIVE = "broadcast_inactive";
 const POST_BROADCAST = "post_broadcast";
 const DELETE_BROADCAST = "delete_broadcast";
 const LOAD_BROADCAST_EMPLOYEE = "load_broadcast_employee";
+const GET_ALL_EMPLOYEES = "get_all_employees";

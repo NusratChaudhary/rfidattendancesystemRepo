@@ -89,4 +89,7 @@ public class Constants {
     public static final String POST_BROADCAST = "post_broadcast";
     public static final String DELETE_BROADCAST = "delete_broadcast";
     public static final String LOAD_BROADCAST_EMPLOYEE = "load_broadcast_employee";
+    
+    public static final String GET_ALL_EMPLOYEES = "get_all_employees";
+    
 }
