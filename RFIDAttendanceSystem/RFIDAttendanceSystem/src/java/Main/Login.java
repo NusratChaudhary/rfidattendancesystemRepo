@@ -108,9 +108,8 @@ public class Login extends HttpServlet {
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery("select RFIDNUMBER from RFID where EMPLOYEEID=" + id);
             if (rs.next()) {
-
                 int rfidNumber = rs.getInt("RFIDNUMBER");
-
+                boolean[] hrDetails = isUserHR(employeeResult.getString("EMAIL"), con);
                 Employee employee = new Employee(
                         id,
                         Helper.convertDateToString(new Date(employeeResult.getDate("DOB").getTime()), "dd-MM-yyyy"),
@@ -121,7 +120,10 @@ public class Login extends HttpServlet {
                         employeeResult.getString("EMAIL"),
                         employeeResult.getString("ADDRESS"),
                         new Rfid(rfidNumber),
-                        isUserHR(employeeResult.getString("EMAIL"), con)
+                        0,
+                        null,
+                        hrDetails[0],
+                        hrDetails[1]
                 );
 
                 ObjectMapper mapper = new ObjectMapper();
@@ -141,7 +143,7 @@ public class Login extends HttpServlet {
             if (rs.next()) {
 
                 int rfidNumber = rs.getInt("RFIDNUMBER");
-
+                boolean[] hrDetails = isUserHR(employeeResult.getString("EMAIL"), con);
                 Employee employee = new Employee(
                         id,
                         Helper.convertDateToString(new Date(employeeResult.getDate("DOB").getTime()), "dd-MM-yyyy"),
@@ -152,7 +154,10 @@ public class Login extends HttpServlet {
                         employeeResult.getString("EMAIL"),
                         employeeResult.getString("ADDRESS"),
                         new Rfid(rfidNumber),
-                        isUserHR(employeeResult.getString("EMAIL"), con)
+                        0,
+                        null,
+                        hrDetails[0],
+                        hrDetails[1]
                 );
 
                 return employee;
@@ -170,17 +175,21 @@ public class Login extends HttpServlet {
         }
     }
 
-    private boolean isUserHR(String email, Connection con) {
+    protected boolean[] isUserHR(String email, Connection con) {
         try {
             Statement stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery("select email from HR where email='" + email + "'");
+            ResultSet rs = stmt.executeQuery("select email,flag from HR where email='" + email + "'");
             if (rs.next() == true) {
-                return true;
+                if (rs.getString("email") != null && rs.getString("flag").equals(Constants.USER_ACTIVE)) {
+                    return new boolean[]{true, true};
+                } else {
+                    return new boolean[]{true, false};
+                }
             } else {
-                return false;
+                return new boolean[]{false, false};
             }
         } catch (Exception e) {
-            return false;
+            return new boolean[]{false, false};
         }
     }
 }

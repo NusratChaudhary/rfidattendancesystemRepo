@@ -17,8 +17,8 @@ public class ConnectionManager {
 
     public Connection getConnection() {
         final String driver = "oracle.jdbc.OracleDriver";
-        // final String url = "jdbc:oracle:thin:@192.168.0.145:1521:orcl";
-        final String url = "jdbc:oracle:thin:@192.168.0.134:1521:xe";
+         final String url = "jdbc:oracle:thin:@192.168.0.145:1521:orcl";
+       // final String url = "jdbc:oracle:thin:@192.168.0.134:1521:xe";
         final String username = "hr";
         final String password = "hr";
 

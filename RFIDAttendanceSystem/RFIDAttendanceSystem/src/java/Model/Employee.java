@@ -21,6 +21,7 @@ public class Employee {
     private String address;
     private Rfid rfid;
     private boolean isUserHr;
+    private boolean isHrEnabled;
     private int salary;
     private String departmentName;
 
@@ -42,8 +43,8 @@ public class Employee {
         this.firstName = firstName;
         this.lastName = lastName;
     }
-    
-    public Employee(int employeeId, String dob, String firstName, String lastName, String gender, String phoneNumber, String email, String address, Rfid rfid, int salary, String departmentName) {
+
+    public Employee(int employeeId, String dob, String firstName, String lastName, String gender, String phoneNumber, String email, String address, Rfid rfid, int salary, String departmentName, boolean isHr, boolean isHrEnabled) {
         this.employeeId = employeeId;
         this.dob = dob;
         this.firstName = firstName;
@@ -55,6 +56,8 @@ public class Employee {
         this.rfid = rfid;
         this.salary = salary;
         this.departmentName = departmentName;
+        this.isUserHr = isHr;
+        this.isHrEnabled = isHrEnabled;
     }
 
     public Employee() {
@@ -138,6 +141,14 @@ public class Employee {
 
     public void setisUserHr(boolean isHr) {
         this.isUserHr = isHr;
+    }
+
+    public boolean isHrEnabled() {
+        return isHrEnabled;
+    }
+
+    public void setisHrEnabled(boolean isHrEnabled) {
+        this.isHrEnabled = isHrEnabled;
     }
 
     public int getsalary() {

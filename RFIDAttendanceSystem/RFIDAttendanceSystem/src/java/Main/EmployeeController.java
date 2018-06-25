@@ -79,6 +79,7 @@ public class EmployeeController extends HttpServlet {
         Connection con = new ConnectionManager().getConnection();
         List<Employee> employeeList = new ArrayList<>();
         int totalEmployees = 0, employeesHoliday = 0, employeesDisabled = 0;
+        Login loginController = new Login();
         try {
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery("select * from EMPLOYEES");
@@ -102,6 +103,7 @@ public class EmployeeController extends HttpServlet {
                             departmentName = rs4.getString("DEPTNAME");
                         }
                     }
+                    boolean[] hrDetails = loginController.isUserHR(rs.getString("EMAIL"), con);
                     employeeList.add(new Employee(
                             rs.getInt("EMPLOYEEID"),
                             Helper.convertDateToString(new Date(rs.getDate("DOB").getTime()), "yyyy-MM-dd"),
@@ -113,7 +115,9 @@ public class EmployeeController extends HttpServlet {
                             rs.getString("ADDRESS"),
                             new Rfid(rfidNumber),
                             salary,
-                            departmentName
+                            departmentName,
+                            hrDetails[0],
+                            hrDetails[1]
                     ));
                     if (rs.getString("FLAG").equals(Constants.USER_HOLIDAY)) {
                         employeesHoliday++;

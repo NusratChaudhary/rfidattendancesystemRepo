@@ -86,7 +86,7 @@
                 <div class="tab-pane fade" id="nav-employees" ng-init="loadEmployeesData();" role="tabpanel" aria-labelledby="nav-contact-tab">
 
                     <div class="col-sm-2 offset-sm-10">
-                        <input class="form-control form-control-sm" type="text" placeholder="Search Employee"  ng-model="employeeFilter" id="employeeSearchBar">
+                        <input class="form-control form-control-sm" type="text" placeholder="Search Employee"  ng-model="employeeFilter" id="searchBar">
                     </div>
                     <br/>
                     <div class="col-sm-3 statistics float-left bg-light shadow-nohover">
@@ -261,32 +261,28 @@
                     </div>
                 </div>
                 <div class="tab-pane fade" id="nav-hr" role="tabpanel" aria-labelledby="nav-contact-tab">
-
                     <div class="col-sm-1 offset-sm-11" style="cursor: pointer;">
-                        <div>
+                        <div data-toggle="modal" data-target="#addHrUser">
                             <img src="Resources/addUsericon.png" alt="icon" class="ml-3" /><br/>
                             <label>Add User</label>
                         </div>
                     </div>
-
-
-                    <div class="card w-25 p-3  m-2 float-left">
-                        <img class="card-img-top" src="" alt="Card image cap">
+                    <div class="card p-3 m-2 mr-5 float-left shadow-nohover" style="width: 18%;" ng-repeat="empData in employeeData.employeeList" ng-if="empData.userHr">
+                        <center> <img class="card-img-top w-50" src="{{'ImageProvider?id=' + empData.rfid.rfidnumber}}" alt="Card image cap" height="125px"></center>
                         <div class="card-body pb-0 pr-0 pl-0">
-                            <h5 class="card-title">user name</h5>
-                            <p class="card-text">user email</p>
-                            <button type="button" class="btn btn-danger">Delete User</button>
+                            <h5 class="card-title text-center">{{empData.name}}</h5>
+                            <p class="card-text text-center">{{empData.email}}</p>
+                            <p class="card-text text-center">{{empData.departmentName?empData.departmentName:'-'}}</p>
+                            <button type="button" class="btn btn-danger mt-2" ng-click="delHrUser(empData)">Delete User</button>
                             <div class="float-right">
                                 <label class="switch">
-                                    <input  class="editMode" type="checkbox">
+                                    <input ng-click="disableHrUser(empData)" ng-checked="{{!empData.hrEnabled}}" class="editMode" type="checkbox">
                                     <span class="slider round"></span>
                                 </label><br/>
                                 <label>&nbsp;&nbsp;Disable&nbsp;&nbsp;</label>
                             </div>
                         </div>
                     </div>
-
-
                 </div>
                 <div class="tab-pane fade" id="nav-mails" role="tabpanel" aria-labelledby="nav-contact-tab">mails</div>
                 <div class="tab-pane fade" id="nav-sms" role="tabpanel" aria-labelledby="nav-contact-tab">sms</div>
@@ -309,6 +305,40 @@
                         <div class="modal-footer">
                             <button type="button" class="btn btn-outline-danger" ng-hide="confirmationData.mode === 'edit'" ng-click="deleteUser(confirmationData)" data-dismiss="modal">Delete Employee</button>                        
                             <button type="button" class="btn btn-outline-info" ng-hide="confirmationData.mode === 'delete'" ng-click="editUser(confirmationData)" data-dismiss="modal">Edit Employee</button>                        
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="modal fade"  id="addHrUser" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header border-bottom-0">
+                            <div class="col-sm-3 offset-sm-9">
+                                <input class="form-control form-control-sm" type="text" placeholder="Search Employee"  ng-model="hrFilter" id="searchBar">
+                            </div>
+                        </div>
+                        <div class="modal-body p-1 mb-2">
+                            <table class="table table-striped text-center mb-0" >
+                                <thead>
+                                    <tr>
+                                        <th scope="col">ID</th>
+                                        <th scope="col">NAME</th>
+                                        <th scope="col">DEPARTMENT</th>
+                                        <th scope="col"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="empData in employeeData.employeeList| filter : hrFilter" ng-if="!empData.userHr">
+                                        <th scope="row">{{empData.employeeId}}</th>
+                                        <td>{{empData.name}}</td>
+                                        <td>{{empData.departmentName?empData.departmentName:'-'}}</td>
+                                        <td><button type="button" class="btn btn-info btn-sm" ng-click="addHrUser(empData)">Add</button></td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -359,6 +389,7 @@
                     $http(request).then(function (response) {
                         if (response !== ERROR) {
                             $scope.employeeData = JSON.parse(JSON.stringify(response.data));
+                            console.log($scope.employeeData);
                         }
                         hideLoader('body');
                         // add event listner after data is loaded 
@@ -479,6 +510,80 @@
                         $scope.alertCreator('No Changes were made', 'alert-warning');
                     }
                     $('.editMode[name=' + id + ']').click();
+                };
+
+
+                $scope.addHrUser = function (employee) {
+                    showLoader('.modal');
+                    const request = {
+                        method: 'POST',
+                        url: 'AdminController',
+                        headers: {"api_key": API_KEY},
+                        timeout: 10000,
+                        params: {employeeId: employee.employeeId, task: ADD_NEW_HR}
+                    };
+                    $http(request).then(function (response) {
+                        if (response === OK) {
+                            employee.userHr = true;
+                            employee.hrEnabled = true;
+                            $scope.alertCreator('Successfully delegated ' + employee.name + ' as HR', 'alert-success');
+                        } else {
+                            $scope.alertCreator('Unable to Contact Server', 'alert-danger');
+                        }
+                        hideLoader('body');
+                    }, function (response) {
+                        console.log('Error ', response);
+                        hideLoader('body');
+                    });
+                    $('#addHrUser').modal('hide')
+                };
+
+                $scope.delHrUser = function (employee) {
+                    showLoader('body');
+                    const request = {
+                        method: 'POST',
+                        url: 'AdminController',
+                        headers: {"api_key": API_KEY},
+                        timeout: 10000,
+                        params: {employeeId: employee.employeeId, task: DELETE_HR}
+                    };
+                    $http(request).then(function (response) {
+                        if (response === OK) {
+                            employee.userHr = false;
+                            employee.hrEnabled = false;
+                            $scope.alertCreator('Successfully removed ' + employee.name + ' from HR', 'alert-success');
+                        } else {
+                            $scope.alertCreator('Unable to Contact Server', 'alert-danger');
+                        }
+                        hideLoader('body');
+                    }, function (response) {
+                        console.log('Error ', response);
+                        hideLoader('body');
+                    });
+                };
+
+
+                $scope.disableHrUser = function (employee) {
+                    showLoader('body');
+                    const request = {
+                        method: 'POST',
+                        url: 'AdminController',
+                        headers: {"api_key": API_KEY},
+                        timeout: 10000,
+                        params: {employeeId: employee.employeeId, task: DISABLE_HR}
+                    };
+                    $http(request).then(function (response) {
+                        if (response === OK) {
+                            employee.hrEnabled = false;
+                            $scope.alertCreator('Successfully disabled ' + employee.name, 'alert-success');
+                        } else {
+                            $scope.alertCreator('Unable to Contact Server', 'alert-danger');
+                        }
+                        hideLoader('body');
+                    }, function (response) {
+                        console.log('Error ', response);
+                        hideLoader('body');
+                    });
                 };
 
                 $scope.alertCreator = function (message, className) {
