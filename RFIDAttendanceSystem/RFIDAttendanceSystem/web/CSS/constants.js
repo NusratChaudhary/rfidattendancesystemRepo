@@ -78,3 +78,4 @@ const GET_ALL_EMPLOYEES = "get_all_employees";
 const ADD_NEW_HR = "add_new_hr";
 const DELETE_HR = "del_hr";
 const DISABLE_HR = "disable_hr";
+const ENABLE_HR = "enable_hr";

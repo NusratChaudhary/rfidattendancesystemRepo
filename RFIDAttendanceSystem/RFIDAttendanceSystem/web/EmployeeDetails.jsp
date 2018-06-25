@@ -97,7 +97,7 @@
 
                                     <div class=" clearfix">
                                         <div class="float-left" >
-                                            <img class="employeeImage img-thumbnail" src="ImageProvider?id={{empData.rfid.rfidnumber}}" alt="employeeImage" />
+                                            <img class="employeeImage img-thumbnail" src="{{empData.rfid.rfidnumber>0?'ImageProvider?id=' + empData.rfid.rfidnumber:''}}" alt="employeeImage" />
                                         </div>
                                         <div class="float-right" >
                                             <label class="switch">

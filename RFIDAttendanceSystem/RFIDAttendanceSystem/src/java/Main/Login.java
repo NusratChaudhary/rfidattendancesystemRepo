@@ -109,7 +109,7 @@ public class Login extends HttpServlet {
             ResultSet rs = stmt.executeQuery("select RFIDNUMBER from RFID where EMPLOYEEID=" + id);
             if (rs.next()) {
                 int rfidNumber = rs.getInt("RFIDNUMBER");
-                boolean[] hrDetails = isUserHR(employeeResult.getString("EMAIL"), con);
+                boolean[] hrDetails = isUserHR(id, con);
                 Employee employee = new Employee(
                         id,
                         Helper.convertDateToString(new Date(employeeResult.getDate("DOB").getTime()), "dd-MM-yyyy"),
@@ -143,7 +143,7 @@ public class Login extends HttpServlet {
             if (rs.next()) {
 
                 int rfidNumber = rs.getInt("RFIDNUMBER");
-                boolean[] hrDetails = isUserHR(employeeResult.getString("EMAIL"), con);
+                boolean[] hrDetails = isUserHR(id, con);
                 Employee employee = new Employee(
                         id,
                         Helper.convertDateToString(new Date(employeeResult.getDate("DOB").getTime()), "dd-MM-yyyy"),
@@ -175,12 +175,12 @@ public class Login extends HttpServlet {
         }
     }
 
-    protected boolean[] isUserHR(String email, Connection con) {
+    protected boolean[] isUserHR(int employeeId, Connection con) {
         try {
             Statement stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery("select email,flag from HR where email='" + email + "'");
+            ResultSet rs = stmt.executeQuery("select flag from HR where employeeId=" + employeeId);
             if (rs.next() == true) {
-                if (rs.getString("email") != null && rs.getString("flag").equals(Constants.USER_ACTIVE)) {
+                if (rs.getString("flag").equals(Constants.USER_ACTIVE)) {
                     return new boolean[]{true, true};
                 } else {
                     return new boolean[]{true, false};

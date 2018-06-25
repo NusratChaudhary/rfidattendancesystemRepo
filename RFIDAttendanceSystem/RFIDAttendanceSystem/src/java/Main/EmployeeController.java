@@ -103,7 +103,7 @@ public class EmployeeController extends HttpServlet {
                             departmentName = rs4.getString("DEPTNAME");
                         }
                     }
-                    boolean[] hrDetails = loginController.isUserHR(rs.getString("EMAIL"), con);
+                    boolean[] hrDetails = loginController.isUserHR(rs.getInt("EMPLOYEEID"), con);
                     employeeList.add(new Employee(
                             rs.getInt("EMPLOYEEID"),
                             Helper.convertDateToString(new Date(rs.getDate("DOB").getTime()), "yyyy-MM-dd"),

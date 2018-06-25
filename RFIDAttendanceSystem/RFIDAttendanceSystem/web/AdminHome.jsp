@@ -149,7 +149,7 @@
 
                                             <div class=" clearfix">
                                                 <div class="float-left" >
-                                                    <img class="employeeImage img-thumbnail" src="ImageProvider?id={{empData.rfid.rfidnumber}}" alt="employeeImage" />
+                                                    <img class="employeeImage img-thumbnail" src="{{empData.rfid.rfidnumber>0?'ImageProvider?id=' + empData.rfid.rfidnumber:''}}" alt="employeeImage" />
                                                 </div>
                                                 <div class="float-right" >
                                                     <label class="switch">
@@ -268,7 +268,7 @@
                         </div>
                     </div>
                     <div class="card p-3 m-2 mr-5 float-left shadow-nohover" style="width: 18%;" ng-repeat="empData in employeeData.employeeList" ng-if="empData.userHr">
-                        <center> <img class="card-img-top w-50" src="{{'ImageProvider?id=' + empData.rfid.rfidnumber}}" alt="Card image cap" height="125px"></center>
+                        <center> <img class="card-img-top w-50" src="{{empData.rfid.rfidnumber>0?'ImageProvider?id=' + empData.rfid.rfidnumber:''}}" alt="Card image cap" height="125px"></center>
                         <div class="card-body pb-0 pr-0 pl-0">
                             <h5 class="card-title text-center">{{empData.name}}</h5>
                             <p class="card-text text-center">{{empData.email}}</p>
@@ -276,7 +276,7 @@
                             <button type="button" class="btn btn-danger mt-2" ng-click="delHrUser(empData)">Delete User</button>
                             <div class="float-right">
                                 <label class="switch">
-                                    <input ng-click="disableHrUser(empData)" ng-checked="{{!empData.hrEnabled}}" class="editMode" type="checkbox">
+                                    <input ng-click="toggleHrUserStatus(empData)" ng-checked="{{!empData.hrEnabled}}" class="editMode" type="checkbox">
                                     <span class="slider round"></span>
                                 </label><br/>
                                 <label>&nbsp;&nbsp;Disable&nbsp;&nbsp;</label>
@@ -449,7 +449,7 @@
                         params: {employeeId: deleteData.employeeId, task: DELETE_EMPLOYEE}
                     };
                     $http(request).then(function (response) {
-                        if (response !== ERROR) {
+                        if (response.data !== ERROR) {
                             $scope.employeeData.employeeList.splice(deleteData.objectPostion, 1);
                             let employeeCount = parseInt($scope.employeeData.employeesCount);
                             $scope.employeeData.employeesCount = --employeeCount;
@@ -496,7 +496,7 @@
                             params: {employee: JSON.stringify(emp), task: EDIT_EMPLOYEE}
                         };
                         $http(request).then(function (response) {
-                            if (response !== ERROR) {
+                            if (response.data !== ERROR) {
                                 $scope.alertCreator('Successfully Edited Employee', 'alert-success');
                             } else {
                                 $scope.alertCreator('Unable to Contact Server', 'alert-danger');
@@ -523,17 +523,17 @@
                         params: {employeeId: employee.employeeId, task: ADD_NEW_HR}
                     };
                     $http(request).then(function (response) {
-                        if (response === OK) {
+                        if (response.data === OK) {
                             employee.userHr = true;
                             employee.hrEnabled = true;
-                            $scope.alertCreator('Successfully delegated ' + employee.name + ' as HR', 'alert-success');
+                            $scope.alertCreator('Successfully delegated ' + employee.name + ' as HR, PS notify user to re-login to get its HR rights back', 'alert-success');
                         } else {
                             $scope.alertCreator('Unable to Contact Server', 'alert-danger');
                         }
-                        hideLoader('body');
+                        hideLoader('.modal');
                     }, function (response) {
                         console.log('Error ', response);
-                        hideLoader('body');
+                        hideLoader('.modal');
                     });
                     $('#addHrUser').modal('hide')
                 };
@@ -548,7 +548,7 @@
                         params: {employeeId: employee.employeeId, task: DELETE_HR}
                     };
                     $http(request).then(function (response) {
-                        if (response === OK) {
+                        if (response.data === OK) {
                             employee.userHr = false;
                             employee.hrEnabled = false;
                             $scope.alertCreator('Successfully removed ' + employee.name + ' from HR', 'alert-success');
@@ -563,19 +563,30 @@
                 };
 
 
-                $scope.disableHrUser = function (employee) {
+                $scope.toggleHrUserStatus = function (employee) {
                     showLoader('body');
+                    let task;
+                    if (employee.hrEnabled) {
+                        task = DISABLE_HR;
+                    } else {
+                        task = ENABLE_HR;
+                    }
                     const request = {
                         method: 'POST',
                         url: 'AdminController',
                         headers: {"api_key": API_KEY},
                         timeout: 10000,
-                        params: {employeeId: employee.employeeId, task: DISABLE_HR}
+                        params: {employeeId: employee.employeeId, task: task}
                     };
                     $http(request).then(function (response) {
-                        if (response === OK) {
-                            employee.hrEnabled = false;
-                            $scope.alertCreator('Successfully disabled ' + employee.name, 'alert-success');
+                        if (response.data === OK) {
+                            if (task === DISABLE_HR) {
+                                employee.hrEnabled = false;
+                                $scope.alertCreator('Successfully disabled ' + employee.name, 'alert-success');
+                            } else {
+                                employee.hrEnabled = true;
+                                $scope.alertCreator('Successfully enabled ' + employee.name+' PS notify user to re-login to get its HR rights back', 'alert-success');
+                            }
                         } else {
                             $scope.alertCreator('Unable to Contact Server', 'alert-danger');
                         }
