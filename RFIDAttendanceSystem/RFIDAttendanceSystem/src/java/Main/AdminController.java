@@ -9,12 +9,12 @@ import Model.Employee;
 import Shared.ConnectionManager;
 import Shared.Constants;
 import Shared.Helper;
+import Shared.SessionManager;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Level;
@@ -29,7 +29,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author mohnish
  */
 public class AdminController extends HttpServlet {
-
+    
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -41,7 +41,7 @@ public class AdminController extends HttpServlet {
                     switch (request.getParameter("task")) {
                         case Constants.GET_ALL_ATTENDANCE:
                             out.print(new AttendanceController().getAllEmployeeAttendance(null, null));
-
+                            
                             break;
                         case Constants.GET_ALL_EMPLOYEES:
                             out.print(new EmployeeController().getAllEmployees());
@@ -57,7 +57,7 @@ public class AdminController extends HttpServlet {
             out.print("invalidRequest");
         }
     }
-
+    
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -97,7 +97,7 @@ public class AdminController extends HttpServlet {
             out.print("invalidRequest");
         }
     }
-
+    
     private String addHrUser(int employeeId) {
         Connection con = new ConnectionManager().getConnection();
         try {
@@ -117,12 +117,13 @@ public class AdminController extends HttpServlet {
             }
         }
     }
-
+    
     private String deleteHrUser(int employeeId) {
         Connection con = new ConnectionManager().getConnection();
         try {
             Statement stmt = con.createStatement();
             int count = stmt.executeUpdate("delete from hr where employeeId=" + employeeId);
+            SessionManager.removeSession(String.valueOf(employeeId));
             return count == 1 ? Constants.OK : Constants.ERROR;
         } catch (Exception e) {
             System.out.println(e);
@@ -135,12 +136,15 @@ public class AdminController extends HttpServlet {
             }
         }
     }
-
+    
     private String toggleHrUserStatus(int employeeId, boolean flag) {
         Connection con = new ConnectionManager().getConnection();
         try {
             Statement stmt = con.createStatement();
             String userflag = flag ? Constants.USER_ACTIVE : Constants.USER_INACTIVE;
+            if (userflag.equals(Constants.USER_INACTIVE)) {
+                SessionManager.removeSession(String.valueOf(employeeId));
+            }
             int count = stmt.executeUpdate("update hr set flag='" + userflag + "' where employeeId=" + employeeId);
             return count == 1 ? Constants.OK : Constants.ERROR;
         } catch (Exception e) {

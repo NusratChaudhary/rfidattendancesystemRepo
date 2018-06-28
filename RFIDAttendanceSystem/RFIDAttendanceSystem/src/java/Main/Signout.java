@@ -7,6 +7,7 @@ package Main;
 
 import Shared.Constants;
 import Shared.Helper;
+import Shared.SessionManager;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -28,6 +29,12 @@ public class Signout extends HttpServlet {
         PrintWriter out = response.getWriter();
         if (request.getHeader("api_key") != null && Helper.validateAPIKEY(request.getHeader("api_key"))) {
             HttpSession session = request.getSession();
+            if (session.getAttribute("isUserAdmin") != null) {
+                SessionManager.removeSession(String.valueOf(session.getAttribute("id")));
+            } else {
+                int employeeId = (Integer) session.getAttribute("id");
+                SessionManager.removeSession(String.valueOf(employeeId));
+            }
             session.invalidate();
             out.print(Constants.LOGGED_OUT);
         } else {

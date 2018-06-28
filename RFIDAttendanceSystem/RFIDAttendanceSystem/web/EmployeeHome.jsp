@@ -66,17 +66,20 @@
 
     <script>
 
+        const BASE_URL = 'http://' + window.location.hostname + ':8080/RFIDAttendanceSystem/';
         $(document).ready(function () {
             $('.card-cursor').click(function () {
                 location.href = this.id + '.jsp';
             });
             var isUserHr = (JSON.parse('<%=(String) session.getAttribute("userJson")%>')).userHr;
-            if (isUserHr) {
+            var isHrEnabled = (JSON.parse('<%=(String) session.getAttribute("userJson")%>')).hrEnabled;
+            
+            if (isUserHr && isHrEnabled) {
                 if (!sessionStorage.getItem("isConfirmed")) {
                     $('#navigationModal').modal('show');
                 }
                 if (sessionStorage.getItem("isConfirmed") === 'true') {
-                    window.location.replace(HOST_ADDRESS + '/HrDashboard.jsp');
+                    window.location.replace(BASE_URL + '/HrDashboard.jsp');
                 } else {
                     $('#root').removeClass("hidden");
                 }
@@ -88,7 +91,7 @@
             sessionStorage.setItem("isConfirmed", "false");
             if (page === 1) {
                 sessionStorage.setItem("isConfirmed", "true");
-                window.location.replace(HOST_ADDRESS + '/HrDashboard.jsp');
+                window.location.replace(BASE_URL + '/HrDashboard.jsp');
             } else {
                 $('#root').removeClass("hidden");
             }
@@ -106,7 +109,6 @@
                 };
                 $http(request).then(function (response) {
                     if (response.data !== ERROR) {
-                        console.log(response.data);
                         $scope.employeeBroadcast = JSON.parse(JSON.stringify(response.data));
                     }
                 }, function (response) {

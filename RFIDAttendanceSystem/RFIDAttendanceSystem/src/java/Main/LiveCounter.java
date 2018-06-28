@@ -29,13 +29,13 @@ import org.json.simple.JSONObject;
  * @author mohnish
  */
 public class LiveCounter extends HttpServlet {
-    
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/plain");
         PrintWriter out = response.getWriter();
-        
+
         if (request.getHeader("api_key") != null && Helper.validateAPIKEY(request.getHeader("api_key"))) {
             Connection con = new ConnectionManager().getConnection();
             JSONObject jsonObject = new JSONObject();
@@ -47,22 +47,23 @@ public class LiveCounter extends HttpServlet {
             try {
                 con.close();
             } catch (Exception e) {
+                System.out.println(e);
             }
-            
+
         } else {
             out.print("invalidRequest");
         }
-        
+
     }
-    
+
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
     }
-    
+
     private int getAttendanceCount(Connection con) {
-        
+
         try {
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery("select count(*) as counter from ATTENDENCE where TO_DATE(TO_CHAR(CHECKIN,'DD-MM-YYYY'),'DD-MM-YYYY') = TO_DATE(TO_CHAR(current_timestamp,'DD-MM-YYYY'),'DD-MM-YYYY')");
@@ -78,7 +79,7 @@ public class LiveCounter extends HttpServlet {
             return 0;
         }
     }
-    
+
     private int getPendingRequestCount(Connection con) {
         try {
             Statement stmt = con.createStatement();
@@ -95,5 +96,5 @@ public class LiveCounter extends HttpServlet {
             return 0;
         }
     }
-    
+
 }

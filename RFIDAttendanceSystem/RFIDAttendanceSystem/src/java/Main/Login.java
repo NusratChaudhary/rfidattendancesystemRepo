@@ -17,6 +17,7 @@ import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -60,7 +61,11 @@ public class Login extends HttpServlet {
                 while (rs.next()) {
                     if (!rs.getString("FLAG").isEmpty()) {
                         if (rs.getString("FLAG").equals(Constants.USER_ACTIVE)) {
+                            if (request.getSession(false) != null) {
+                                request.getSession(false).invalidate(); // remove non login session which is common behavior of servlet
+                            }
                             HttpSession loginSession = request.getSession();
+                            SessionManager.addSession(String.valueOf(rs.getInt("EMPLOYEEID")), loginSession.getId());
                             loginSession.setAttribute("id", rs.getInt("EMPLOYEEID"));
                             loginSession.setAttribute("userJson", getUserJson(con, rs.getInt("EMPLOYEEID"), rs));
                             loginSession.setAttribute("userData", getUserData(con, rs.getInt("EMPLOYEEID"), rs));
@@ -85,6 +90,7 @@ public class Login extends HttpServlet {
                 if (rs.getInt("COUNT") == 1) {
                     HttpSession loginSession = request.getSession();
                     loginSession.setAttribute("isUserAdmin", true);
+                    loginSession.setAttribute("id", "admin");
                     return Constants.LOGIN_SUCCESS;
                 } else {
                     return Constants.LOGIN_INSUCCESS;
