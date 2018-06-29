@@ -6,17 +6,23 @@
 package Main;
 
 import Model.Employee;
+import Model.Message;
 import Shared.ConnectionManager;
 import Shared.Constants;
 import Shared.Helper;
+import Shared.Mailer;
 import Shared.SessionManager;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -45,6 +51,12 @@ public class AdminController extends HttpServlet {
                             break;
                         case Constants.GET_ALL_EMPLOYEES:
                             out.print(new EmployeeController().getAllEmployees());
+                            break;
+                        case Constants.GET_MAILS:
+                            out.print(loadMailData());
+                            break;
+                        case Constants.GET_SMS:
+                            out.print(loadSMSData());
                             break;
                     }
                 } else {
@@ -147,6 +159,62 @@ public class AdminController extends HttpServlet {
             }
             int count = stmt.executeUpdate("update hr set flag='" + userflag + "' where employeeId=" + employeeId);
             return count == 1 ? Constants.OK : Constants.ERROR;
+        } catch (Exception e) {
+            System.out.println(e);
+            return Constants.ERROR;
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(AdminController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+    
+    private String loadMailData() {
+        Connection con = new ConnectionManager().getConnection();
+        try {
+            List<Message> listOfMails = new ArrayList<Message>();
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery("select * from MAILSERVICE ORDER BY TO_DATE(TO_CHAR(TIME,'DD-MM-YY HH24:MI:SS'),'YYYY/MM/DD HH24:MI:SS') desc");
+            while (rs.next()) {
+                listOfMails.add(new Message(
+                        rs.getString("RECIEVER"),
+                        rs.getString("SUBJECT"),
+                        rs.getString("CONTEXT"),
+                        String.valueOf(rs.getTimestamp("TIME"))
+                ));
+            }
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.writeValueAsString(listOfMails);
+        } catch (Exception e) {
+            System.out.println(e);
+            return Constants.ERROR;
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(AdminController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+    
+    private String loadSMSData() {
+        Connection con = new ConnectionManager().getConnection();
+        try {
+            List<Message> listOfSMS = new ArrayList<Message>();
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery("select * from SMSSERVICE ORDER BY TO_DATE(TO_CHAR(TIME,'DD-MM-YY HH24:MI:SS'),'YYYY/MM/DD HH24:MI:SS') desc");
+            while (rs.next()) {
+                listOfSMS.add(new Message(
+                        rs.getString("RECIEVER"),
+                        rs.getString("SUBJECT"),
+                        rs.getString("CONTEXT"),
+                        String.valueOf(rs.getTimestamp("TIME"))
+                ));
+            }
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.writeValueAsString(listOfSMS);
         } catch (Exception e) {
             System.out.println(e);
             return Constants.ERROR;

@@ -15,6 +15,7 @@ import java.io.StringWriter;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -97,4 +98,21 @@ public class LiveCounter extends HttpServlet {
         }
     }
 
+    protected String getCurrentCheckinData() {
+        Connection con = new ConnectionManager().getConnection();
+        try {
+            Statement stmt = con.createStatement();
+            ResultSet rs=stmt.executeQuery("");
+        } catch (Exception e) {
+            System.out.println(e);
+            return Constants.ERROR;
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(LiveCounter.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return null;
+    }
 }

@@ -96,4 +96,7 @@ public class Constants {
     public static final String DELETE_HR = "del_hr";
     public static final String DISABLE_HR = "disable_hr";
     public static final String ENABLE_HR = "enable_hr";
+
+    public static final String GET_MAILS = "get_mails";
+      public static final String GET_SMS = "get_sms";
 }
