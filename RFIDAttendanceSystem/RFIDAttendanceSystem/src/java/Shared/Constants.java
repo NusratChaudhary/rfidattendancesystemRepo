@@ -98,5 +98,6 @@ public class Constants {
     public static final String ENABLE_HR = "enable_hr";
 
     public static final String GET_MAILS = "get_mails";
-      public static final String GET_SMS = "get_sms";
+    public static final String GET_SMS = "get_sms";
+    public static final String GET_CURRENT_CHECKINS = "get_current_checkins";
 }

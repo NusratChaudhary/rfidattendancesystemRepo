@@ -56,6 +56,9 @@ public class AttendanceController extends HttpServlet {
                             out.print(Constants.ERROR);
                         }
                         break;
+                    case Constants.GET_CURRENT_CHECKINS:
+                        out.print(getCurrentCheckinData());
+                        break;
                 }
             } else {
                 out.print("invalidRequest");
@@ -337,4 +340,56 @@ public class AttendanceController extends HttpServlet {
         }
     }
 
+    private String getCurrentCheckinData() {
+        Connection con = new ConnectionManager().getConnection();
+        try {
+            List<Attendance> attendanceList = new ArrayList<>();
+            String flag = null;
+            Statement stmt = con.createStatement();
+            Statement stmt2 = con.createStatement();
+            ResultSet attendanceSet = stmt.executeQuery("select ATTENDENCEID,RFIDNUMBER,TO_CHAR(CHECKIN,'DD-MM-YY HH24:MI:SS') AS CHECKIN,TO_CHAR(CHECKOUT,'DD-MM-YY HH24:MI:SS') AS CHECKOUT,FLAG from ATTENDENCE where TO_DATE(TO_CHAR(CHECKIN,'DD-MM-YYYY'),'DD-MM-YYYY') = TO_DATE(TO_CHAR(current_timestamp,'DD-MM-YYYY'),'DD-MM-YYYY')");
+            while (attendanceSet.next()) {
+                flag = attendanceSet.getString("flag");
+                switch (flag) {
+                    case Constants.ATTENDANCE_IN:
+                        flag = "Checked In";
+                        break;
+                    case Constants.ATTENDANCE_ABSENT:
+                        flag = "Absent";
+                        break;
+                    case Constants.ATTENDANCE_OUT:
+                        flag = "Checked Out";
+                        break;
+                    default:
+                        flag = "ERR";
+                }
+                ResultSet employeeDataSet = stmt2.executeQuery("select employeeId,firstName||' '||lastName as \"employeeName\"  from employees where employeeId IN (select employeeId from rfid where rfidnumber=" + attendanceSet.getInt("RFIDNUMBER") + ")");
+                employeeDataSet.next();
+                attendanceList.add(new Attendance(
+                        attendanceSet.getInt("ATTENDENCEID"),
+                        attendanceSet.getString("CHECKIN"),
+                        attendanceSet.getString("CHECKOUT"),
+                        flag,
+                        employeeDataSet.getInt("employeeId"),
+                        employeeDataSet.getString("employeeName"),
+                        attendanceSet.getInt("RFIDNUMBER")
+                ));
+            }
+            ObjectMapper mapper = new ObjectMapper();
+            if (mapper.writeValueAsString(attendanceList).equals("[]")) {
+                return Constants.ATTENDANCE_NOT_FOUND;
+            } else {
+                return mapper.writeValueAsString(attendanceList);
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+            return Constants.ERROR;
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(LiveCounter.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
 }

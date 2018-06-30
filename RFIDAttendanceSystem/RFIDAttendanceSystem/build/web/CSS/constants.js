@@ -79,3 +79,6 @@ const ADD_NEW_HR = "add_new_hr";
 const DELETE_HR = "del_hr";
 const DISABLE_HR = "disable_hr";
 const ENABLE_HR = "enable_hr";
+const GET_MAILS = "get_mails";
+const GET_SMS = "get_sms";
+const GET_CURRENT_CHECKINS = "get_current_checkins";

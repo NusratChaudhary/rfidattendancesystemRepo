@@ -43,14 +43,43 @@
             </nav>
 
             <div class="tab-content" id="nav-tabContent">
-                <div class="tab-pane fade show active" id="nav-checkincheckout" role="tabpanel" aria-labelledby="nav-home-tab">che</div>
+                <div class="tab-pane fade show active" id="nav-checkincheckout" role="tabpanel" ng-init="loadCurrentCheckins()" aria-labelledby="nav-home-tab">
+                    <div class="container-fluid">
+                        <div class="col-sm-2 offset-sm-10 mb-3">
+                            <input class="form-control form-control-sm" type="text" placeholder="Search Employee"  ng-model="checkinEmployeeFilter" id="searchBar">
+                        </div>
+                        <div class="col-sm-12">
+                            <table class="table table-striped text-center shadow-nohover">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Employee Name</th>
+                                        <th scope="col">Checkin</th>
+                                        <th scope="col">Checkout</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-if="currentCheckins.length > 0" ng-repeat="checkin in currentCheckins| filter : {employeeName:checkinEmployeeFilter}">
+                                        <th scope="row">{{$index + 1}}</th>
+                                        <td>{{checkin.employeeName}}</td>
+                                        <td>{{checkin.checkIn}}</td>
+                                        <td>{{checkin.checkOut}}</td>
+                                    </tr>
+                                    <tr ng-if="currentCheckins.length === 0">
+                                        <td colspan="4"><b>No Current Checkin Made...</b></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
                 <div class="tab-pane fade" id="nav-attendance" ng-init="loadAttendanceData()" role="tabpanel" aria-labelledby="nav-profile-tab">
                     <div class="col-sm-2 offset-sm-10 mb-3">
                         <input class="form-control form-control-sm" type="text" placeholder="Search Date"  ng-model="dateFilter" id="attendanceSearchBar">
                     </div>
                     <div class="col-sm-12"  ng-repeat="attendance in attendanceData| filter : {
                         date:dateFilter
-                    }"  ng-if="attendanceData">
+                        }"  ng-if="attendanceData">
                         <div>
                             <div class="card shadow-nohover attendanceCard" >
                                 <h5 class="card-header">{{attendance.date}}</h5>
@@ -284,8 +313,70 @@
                         </div>
                     </div>
                 </div>
-                <div class="tab-pane fade" id="nav-mails" role="tabpanel" aria-labelledby="nav-contact-tab">mails</div>
-                <div class="tab-pane fade" id="nav-sms" role="tabpanel" aria-labelledby="nav-contact-tab">sms</div>
+                <div class="tab-pane fade" id="nav-mails" role="tabpanel" ng-init="loadMailData()" aria-labelledby="nav-contact-tab">
+                    <div class="container-fluid">
+                        <div class="col-sm-2 offset-sm-10 mb-3">
+                            <input class="form-control form-control-sm" type="text" placeholder="Search"  ng-model="mailFilter" id="searchBar">
+                        </div>
+                        <div class="col-sm-12">
+                            <table class="table table-striped text-center shadow-nohover">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Email</th>
+                                        <th scope="col">Subject</th>
+                                        <th scope="col">Message</th>
+                                        <th scope="col">Time</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-if="mailData.length > 0" ng-repeat="mail in mailData| filter : mailFilter">
+                                        <th scope="row">{{$index + 1}}</th>
+                                        <td>{{mail.reciver}}</td>
+                                        <td>{{mail.subject}}</td>
+                                        <td>{{mail.context}}</td>
+                                        <td>{{mail.time}}</td>
+                                    </tr>
+                                    <tr ng-if="mailData.length === 0">
+                                        <td colspan="5"><b>No Mails Found...</b></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="nav-sms" role="tabpanel" ng-init="loadSmsData()" aria-labelledby="nav-contact-tab">
+                    <div class="container-fluid">
+                        <div class="col-sm-2 offset-sm-10 mb-3">
+                            <input class="form-control form-control-sm" type="text" placeholder="Search"  ng-model="smsFilter" id="searchBar">
+                        </div>
+                        <div class="col-sm-12">
+                            <table class="table table-striped text-center shadow-nohover">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Email</th>
+                                        <th scope="col">Subject</th>
+                                        <th scope="col">Message</th>
+                                        <th scope="col">Time</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-if="smsData.length > 0" ng-repeat="sms in smsData| filter : smsFilter">
+                                        <th scope="row">{{$index + 1}}</th>
+                                        <td>{{sms.reciver}}</td>
+                                        <td>{{sms.subject}}</td>
+                                        <td>{{sms.context}}</td>
+                                        <td>{{sms.time}}</td>
+                                    </tr>
+                                    <tr ng-if="smsData.length === 0">
+                                        <td colspan="5"><b>No Sms Found...</b></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div class="modal fade" ng-if="confirmationData" id="confirmationModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
@@ -349,12 +440,9 @@
         <script>
             const src1 = "Resources/expand-button.png";
             const src2 = "Resources/expand-arrow.png";
-
             $(document).ready(function () {
 
             });
-
-
             var app = angular.module('AdminConsole', []);
             app.controller('AdminConsoleCtrl', function ($scope, $http) {
                 showLoader('body');
@@ -376,7 +464,6 @@
                         hideLoader('body');
                     });
                 };
-
 
                 $scope.loadEmployeesData = function () {
                     const request = {
@@ -403,7 +490,6 @@
                                     $('#button-' + $(this).attr('name')).addClass('hidden');
                                 }
                             });
-
                             $('.card').on('hidden.bs.collapse', function () {
                                 var id = String(this.id).substr(3);
                                 $('#' + id + '-img').attr('src', src1);
@@ -412,16 +498,13 @@
                                     $('input[name=' + id + ']').prop('checked', false);
                                 }
                             });
-
                             $('.card').on('shown.bs.collapse', function () {
                                 var id = String(this.id).substr(3);
                                 $('#' + id + '-img').attr('src', src2);
                             });
-
                             $('.submitForm').click(function () {
                                 var id = String(this.id).substring(7);
                             });
-
                         });
                     }, function (response) {
                         console.log('Error ', response);
@@ -512,7 +595,6 @@
                     $('.editMode[name=' + id + ']').click();
                 };
 
-
                 $scope.addHrUser = function (employee) {
                     showLoader('.modal');
                     const request = {
@@ -562,7 +644,6 @@
                     });
                 };
 
-
                 $scope.toggleHrUserStatus = function (employee) {
                     showLoader('body');
                     let task;
@@ -585,10 +666,79 @@
                                 $scope.alertCreator('Successfully disabled ' + employee.name, 'alert-success');
                             } else {
                                 employee.hrEnabled = true;
-                                $scope.alertCreator('Successfully enabled ' + employee.name+' PS notify user to re-login to get its HR rights back', 'alert-success');
+                                $scope.alertCreator('Successfully enabled ' + employee.name + ' PS notify user to re-login to get its HR rights back', 'alert-success');
                             }
                         } else {
                             $scope.alertCreator('Unable to Contact Server', 'alert-danger');
+                        }
+                        hideLoader('body');
+                    }, function (response) {
+                        console.log('Error ', response);
+                        hideLoader('body');
+                    });
+                };
+
+                $scope.loadSmsData = function () {
+                    showLoader('body');
+                    const request = {
+                        method: 'GET',
+                        url: 'AdminController',
+                        headers: {"api_key": API_KEY},
+                        timeout: 10000,
+                        params: {task: GET_SMS}
+                    };
+                    $http(request).then(function (response) {
+                        if (response.data !== ERROR) {
+                            console.log(response.data);
+                            $scope.smsData = JSON.parse(JSON.stringify(response.data));
+                        } else {
+                            $scope.alertCreator('Unable to get SMS Data', 'alert-danger');
+                        }
+                        hideLoader('body');
+                    }, function (response) {
+                        console.log('Error ', response);
+                        hideLoader('body');
+                    });
+                };
+
+                $scope.loadMailData = function () {
+                    showLoader('body');
+                    const request = {
+                        method: 'GET',
+                        url: 'AdminController',
+                        headers: {"api_key": API_KEY},
+                        timeout: 10000,
+                        params: {task: GET_MAILS}
+                    };
+                    $http(request).then(function (response) {
+                        if (response.data !== ERROR) {
+                            console.log(response.data);
+                            $scope.mailData = JSON.parse(JSON.stringify(response.data));
+                        } else {
+                            $scope.alertCreator('Unable to get Mail Data', 'alert-danger');
+                        }
+                        hideLoader('body');
+                    }, function (response) {
+                        console.log('Error ', response);
+                        hideLoader('body');
+                    });
+                };
+
+                $scope.loadCurrentCheckins = function () {
+                    showLoader('body');
+                    const request = {
+                        method: 'GET',
+                        url: 'AttendanceController',
+                        headers: {"api_key": API_KEY},
+                        timeout: 10000,
+                        params: {task: GET_CURRENT_CHECKINS}
+                    };
+                    $http(request).then(function (response) {
+                        if (response.data !== ERROR) {
+                            console.log(response.data);
+                            $scope.currentCheckins = JSON.parse(JSON.stringify(response.data));
+                        } else {
+                            $scope.alertCreator('Unable to get Current Checkins Data', 'alert-danger');
                         }
                         hideLoader('body');
                     }, function (response) {
@@ -610,7 +760,6 @@
                         }
                     }, 2000);
                 };
-
             });
         </script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" ></script>
