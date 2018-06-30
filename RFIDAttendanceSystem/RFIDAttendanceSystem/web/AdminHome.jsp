@@ -92,6 +92,7 @@
                                                 <th >Employee Name</th>
                                                 <th >Check In</th>
                                                 <th >Check Out</th>
+                                                <th ></th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -101,13 +102,15 @@
                                                 <td>{{employee.employeeName}}</td>
                                                 <td>{{employee.checkIn}}</td>
                                                 <td>{{employee.checkOut}}</td>
-
+                                                <td style="padding-top: 5px;">
+                                                    <button type="button" ng-click="editRecordConfirmation(employee)" style="font-weight: 500;" class="btn btn-outline-info">Edit</button>
+                                                    &nbsp;&nbsp;&nbsp;<button type="button" ng-click="deleteUserAttendanceConfirmation(employee)" style="font-weight: 500;" class="btn btn-outline-danger">Delete</button>
+                                                </td>
                                             </tr>
                                         </tbody>
                                     </table>
                                 </div>
                             </div> 
-
                             <br/>
                         </div>
                     </div>
@@ -436,6 +439,52 @@
             </div>
 
 
+            <div class="modal fade"  id="attendanceModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLongTitle">Edit Record</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label >Check In:</label>
+                                <input type="text"  class="form-control" ng-model="checkIn" maxlength="17"/>
+                            </div>
+                            <div class="form-group">
+                                <label >Check Out:</label>
+                                <input type="text" class="form-control" ng-model="checkOut" maxlength="17"/>
+                            </div>
+                        </div>  
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline-info" ng-click="editEmployeeAttendance(editAttendance, checkIn, checkOut)" data-dismiss="modal">Edit Record</button>                               
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" ng-if="confirmationData" id="deleteconfirmationModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLongTitle">Delete Record</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Do you want to delete {{confirmationData.employeeName}} record permanently </p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline-danger" ng-click="deleteUserAttendence(confirmationData)" data-dismiss="modal">Delete Record</button>                        
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
         </div>
         <script>
             const src1 = "Resources/expand-button.png";
@@ -745,6 +794,71 @@
                         console.log('Error ', response);
                         hideLoader('body');
                     });
+                };
+
+                $scope.deleteUserAttendanceConfirmation = function (attendance) {
+                    $scope.confirmationData = attendance;
+                    $('#deleteconfirmationModal').modal('show')
+                };
+
+                $scope.editRecordConfirmation = function (attendance) {
+                    $scope.editAttendance = attendance;
+                    $scope.checkIn = attendance.checkIn;
+                    $scope.checkOut = attendance.checkOut;
+                    $('#attendanceModal').modal('show')
+                };
+
+                $scope.deleteUserAttendence = function (deleteData) {
+                    showLoader('body');
+                    const request = {
+                        method: 'POST',
+                        url: 'AttendanceController',
+                        headers: {"api_key": API_KEY},
+                        timeout: 10000,
+                        params: {attendanceId: deleteData.attendanceId, task: DELETE_ATTENDANCE}
+                    };
+                    $http(request).then(function (response) {
+                        if (response !== ERROR && response.data !== 'invalidRequest') {
+                            $scope.loadAttendanceData();
+                            $scope.alertCreator('Successfully Deleted Record', 'alert-success');
+                        } else {
+                            $scope.alertCreator('Error in Deleting Record', 'alert-danger');
+                        }
+                        hideLoader('body');
+                    }, function (response) {
+                        console.log('Error ', response);
+                        hideLoader('body');
+                    });
+                };
+
+                $scope.editEmployeeAttendance = function (attendance, checkIn, checkOut) {
+                    if (attendance.checkIn !== checkIn || attendance.checkOut !== checkOut) {
+                        if (checkIn.length === 17 && checkOut.length === 17) {
+                            const request = {
+                                method: 'POST',
+                                url: 'AttendanceController',
+                                headers: {"api_key": API_KEY},
+                                timeout: 10000,
+                                params: {attendanceId: attendance.attendanceId, checkIn: checkIn, checkOut: checkOut, task: UPDATE_ATTENDANCE}
+                            };
+                            $http(request).then(function (response) {
+                                if (response !== ERROR && response.data !== 'invalidRequest') {
+                                    $scope.loadAttendanceData();
+                                    $scope.alertCreator('Successfully Updated Record', 'alert-success');
+                                } else {
+                                    $scope.alertCreator('Error in Updating Record', 'alert-danger');
+                                }
+                                hideLoader('body');
+                            }, function (response) {
+                                console.log('Error ', response);
+                                hideLoader('body');
+                            });
+                        } else {
+                            $scope.alertCreator('Enter Valid Date and Time', 'alert-warning');
+                        }
+                    } else {
+                        $scope.alertCreator('No Changes Were Made', 'alert-info');
+                    }
                 };
 
                 $scope.alertCreator = function (message, className) {
