@@ -82,3 +82,4 @@ const ENABLE_HR = "enable_hr";
 const GET_MAILS = "get_mails";
 const GET_SMS = "get_sms";
 const GET_CURRENT_CHECKINS = "get_current_checkins";
+const GET_ADMIN_REQUEST = "get_admin_request";

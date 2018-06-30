@@ -100,4 +100,5 @@ public class Constants {
     public static final String GET_MAILS = "get_mails";
     public static final String GET_SMS = "get_sms";
     public static final String GET_CURRENT_CHECKINS = "get_current_checkins";
+    public static final String GET_ADMIN_REQUEST = "get_admin_request";
 }

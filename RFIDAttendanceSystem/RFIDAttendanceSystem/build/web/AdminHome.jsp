@@ -38,11 +38,13 @@
                     <a class="nav-item nav-link" id="nav-contact-tab" data-toggle="tab" href="#nav-hr" role="tab" aria-controls="nav-contact" aria-selected="false">HR</a>
                     <a class="nav-item nav-link" id="nav-contact-tab" data-toggle="tab" href="#nav-mails" role="tab" aria-controls="nav-contact" aria-selected="false">Mails</a>
                     <a class="nav-item nav-link" id="nav-contact-tab" data-toggle="tab" href="#nav-sms" role="tab" aria-controls="nav-contact" aria-selected="false">SMS</a>
-
+                    <a class="nav-item nav-link" id="nav-request-tab" data-toggle="tab" href="#nav-request" role="tab" aria-controls="nav-contact" aria-selected="false">Request</a>
                 </div>
             </nav>
 
             <div class="tab-content" id="nav-tabContent">
+
+                <!-- checking start-->
                 <div class="tab-pane fade show active" id="nav-checkincheckout" role="tabpanel" ng-init="loadCurrentCheckins()" aria-labelledby="nav-home-tab">
                     <div class="container-fluid">
                         <div class="col-sm-2 offset-sm-10 mb-3">
@@ -73,6 +75,9 @@
                         </div>
                     </div>
                 </div>
+                <!-- checking end-->
+
+                <!-- attendance start-->
                 <div class="tab-pane fade" id="nav-attendance" ng-init="loadAttendanceData()" role="tabpanel" aria-labelledby="nav-profile-tab">
                     <div class="col-sm-2 offset-sm-10 mb-3">
                         <input class="form-control form-control-sm" type="text" placeholder="Search Date"  ng-model="dateFilter" id="attendanceSearchBar">
@@ -115,6 +120,9 @@
                         </div>
                     </div>
                 </div>
+                <!-- attendance end-->
+
+                <!-- emptab start-->
                 <div class="tab-pane fade" id="nav-employees" ng-init="loadEmployeesData();" role="tabpanel" aria-labelledby="nav-contact-tab">
 
                     <div class="col-sm-2 offset-sm-10">
@@ -292,6 +300,9 @@
                         </div>
                     </div>
                 </div>
+                <!-- emptab end-->
+
+                <!-- Hr start-->
                 <div class="tab-pane fade" id="nav-hr" role="tabpanel" aria-labelledby="nav-contact-tab">
                     <div class="col-sm-1 offset-sm-11" style="cursor: pointer;">
                         <div data-toggle="modal" data-target="#addHrUser">
@@ -316,6 +327,9 @@
                         </div>
                     </div>
                 </div>
+                <!-- Hr end-->
+
+                <!-- mail start-->
                 <div class="tab-pane fade" id="nav-mails" role="tabpanel" ng-init="loadMailData()" aria-labelledby="nav-contact-tab">
                     <div class="container-fluid">
                         <div class="col-sm-2 offset-sm-10 mb-3">
@@ -348,6 +362,9 @@
                         </div>
                     </div>
                 </div>
+                <!-- mail end-->
+
+                <!-- Sms start-->
                 <div class="tab-pane fade" id="nav-sms" role="tabpanel" ng-init="loadSmsData()" aria-labelledby="nav-contact-tab">
                     <div class="container-fluid">
                         <div class="col-sm-2 offset-sm-10 mb-3">
@@ -380,7 +397,61 @@
                         </div>
                     </div>
                 </div>
+                <!-- Sms end-->
+
+                <!-- Request start-->
+                <div class="tab-pane fade" id="nav-request" role="tabpanel" ng-init="loadRequestData()" aria-labelledby="nav-request-tab">
+                    <div class="container-fluid">
+                        <div class="col-sm-2 offset-sm-10 mb-3">
+                            <input class="form-control form-control-sm" type="text" placeholder="Search Request"  ng-model="requestFilter" id="searchBar">
+                        </div>
+                        <div class="col-sm-12">
+                            <div  ng-repeat="request in requestsData| filter:requestFilter" class="animated fadeInUp">
+                                <div class="card requestCard shadow-nohover" style="clear: right">
+                                    <div class="card-header pending" ng-class="{'pending':request.flag === 'request_pending', 'read':request.flag === 'request_read', 'responded':request.flag === 'request_responded'}">
+                                        <span class="float-left">{{request.requestSubject}}</span> 
+                                        <span class="float-right">Request Id : {{request.requestId}}</span>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="float-left">
+                                            <h6>Date : {{request.dateTime}}</h6>
+                                        </div>
+                                        <div class="float-right">
+                                            <h6>Employee : {{request.employeeName}}</h6>
+                                            <h6>Employee Id : {{request.employeeId}}</h6>
+                                        </div>
+                                        <br/>
+                                        <div style="clear: right">
+                                            <p class="requestBody" ng-if="!(request.isRequestRead || request.isRequestReplied)">{{request.requestBody| limitTo:2 }}<button type="button" ng-click="expandView(request)" class="btn btn-link readmoreless">...Read More</button></p>
+                                            <p class="requestBody" ng-if="request.isRequestRead || request.isRequestReplied">{{request.requestBody}}</p>
+
+                                        </div>
+
+                                        <div>
+                                        </div>
+                                        <br/><br/>
+                                        <div class="collapse" ng-class="{'show':request.isRequestReplied}" id="{{request.requestId}}" style="clear: right">
+                                            <div class="replyCard">
+                                                <textarea class="form-control" ng-model="replyBody" id="{{'reply' + request.requestId}}" ng-hide="request.isRequestReplied" rows="3" placeholder="Reply ...."></textarea>
+                                                <br/>
+                                                <hr class="dashed" ng-hide="!request.isRequestReplied"/>
+                                                <h6 ng-hide="!request.isRequestReplied">Date : {{request.replyDateTime}}</h6>
+                                                <p ng-hide="!request.isRequestReplied">{{request.requestReply}}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Request end-->
+
             </div>
+
+
+            <!-- Helper Elements-->
 
             <div class="modal fade" ng-if="confirmationData" id="confirmationModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered" role="document">
@@ -403,8 +474,6 @@
                     </div>
                 </div>
             </div>
-
-
 
             <div class="modal fade"  id="addHrUser" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                 <div class="modal-dialog modal-lg" role="document">
@@ -525,7 +594,6 @@
                     $http(request).then(function (response) {
                         if (response !== ERROR) {
                             $scope.employeeData = JSON.parse(JSON.stringify(response.data));
-                            console.log($scope.employeeData);
                         }
                         hideLoader('body');
                         // add event listner after data is loaded 
@@ -738,7 +806,6 @@
                     };
                     $http(request).then(function (response) {
                         if (response.data !== ERROR) {
-                            console.log(response.data);
                             $scope.smsData = JSON.parse(JSON.stringify(response.data));
                         } else {
                             $scope.alertCreator('Unable to get SMS Data', 'alert-danger');
@@ -761,7 +828,6 @@
                     };
                     $http(request).then(function (response) {
                         if (response.data !== ERROR) {
-                            console.log(response.data);
                             $scope.mailData = JSON.parse(JSON.stringify(response.data));
                         } else {
                             $scope.alertCreator('Unable to get Mail Data', 'alert-danger');
@@ -784,7 +850,6 @@
                     };
                     $http(request).then(function (response) {
                         if (response.data !== ERROR) {
-                            console.log(response.data);
                             $scope.currentCheckins = JSON.parse(JSON.stringify(response.data));
                         } else {
                             $scope.alertCreator('Unable to get Current Checkins Data', 'alert-danger');
@@ -859,6 +924,28 @@
                     } else {
                         $scope.alertCreator('No Changes Were Made', 'alert-info');
                     }
+                };
+
+                $scope.loadRequestData = function () {
+                    showLoader('body');
+                    const request = {
+                        method: 'GET',
+                        url: 'RequestController',
+                        headers: {"api_key": API_KEY},
+                        timeout: 10000,
+                        params: {task: GET_ADMIN_REQUEST}
+                    };
+                    $http(request).then(function (response) {
+                        if (response.data !== ERROR) {
+                            $scope.requestsData = JSON.parse(JSON.stringify(response.data));
+                        } else {
+                            $scope.alertCreator('Unable to get Request Data', 'alert-danger');
+                        }
+                        hideLoader('body');
+                    }, function (response) {
+                        console.log('Error ', response);
+                        hideLoader('body');
+                    });
                 };
 
                 $scope.alertCreator = function (message, className) {

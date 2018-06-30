@@ -49,10 +49,13 @@ public class RequestController extends HttpServlet {
             switch (request.getParameter("task")) {
                 case Constants.GET_REQUESTS:
                     if (request.getParameter("id") != null) {
-                        out.print(getAllRequest(request, request.getParameter("id")));
+                        out.print(getAllRequest(request, request.getParameter("id"), false));
                     } else {
-                        out.print(getAllRequest(request, null));
+                        out.print(getAllRequest(request, null, false));
                     }
+                    break;
+                case Constants.GET_ADMIN_REQUEST:
+                    out.print(getAllRequest(request, null, true));
                     break;
             }
         } else {
@@ -87,16 +90,24 @@ public class RequestController extends HttpServlet {
 
     }
 
-    private String getAllRequest(HttpServletRequest request, String requestIds) {
+    private String getAllRequest(HttpServletRequest request, String requestIds, boolean adminRequest) {
         Connection con = new ConnectionManager().getConnection();
         List<Request> requestList = new ArrayList<Request>();
         String query = null;
         try {
             Statement stmt = con.createStatement();
-            if (request.getHeader("Referer").contains("PendingRequest.jsp") && ((Employee) request.getSession(false).getAttribute("userData")).isUserHr()) {
+            boolean isUserAuthorized = false;
+            if (request.getSession(false).getAttribute("userData") != null) {
+                isUserAuthorized = ((Employee) request.getSession(false).getAttribute("userData")).isUserHr();
+            } else if (request.getSession(false).getAttribute("isUserAdmin") != null) {
+                isUserAuthorized = (Boolean) request.getSession(false).getAttribute("isUserAdmin");
+            }
+            if ((request.getHeader("Referer").contains("PendingRequest.jsp") || request.getHeader("Referer").contains("AdminHome.jsp")) && isUserAuthorized) {
                 query = "select REQUESTID,REQUESTSUBJECT,REQUESTBODY,REQUESTREPLY,EMPLOYEEID,NVL(ADMINSTATUS,0) AS ADMINSTATUS,to_char(DATETIME,'DD-MM-YY') AS DATETIME,NVL(to_char(REPLYDATETIME,'DD-MM-YY'),'-') AS REPLYDATETIME,FLAG from request";
                 if (requestIds != null) {
                     query = query + " WHERE REQUESTID NOT IN ( " + requestIds + " ) ORDER BY FLAG";
+                } else if (adminRequest) {
+                    query = query + " WHERE ADMINSTATUS=1";
                 } else {
                     query = query + " ORDER BY FLAG";
                 }
