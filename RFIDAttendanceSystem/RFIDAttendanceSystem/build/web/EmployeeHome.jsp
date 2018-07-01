@@ -79,7 +79,7 @@
                     $('#navigationModal').modal('show');
                 }
                 if (sessionStorage.getItem("isConfirmed") === 'true') {
-                    window.location.replace(BASE_URL + '/HrDashboard.jsp');
+                    window.location.replace(BASE_URL + 'HrDashboard.jsp');
                 } else {
                     $('#root').removeClass("hidden");
                 }
@@ -91,7 +91,7 @@
             sessionStorage.setItem("isConfirmed", "false");
             if (page === 1) {
                 sessionStorage.setItem("isConfirmed", "true");
-                window.location.replace(BASE_URL + '/HrDashboard.jsp');
+                window.location.replace(BASE_URL + 'HrDashboard.jsp');
             } else {
                 $('#root').removeClass("hidden");
             }

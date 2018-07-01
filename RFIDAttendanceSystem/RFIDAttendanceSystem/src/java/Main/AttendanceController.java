@@ -249,12 +249,13 @@ public class AttendanceController extends HttpServlet {
 
     private String CheckInEmployee(int rfidNumber, Connection con) {
         try {
-            PreparedStatement ps = con.prepareStatement("insert into ATTENDENCE values(?,?,?,?,?)");
+            PreparedStatement ps = con.prepareStatement("insert into ATTENDENCE values(?,?,?,?,?,?)");
             ps.setInt(1, Math.abs(new Random().nextInt()));
             ps.setInt(2, rfidNumber);
             ps.setTimestamp(3, Helper.getCurrentTimeStamp());
             ps.setTimestamp(4, null);
             ps.setString(5, Constants.ATTENDANCE_IN);
+            ps.setTimestamp(6, Helper.getCurrentTimeStamp());
             int result = ps.executeUpdate();
             if (result == 1) {
                 return Constants.ATTENDANCE_IN;
