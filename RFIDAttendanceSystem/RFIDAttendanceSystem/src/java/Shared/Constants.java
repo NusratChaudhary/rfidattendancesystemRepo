@@ -101,4 +101,10 @@ public class Constants {
     public static final String GET_SMS = "get_sms";
     public static final String GET_CURRENT_CHECKINS = "get_current_checkins";
     public static final String GET_ADMIN_REQUEST = "get_admin_request";
+
+    public static final String PIN_ACTIVE = "pin_active";
+    public static final String PIN_USED = "pin_used";
+    public static final String PIN_TYPE_OTP = "pin_type_otp";
+    public static final String PIN_TYPE_ADMINPIN = "pin_type_adminPIN";
+    public static final String PIN_INCORRECT = "pin_incorrect";
 }

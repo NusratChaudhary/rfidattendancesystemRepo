@@ -52,6 +52,10 @@
         <servlet-name>AdminController</servlet-name>
         <servlet-class>Main.AdminController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>SecretPinManager</servlet-name>
+        <servlet-class>Shared.SecretPinManager</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Registration</servlet-name>
         <url-pattern>/Registration</url-pattern>
@@ -95,6 +99,10 @@
     <servlet-mapping>
         <servlet-name>AdminController</servlet-name>
         <url-pattern>/AdminController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SecretPinManager</servlet-name>
+        <url-pattern>/SecretPinManager</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

@@ -1,2 +1,0 @@
-Main.EmployeeController
-Main.Departments
