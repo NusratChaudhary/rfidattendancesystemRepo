@@ -6,7 +6,6 @@
 package Shared;
 
 import java.util.Hashtable;
-import javax.servlet.ServletContext;
 
 /**
  *
@@ -14,7 +13,6 @@ import javax.servlet.ServletContext;
  */
 public class SessionManager {
     
-    ServletContext ctx = null;
     static Hashtable<String, String> sessions = new Hashtable<String, String>();
     
     public static void addSession(String employeeId, String sessionId) {

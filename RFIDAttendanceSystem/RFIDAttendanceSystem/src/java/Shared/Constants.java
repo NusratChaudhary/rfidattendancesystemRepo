@@ -107,4 +107,6 @@ public class Constants {
     public static final String PIN_TYPE_OTP = "pin_type_otp";
     public static final String PIN_TYPE_ADMINPIN = "pin_type_adminPIN";
     public static final String PIN_INCORRECT = "pin_incorrect";
+    public static final String PIN_MESSAGE_OTP = "Your One Time Password(OTP) for attendance is ";
+    public static final String PIN_MESSAGE_ADMIN = "Your One Time Password(OTP) for Login is ";
 }
