@@ -24,7 +24,7 @@ public class SecretPinManager {
 
     static Hashtable<Integer, Pin> pinList = new Hashtable<Integer, Pin>();
 
-    protected static String createPin(int employeeId, String type, Connection con, String mobileNumber) {
+    public static Pin createPin(int employeeId, String type, Connection con, String mobileNumber) {
         try {
             int pinNumber = 0;
             int recordId = Math.abs(new Random().nextInt());
@@ -34,27 +34,38 @@ public class SecretPinManager {
                     break;
                 }
             }
-            PreparedStatement ps = con.prepareStatement("insert into SECRETPIN values (?,?,?,?,?)");
+            PreparedStatement ps = con.prepareStatement("insert into SECRETPIN values (?,?,?,?,?,?)");
             ps.setInt(1, recordId);
             ps.setInt(2, employeeId);
             ps.setInt(3, pinNumber);
             ps.setString(4, type);
             ps.setString(5, Constants.PIN_ACTIVE);
-            int counter = ps.executeUpdate();
-            pinList.put(pinNumber, new Pin(recordId, pinNumber, employeeId, type, true));
-            if (type.equals(Constants.PIN_TYPE_OTP)) {
-                new SMSManager().SendSMS(mobileNumber, Constants.PIN_MESSAGE_OTP + pinNumber);
+            ps.setString(6, mobileNumber);
+            ps.executeUpdate();
+            Pin pinData = new Pin(recordId, pinNumber, employeeId, type, mobileNumber, true);
+            pinList.put(pinNumber, pinData);
+            return pinData;
+        } catch (Exception e) {
+            System.out.println(e);
+            return null;
+        }
+    }
+
+    public static String sendPin(Pin pinData) {
+        try {
+            if (pinData.getType().equals(Constants.PIN_TYPE_OTP)) {
+                new SMSManager().SendSMS(pinData.getMobileNumber(), Constants.PIN_MESSAGE_OTP + pinData.getPinNumber());
             } else {
-                new SMSManager().SendSMS(mobileNumber, Constants.PIN_MESSAGE_ADMIN + pinNumber);
+                new SMSManager().SendSMS(pinData.getMobileNumber(), Constants.PIN_MESSAGE_ADMIN + pinData.getPinNumber());
             }
-            return counter == 1 ? Constants.OK : Constants.ERROR;
+            return Constants.OK;
         } catch (Exception e) {
             System.out.println(e);
             return Constants.ERROR;
         }
     }
 
-    protected static String validatePin(int employeeId, String type, String pin, Connection con) {
+    public static String validatePin(int employeeId, String type, String pin, Connection con) {
         try {
             if (pinList.containsKey(Integer.valueOf(pin))) {
                 Pin pinData = pinList.get(Integer.valueOf(pin));
@@ -82,7 +93,7 @@ public class SecretPinManager {
         }
     }
 
-    private static boolean changePINStatus(int id, Connection con) {
+    public static boolean changePINStatus(int id, Connection con) {
         try {
             Statement stmt = con.createStatement();
             int count = stmt.executeUpdate("update SECRETPIN set FLAG='" + Constants.PIN_USED + "' where ID=" + id);
@@ -93,18 +104,18 @@ public class SecretPinManager {
         }
     }
 
-    protected static void initializePin() {
+    public static void initializePin() {
         Connection con = new ConnectionManager().getConnection();
-        String query = "select * from SECRETPIN  where FLAG=" + Constants.PIN_ACTIVE + "";
+        String query = "select * from SECRETPIN  where FLAG='" + Constants.PIN_ACTIVE + "'";
         pinList.clear();
         try {
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery(query);
             while (rs.next()) {
-                pinList.put(rs.getInt("PINNUMBER"), new Pin(rs.getInt("ID"), rs.getInt("PINNUMBER"), rs.getInt("EMPLOYEEID"), rs.getString("PINTYPE"), true));
+                pinList.put(rs.getInt("PINNUMBER"), new Pin(rs.getInt("ID"), rs.getInt("PINNUMBER"), rs.getInt("EMPLOYEEID"), rs.getString("PINTYPE"), rs.getString("MOBILENUMBER"), true));
             }
         } catch (Exception e) {
-            System.out.println(e);
+            System.out.println(e); 
         } finally {
             try {
                 con.close();
@@ -114,7 +125,7 @@ public class SecretPinManager {
         }
     }
 
-    protected static void removePin(int pinNumber) {
+    public static void removePin(int pinNumber) {
         pinList.remove(pinNumber);
     }
 }

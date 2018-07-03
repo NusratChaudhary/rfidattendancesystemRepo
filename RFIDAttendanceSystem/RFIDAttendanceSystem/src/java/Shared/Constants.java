@@ -58,6 +58,7 @@ public class Constants {
 
     public static final String ATTENDANCE_IN = "in";
     public static final String ATTENDANCE_OUT = "out";
+    public static final String ATTENDANCE_VERIFY = "ATTENDANCE_VERIFY";
     public static final String ATTENDANCE_ABSENT = "absent";
     public static final String ATTENDANCE_ALREADY_COMPLETED = "already_completed";
 

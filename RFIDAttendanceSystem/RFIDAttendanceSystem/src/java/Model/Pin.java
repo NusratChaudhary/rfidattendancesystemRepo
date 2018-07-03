@@ -15,17 +15,16 @@ public class Pin {
     private int pinNumber;
     private int employeeId;
     private String type;
+    private String mobileNumber;
     private Boolean isActive;
 
-    public Pin(int Id, int pinNumber, int employeeId, String type, Boolean isActive) {
+    public Pin(int Id, int pinNumber, int employeeId, String type, String mobileNumber, Boolean isActive) {
         this.Id = Id;
         this.pinNumber = pinNumber;
         this.employeeId = employeeId;
         this.type = type;
+        this.mobileNumber = mobileNumber;
         this.isActive = isActive;
-    }
-
-    public Pin() {
     }
 
     public int getId() {
@@ -60,6 +59,14 @@ public class Pin {
         this.type = type;
     }
 
+    public String getMobileNumber() {
+        return mobileNumber;
+    }
+
+    public void setMobileNumber(String mobileNumber) {
+        this.mobileNumber = mobileNumber;
+    }
+
     public Boolean getIsActive() {
         return isActive;
     }
@@ -68,4 +75,6 @@ public class Pin {
         this.isActive = isActive;
     }
 
+    
+    
 }

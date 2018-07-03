@@ -11,6 +11,7 @@ import Model.Employee;
 import Shared.ConnectionManager;
 import Shared.Constants;
 import Shared.Helper;
+import Shared.SecretPinManager;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -129,7 +130,7 @@ public class AttendanceController extends HttpServlet {
         Connection con = new ConnectionManager().getConnection();
         String flag = null;
         try {
-            int rfidNumber = ((Employee) session.getAttribute("userData")).getRfid().getRFIDNUMBER();
+            int rfidNumber = ((Employee) session.getAttribute("userData")).getRfid().getRfidNumber();
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery("select attendenceid,checkin,checkout,flag from ATTENDENCE where rfidnumber=" + rfidNumber);
             while (rs.next()) {
@@ -228,7 +229,7 @@ public class AttendanceController extends HttpServlet {
     private String getEmployeeAttendanceStatus(int rfidNumber, Connection con) {
         try {
             Statement stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery("select flag from ATTENDENCE WHERE TO_DATE(TO_CHAR(CHECKIN,'DD-MM-YYYY'),'DD-MM-YYYY')=TO_DATE(TO_CHAR(current_timestamp,'DD-MM-YYYY'),'DD-MM-YYYY')AND RFIDNUMBER=" + rfidNumber);
+            ResultSet rs = stmt.executeQuery("select flag from ATTENDENCE WHERE TO_DATE(TO_CHAR(CHECKIN,'DD-MM-YYYY'),'DD-MM-YYYY')=TO_DATE(TO_CHAR(current_timestamp,'DD-MM-YYYY'),'DD-MM-YYYY') AND RFIDNUMBER=" + rfidNumber);
             if (rs.next()) {
                 if (rs.getString("flag").equals(Constants.ATTENDANCE_IN)) {
                     return Constants.ATTENDANCE_IN;
@@ -254,10 +255,12 @@ public class AttendanceController extends HttpServlet {
             ps.setInt(2, rfidNumber);
             ps.setTimestamp(3, Helper.getCurrentTimeStamp());
             ps.setTimestamp(4, null);
-            ps.setString(5, Constants.ATTENDANCE_IN);
+            ps.setString(5, Constants.ATTENDANCE_VERIFY);
             ps.setTimestamp(6, Helper.getCurrentTimeStamp());
             int result = ps.executeUpdate();
             if (result == 1) {
+                Employee emp = getEmployeeData(rfidNumber, con);
+                SecretPinManager.sendPin(SecretPinManager.createPin(emp.getEmployeeId(), Constants.PIN_TYPE_OTP, con, emp.getPhoneNumber()));
                 return Constants.ATTENDANCE_IN;
             } else {
                 return Constants.ERROR;
@@ -267,6 +270,21 @@ public class AttendanceController extends HttpServlet {
             return Constants.ERROR;
         }
 
+    }
+
+    private String verifyCheckInEmployee(int rfidNumber, Connection con) {
+        try {
+            Statement stmt = con.createStatement();
+            int result = stmt.executeUpdate("update ATTENDENCE set flag=''  WHERE TO_DATE(TO_CHAR(CHECKIN,'DD-MM-YYYY'),'DD-MM-YYYY')=TO_DATE(TO_CHAR(current_timestamp,'DD-MM-YYYY'),'DD-MM-YYYY')AND RFIDNUMBER=" + rfidNumber);
+            if (result == 1) {
+                return Constants.OK;
+            } else {
+                return Constants.ERROR;
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+            return Constants.ERROR;
+        }
     }
 
     private String CheckOutEmployee(int rfidNumber, Connection con) {
@@ -391,6 +409,18 @@ public class AttendanceController extends HttpServlet {
             } catch (SQLException ex) {
                 Logger.getLogger(LiveCounter.class.getName()).log(Level.SEVERE, null, ex);
             }
+        }
+    }
+
+    private Employee getEmployeeData(int rfidNumber, Connection con) {
+        try {
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery("select EMPLOYEEID,PHONENUMBER from EMPLOYEES where  employeeId IN (select employeeId from RFID where RFIDNUMBER=" + rfidNumber + ")");
+            rs.next();
+            return new Employee(rs.getInt("EMPLOYEEID"), rs.getString("PHONENUMBER"));
+        } catch (Exception e) {
+            System.out.println(e);
+            return null;
         }
     }
 }

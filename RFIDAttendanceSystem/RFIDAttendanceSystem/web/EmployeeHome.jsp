@@ -67,13 +67,22 @@
     <script>
 
         const BASE_URL = 'http://' + window.location.hostname + ':8080/RFIDAttendanceSystem/';
+        var isUserHr, isHrEnabled;
         $(document).ready(function () {
             $('.card-cursor').click(function () {
                 location.href = this.id + '.jsp';
             });
-            var isUserHr = (JSON.parse('<%=(String) session.getAttribute("userJson")%>')).userHr;
-            var isHrEnabled = (JSON.parse('<%=(String) session.getAttribute("userJson")%>')).hrEnabled;
-            
+            isUserHr = (JSON.parse('<%=(String) session.getAttribute("userJson")%>')).userHr;
+            isHrEnabled = (JSON.parse('<%=(String) session.getAttribute("userJson")%>')).hrEnabled;
+            var verifyCheckin = (JSON.parse('<%=(String) session.getAttribute("userJson")%>')).rfid.verifyCheckin;
+            if (verifyCheckin) {
+                console.log('he;;p');
+            } else {
+                checkUserHr();
+            }
+        });
+
+        function checkUserHr() {
             if (isUserHr && isHrEnabled) {
                 if (!sessionStorage.getItem("isConfirmed")) {
                     $('#navigationModal').modal('show');
@@ -86,7 +95,8 @@
             } else {
                 $('#root').removeClass("hidden");
             }
-        });
+        }
+        
         function changeStatus(page) {
             sessionStorage.setItem("isConfirmed", "false");
             if (page === 1) {

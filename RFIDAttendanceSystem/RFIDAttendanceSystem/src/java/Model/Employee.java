@@ -44,6 +44,11 @@ public class Employee {
         this.lastName = lastName;
     }
 
+    public Employee(int employeeId, String phoneNumber) {
+        this.employeeId = employeeId;
+        this.phoneNumber = phoneNumber;
+    }
+    
     public Employee(int employeeId, String dob, String firstName, String lastName, String gender, String phoneNumber, String email, String address, Rfid rfid, int salary, String departmentName, boolean isHr, boolean isHrEnabled) {
         this.employeeId = employeeId;
         this.dob = dob;

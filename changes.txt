@@ -1,0 +1,8 @@
+broadcast page name
+connection string change
+HrDashboard page name change
+remove notification button
+
+
+ALTER TABLE secretPin
+  ADD mobileNumber varchar2(10);

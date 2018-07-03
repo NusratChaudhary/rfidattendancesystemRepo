@@ -18,6 +18,9 @@ import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 import java.security.cert.X509Certificate;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -33,15 +36,17 @@ public class SMSManager {
     private static final String HOST_PASSWORD = "frankenstein96";
 
     public String SendSMS(String mobileNo, String message) throws NoSuchAlgorithmException {
-        try {
-            String rawurl = API_URL + "Mobile=" + HOST_MOBILENO + "&Password=" + HOST_PASSWORD + "&Message=" + message + "&To=" + mobileNo + "&Key=" + API_KEY;
+        try {// message.replace(" ", "%20") have to do as there are spaces inside the message string and in url space is refered as %20
+            String rawurl = API_URL + "Mobile=" + HOST_MOBILENO + "&Password=" + HOST_PASSWORD + "&Message=" + message.replace(" ", "%20") + "&To=" + mobileNo + "&Key=" + API_KEY;
             TrustManager[] trustAllCerts = new TrustManager[]{
                 new X509TrustManager() {
                     public java.security.cert.X509Certificate[] getAcceptedIssuers() {
                         return null;
                     }
+
                     public void checkClientTrusted(X509Certificate[] certs, String authType) {
                     }
+
                     public void checkServerTrusted(X509Certificate[] certs, String authType) {
                     }
                 }
@@ -65,6 +70,7 @@ public class SMSManager {
             }
             if (response.contains("success")) {
                 System.out.println("Successfully send SMS");
+                logSMS(mobileNo, message);
                 return Constants.OK;
             } else {
                 System.out.println(response);
@@ -77,6 +83,25 @@ public class SMSManager {
             System.out.println(ex);
             Logger.getLogger(SMSManager.class.getName()).log(Level.SEVERE, null, ex);
             return Constants.ERROR;
+        }
+    }
+
+    private void logSMS(String mobileNo, String message) {
+        Connection con = new ConnectionManager().getConnection();
+        try {
+            PreparedStatement ps = con.prepareStatement("insert into SMSSERVICE values (?,?,?)");
+            ps.setString(1, mobileNo);
+            ps.setString(2, message);
+            ps.setTimestamp(3, Helper.getCurrentTimeStamp());
+            ps.executeUpdate();
+        } catch (Exception e) {
+            System.out.println(e);
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(SMSManager.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
 }

@@ -17,7 +17,6 @@ import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -125,7 +124,7 @@ public class Login extends HttpServlet {
                         employeeResult.getString("PHONENUMBER"),
                         employeeResult.getString("EMAIL"),
                         employeeResult.getString("ADDRESS"),
-                        new Rfid(rfidNumber),
+                        new Rfid(rfidNumber, isUserCheckinInVerification(String.valueOf(rfidNumber), con)),
                         0,
                         null,
                         hrDetails[0],
@@ -159,7 +158,7 @@ public class Login extends HttpServlet {
                         employeeResult.getString("PHONENUMBER"),
                         employeeResult.getString("EMAIL"),
                         employeeResult.getString("ADDRESS"),
-                        new Rfid(rfidNumber),
+                        new Rfid(rfidNumber, isUserCheckinInVerification(String.valueOf(rfidNumber), con)),
                         0,
                         null,
                         hrDetails[0],
@@ -196,6 +195,21 @@ public class Login extends HttpServlet {
             }
         } catch (Exception e) {
             return new boolean[]{false, false};
+        }
+    }
+
+    private boolean isUserCheckinInVerification(String rfidNumber, Connection con) {
+        try {
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery("select FLAG from ATTENDENCE WHERE TO_DATE(TO_CHAR(CHECKIN,'DD-MM-YYYY'),'DD-MM-YYYY')=TO_DATE(TO_CHAR(current_timestamp,'DD-MM-YYYY'),'DD-MM-YYYY') AND RFIDNUMBER=" + rfidNumber);
+            if (rs.next() && rs.getString("FLAG").equals(Constants.ATTENDANCE_VERIFY)) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+            return false;
         }
     }
 }
