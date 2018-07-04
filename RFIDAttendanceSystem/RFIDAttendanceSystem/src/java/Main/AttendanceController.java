@@ -79,7 +79,7 @@ public class AttendanceController extends HttpServlet {
         if (request.getHeader("api_key") != null && Helper.validateAPIKEY(request.getHeader("api_key"))) {
             Connection con = new ConnectionManager().getConnection();
             //((Employee) request.getSession(false).getAttribute("userData")).isUserHr()
-            if (request.getParameter("task") != null && ((Employee) request.getSession(false).getAttribute("userData")).isUserHr()) {
+            if (request.getParameter("task") != null && ((Employee) request.getSession(false).getAttribute("userData")).isUserHr() && request.getParameter("pin") == null) {
                 switch (request.getParameter("task")) {
                     case Constants.UPDATE_ATTENDANCE:
                         out.print(updateRecord(con, Integer.parseInt(request.getParameter("attendanceId")), request.getParameter("checkIn"), request.getParameter("checkOut")));
@@ -92,7 +92,7 @@ public class AttendanceController extends HttpServlet {
                         break;
                 }
             } else {
-                if (request.getParameter("rfid") != null) {
+                if (request.getParameter("rfid") != null && request.getParameter("pin") == null) {
                     String employeeStatus = getEmployeeStatus(con, Integer.parseInt(request.getParameter("rfid")));
                     if (employeeStatus.equals(Constants.OK)) {
                         switch (getEmployeeAttendanceStatus(Integer.parseInt(request.getParameter("rfid")), con)) {
@@ -110,6 +110,18 @@ public class AttendanceController extends HttpServlet {
                         }
                     } else {
                         out.print(employeeStatus);
+                    }
+                } else if (request.getParameter("pin") != null && request.getParameter("task") != null && request.getParameter("rfid") != null) {
+                    switch (request.getParameter("task")) {
+                        case Constants.VERIFY_CHECKIN:
+                            out.print(verifyCheckInEmployee(
+                                    Integer.parseInt(request.getParameter("rfid")),
+                                    Integer.parseInt(request.getParameter("pin")),
+                                    new ConnectionManager().getConnection())
+                            );
+                            break;
+                        default:
+                            out.print(Constants.ERROR);
                     }
                 } else {
                     out.print("invalidRequest");
@@ -272,15 +284,17 @@ public class AttendanceController extends HttpServlet {
 
     }
 
-    private String verifyCheckInEmployee(int rfidNumber, Connection con) {
+    private String verifyCheckInEmployee(int rfidNumber, int pinNumber, Connection con) {
         try {
-            Statement stmt = con.createStatement();
-            int result = stmt.executeUpdate("update ATTENDENCE set flag=''  WHERE TO_DATE(TO_CHAR(CHECKIN,'DD-MM-YYYY'),'DD-MM-YYYY')=TO_DATE(TO_CHAR(current_timestamp,'DD-MM-YYYY'),'DD-MM-YYYY')AND RFIDNUMBER=" + rfidNumber);
-            if (result == 1) {
-                return Constants.OK;
-            } else {
-                return Constants.ERROR;
-            }
+//            Statement stmt = con.createStatement();
+//            int result = stmt.executeUpdate("update ATTENDENCE set flag=''  WHERE TO_DATE(TO_CHAR(CHECKIN,'DD-MM-YYYY'),'DD-MM-YYYY')=TO_DATE(TO_CHAR(current_timestamp,'DD-MM-YYYY'),'DD-MM-YYYY')AND RFIDNUMBER=" + rfidNumber);
+//            if (result == 1) {
+//                return Constants.OK;
+//            } else {
+//                return Constants.ERROR;
+//            }
+            // update session attribs as well 
+            return Constants.OK;
         } catch (Exception e) {
             System.out.println(e);
             return Constants.ERROR;

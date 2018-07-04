@@ -110,4 +110,5 @@ public class Constants {
     public static final String PIN_INCORRECT = "pin_incorrect";
     public static final String PIN_MESSAGE_OTP = "Your One Time Password(OTP) for attendance is ";
     public static final String PIN_MESSAGE_ADMIN = "Your One Time Password(OTP) for Login is ";
+    public static final String VERIFY_CHECKIN = "verify_checkin";
 }

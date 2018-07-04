@@ -83,3 +83,6 @@ const GET_MAILS = "get_mails";
 const GET_SMS = "get_sms";
 const GET_CURRENT_CHECKINS = "get_current_checkins";
 const GET_ADMIN_REQUEST = "get_admin_request";
+const VERIFY_CHECKIN = "verify_checkin";
+const PIN_USED = "pin_used";
+const PIN_INCORRECT = "pin_incorrect";
