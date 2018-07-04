@@ -2,6 +2,9 @@ broadcast page name
 connection string change
 HrDashboard page name change
 remove notification button
+send admin password everyday
+clear pin table everymorning
+checkout emp on morning
 
 
 ALTER TABLE secretPin
