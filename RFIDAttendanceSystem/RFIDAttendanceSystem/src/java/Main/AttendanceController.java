@@ -78,7 +78,6 @@ public class AttendanceController extends HttpServlet {
 
         if (request.getHeader("api_key") != null && Helper.validateAPIKEY(request.getHeader("api_key"))) {
             Connection con = new ConnectionManager().getConnection();
-            //((Employee) request.getSession(false).getAttribute("userData")).isUserHr()
             if (request.getParameter("task") != null && ((Employee) request.getSession(false).getAttribute("userData")).isUserHr() && request.getParameter("pin") == null) {
                 switch (request.getParameter("task")) {
                     case Constants.UPDATE_ATTENDANCE:
@@ -92,7 +91,7 @@ public class AttendanceController extends HttpServlet {
                         break;
                 }
             } else {
-                if (request.getParameter("rfid") != null && request.getParameter("pin") == null) {
+                if (request.getParameter("rfid") != null) {
                     String employeeStatus = getEmployeeStatus(con, Integer.parseInt(request.getParameter("rfid")));
                     if (employeeStatus.equals(Constants.OK)) {
                         switch (getEmployeeAttendanceStatus(Integer.parseInt(request.getParameter("rfid")), con)) {
@@ -111,13 +110,14 @@ public class AttendanceController extends HttpServlet {
                     } else {
                         out.print(employeeStatus);
                     }
-                } else if (request.getParameter("pin") != null && request.getParameter("task") != null && request.getParameter("rfid") != null) {
+                } else if (request.getParameter("pin") != null && request.getParameter("task") != null && request.getParameter("id") != null) {
                     switch (request.getParameter("task")) {
                         case Constants.VERIFY_CHECKIN:
                             out.print(verifyCheckInEmployee(
-                                    Integer.parseInt(request.getParameter("rfid")),
-                                    Integer.parseInt(request.getParameter("pin")),
-                                    new ConnectionManager().getConnection())
+                                    Integer.parseInt(request.getParameter("id")),
+                                    request.getParameter("pin"),
+                                    new ConnectionManager().getConnection(),
+                                    request.getSession(false))
                             );
                             break;
                         default:
@@ -284,20 +284,40 @@ public class AttendanceController extends HttpServlet {
 
     }
 
-    private String verifyCheckInEmployee(int rfidNumber, int pinNumber, Connection con) {
+    private String verifyCheckInEmployee(int employeeId, String pinNumber, Connection con, HttpSession userSession) {
         try {
-//            Statement stmt = con.createStatement();
-//            int result = stmt.executeUpdate("update ATTENDENCE set flag=''  WHERE TO_DATE(TO_CHAR(CHECKIN,'DD-MM-YYYY'),'DD-MM-YYYY')=TO_DATE(TO_CHAR(current_timestamp,'DD-MM-YYYY'),'DD-MM-YYYY')AND RFIDNUMBER=" + rfidNumber);
-//            if (result == 1) {
-//                return Constants.OK;
-//            } else {
-//                return Constants.ERROR;
-//            }
-            // update session attribs as well 
-            return Constants.OK;
+            String status = null;
+            String pinStatus = SecretPinManager.validatePin(employeeId, Constants.PIN_TYPE_OTP, pinNumber, con);
+            switch (pinStatus) {
+                case Constants.OK:
+                    Employee employee = (Employee) userSession.getAttribute("userData");
+                    employee.getRfid().setVerifyCheckin(false);
+                    ObjectMapper mapper = new ObjectMapper();
+                    String userJson = mapper.writeValueAsString(employee);
+                    userSession.setAttribute("userJson", userJson);
+                    userSession.setAttribute("userData", employee);
+                    status = Constants.OK;
+                    break;
+                case Constants.PIN_USED:
+                    status = Constants.PIN_USED;
+                    break;
+                case Constants.PIN_INCORRECT:
+                    status = Constants.PIN_INCORRECT;
+                    break;
+                case Constants.ERROR:
+                    status = Constants.ERROR;
+                    break;
+            }
+            return status;
         } catch (Exception e) {
             System.out.println(e);
             return Constants.ERROR;
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(AttendanceController.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
 

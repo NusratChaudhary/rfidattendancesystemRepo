@@ -71,7 +71,7 @@ public class SecretPinManager {
                 Pin pinData = pinList.get(Integer.valueOf(pin));
                 if (pinData.getEmployeeId() == employeeId && pinData.getType().equals(type)) {
                     if (pinData.getIsActive()) {
-                        if (changePINStatus(pinData.getId(), con)) {
+                        if (changePINStatus(pinData, con)) {
                             pinData.setIsActive(false);
                             pinList.replace(Integer.valueOf(pin), pinData);
                             return Constants.OK;
@@ -93,11 +93,17 @@ public class SecretPinManager {
         }
     }
 
-    public static boolean changePINStatus(int id, Connection con) {
+    public static boolean changePINStatus(Pin pinData, Connection con) {
         try {
             Statement stmt = con.createStatement();
-            int count = stmt.executeUpdate("update SECRETPIN set FLAG='" + Constants.PIN_USED + "' where ID=" + id);
-            return count == 1;
+            ResultSet rs = stmt.executeQuery("select RFIDNUMBER from RFID where EMPLOYEEID=" + pinData.getEmployeeId());
+            rs.next();
+            int rfidNumber = rs.getInt("RFIDNUMBER");
+            Statement stmt2 = con.createStatement();
+            int count = stmt2.executeUpdate("update SECRETPIN set FLAG='" + Constants.PIN_USED + "' where ID=" + pinData.getId());
+            Statement stmt3 = con.createStatement();
+            count += stmt3.executeUpdate("update attendence set FLAG='" + Constants.ATTENDANCE_IN + "' where  TO_DATE(TO_CHAR(CHECKIN,'DD-MM-YYYY'),'DD-MM-YYYY')=TO_DATE(TO_CHAR(current_timestamp,'DD-MM-YYYY'),'DD-MM-YYYY') AND RFIDNUMBER=" + rfidNumber);
+            return count == 2;
         } catch (Exception e) {
             System.out.println(e);
             return false;
@@ -115,7 +121,7 @@ public class SecretPinManager {
                 pinList.put(rs.getInt("PINNUMBER"), new Pin(rs.getInt("ID"), rs.getInt("PINNUMBER"), rs.getInt("EMPLOYEEID"), rs.getString("PINTYPE"), rs.getString("MOBILENUMBER"), true));
             }
         } catch (Exception e) {
-            System.out.println(e); 
+            System.out.println(e);
         } finally {
             try {
                 con.close();

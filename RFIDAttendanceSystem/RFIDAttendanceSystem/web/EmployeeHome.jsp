@@ -192,12 +192,12 @@
 
                 $scope.verifyCheckin = function () {
                     showLoader('.modal');
-                    let rfidNumber = (JSON.parse('<%=(String) session.getAttribute("userJson")%>')).rfid.rfidNumber;
+                    let employeeId = (JSON.parse('<%=(String) session.getAttribute("userJson")%>')).employeeId;
                     const request = {
                         method: 'POST',
                         url: 'AttendanceController',
                         headers: {"api_key": API_KEY},
-                        params: {task: VERIFY_CHECKIN, pin: $scope.pinNumber, rfid: rfidNumber},
+                        params: {task: VERIFY_CHECKIN, pin: $scope.pinNumber, id: employeeId},
                         timeout: 10000
                     };
                     $http(request).then(function (response) {
