@@ -18,13 +18,6 @@
             if (session.getAttribute("id") != null || session.getAttribute("isUserAdmin") != null) {
         %>
         <div class="login" >
-            <div class="notification-item">
-                <a href="#">
-                    <span class="notification-badge">5</span>
-                    <img src="Resources/notificatonIcon.png" alt="notificatonIcon" />
-                </a>
-            </div>
-
             <button type="button" class="btn btn-sm btn-light mr-sm-2 " id="signoutButton"  data-toggle="modal" >&nbsp;&nbsp;&nbsp;SIGNOUT&nbsp;&nbsp;&nbsp;</button>                 
         </div>
         <%
