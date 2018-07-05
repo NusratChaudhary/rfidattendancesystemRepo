@@ -83,10 +83,16 @@ public class Login extends HttpServlet {
                 }
                 return Constants.LOGIN_INSUCCESS;
             } else {
+                int length = request.getParameter("password").length() - 8;
+                String password = request.getParameter("password").substring(0, length);
+                int pin = Integer.valueOf(request.getParameter("password").substring(0, length));
                 Statement stmt = con.createStatement();
-                ResultSet rs = stmt.executeQuery("select count(*) as COUNT from admin where password='" + request.getParameter("password") + "'");
+                ResultSet rs = stmt.executeQuery("select count(*) as COUNTER from admin where password='" + password + "'");
+                Statement stmt2 = con.createStatement();
+                ResultSet rs2 = stmt2.executeQuery("select COUNT(*) as COUNTER from SECRETPIN where PINNUMBER=" + pin + " AND PINTYPE='" + Constants.PIN_TYPE_ADMINPIN + "'");
                 rs.next();
-                if (rs.getInt("COUNT") == 1) {
+                rs2.next();
+                if (rs.getInt("COUNTER") == 1 && rs2.getInt("COUNTER") == 1) {
                     HttpSession loginSession = request.getSession();
                     loginSession.setAttribute("isUserAdmin", true);
                     loginSession.setAttribute("id", "admin");

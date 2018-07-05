@@ -2,10 +2,23 @@ broadcast page name
 connection string change
 HrDashboard page name change
 remove notification button
-send admin password everyday
-clear pin table everymorning
-checkout emp on morning
+send admin password everyday~
+clear pin table everymorning~
+checkout emp on morning~
 
+
+insert into employees values(
+01234567,
+'Nusrat',
+'Chaudhary',
+'female',
+'9769884996',
+'admin@symphid.com',
+'null',
+'null',
+TO_DATE('1995/10/04', 'yyyy/mm/dd'),
+'user_active'
+);
 
 ALTER TABLE secretPin
   ADD mobileNumber varchar2(10);
