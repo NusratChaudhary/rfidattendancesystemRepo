@@ -263,7 +263,7 @@ public class AttendanceController extends HttpServlet {
     private String CheckInEmployee(int rfidNumber, Connection con) {
         try {
             PreparedStatement ps = con.prepareStatement("insert into ATTENDENCE values(?,?,?,?,?,?)");
-            ps.setInt(1, Math.abs(new Random().nextInt()));
+            ps.setInt(1, Math.abs(new Random().nextInt(9999999)));
             ps.setInt(2, rfidNumber);
             ps.setTimestamp(3, Helper.getCurrentTimeStamp());
             ps.setTimestamp(4, null);

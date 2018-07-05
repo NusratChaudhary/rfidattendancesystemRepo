@@ -121,7 +121,7 @@ public class Registration extends HttpServlet {
 
                 PreparedStatement insertEmployees = con.prepareStatement("insert into EMPLOYEES values (?,?,?,?,?,?,?,?,?,?)");
                 PreparedStatement insertRfid = con.prepareStatement("insert into RFID values (?,?,?,?)");
-                int employeeID = Math.abs(new Random().nextInt()); // maths.abs to get positive i.e converts negative to posotive
+                int employeeID = Math.abs(new Random().nextInt(9999999)); // maths.abs to get positive i.e converts negative to posotive
                 insertEmployees.setInt(1, employeeID);
                 insertEmployees.setString(2, mapItems.get("firstName").toString());
                 insertEmployees.setString(3, mapItems.get("lastName").toString());
@@ -183,7 +183,7 @@ public class Registration extends HttpServlet {
             String hashUrl = Helper.getMD5Hash(rawUrl);
             Connection con = new ConnectionManager().getConnection();
             PreparedStatement insertVerification = con.prepareStatement("insert into VERIFICATION values (?,?,?,?,?)");
-            insertVerification.setInt(1, Math.abs(new Random().nextInt()));
+            insertVerification.setInt(1, Math.abs(new Random().nextInt(9999999)));
             insertVerification.setString(2, hashUrl);
             insertVerification.setInt(3, id);
             insertVerification.setString(4, Constants.MODE_VERIFY_EMAIL);

@@ -27,7 +27,7 @@ public class SecretPinManager {
     public static Pin createPin(int employeeId, String type, Connection con, String mobileNumber) {
         try {
             int pinNumber = 0;
-            int recordId = Math.abs(new Random().nextInt());
+            int recordId = Math.abs(new Random().nextInt(9999999));
             while (true) {
                 pinNumber = Math.abs(new Random().nextInt(999999));
                 if (!pinList.containsKey(pinNumber)) {  // avoids duplicate pin number

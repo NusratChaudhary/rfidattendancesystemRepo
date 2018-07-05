@@ -156,7 +156,7 @@ public class BroadcastController extends HttpServlet {
                     listofEmployeeId = multiselect.split(",");
                 }
                 PreparedStatement ps = con.prepareStatement("insert into broadcast values (?,?,?,?,?)");
-                int broadcastId = Math.abs(new Random().nextInt());
+                int broadcastId = Math.abs(new Random().nextInt(9999999));
                 ps.setInt(1, broadcastId);
                 ps.setString(2, message);
                 ps.setString(3, type);

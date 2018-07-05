@@ -154,7 +154,7 @@ public class RequestController extends HttpServlet {
 
     private String addRequest(HttpSession session, HttpServletRequest request) {
         Connection con = new ConnectionManager().getConnection();
-        int requestId = Math.abs(new Random().nextInt());
+        int requestId = Math.abs(new Random().nextInt(9999999));
         Employee employee = (Employee) session.getAttribute("userData");
         try {
             PreparedStatement ps = con.prepareStatement("insert into request values (?,?,?,?,?,?,?,?,?)");
