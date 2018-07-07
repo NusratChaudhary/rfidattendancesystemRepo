@@ -74,6 +74,7 @@ public class SMSManager {
                 return Constants.OK;
             } else {
                 System.out.println(response);
+                logSMS(mobileNo, message);
                 return Constants.ERROR;
             }
         } catch (IOException e) {
@@ -96,12 +97,6 @@ public class SMSManager {
             ps.executeUpdate();
         } catch (Exception e) {
             System.out.println(e);
-        } finally {
-            try {
-                con.close();
-            } catch (SQLException ex) {
-                Logger.getLogger(SMSManager.class.getName()).log(Level.SEVERE, null, ex);
-            }
         }
     }
 }

@@ -68,13 +68,11 @@ public class LiveCounter extends HttpServlet {
         try {
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery("select count(*) as counter from ATTENDENCE where TO_DATE(TO_CHAR(CHECKIN,'DD-MM-YYYY'),'DD-MM-YYYY') = TO_DATE(TO_CHAR(current_timestamp,'DD-MM-YYYY'),'DD-MM-YYYY')");
-            if (rs.next() == false) {
+            if (rs.next()) {
+                return rs.getInt("counter");
+            }else{
                 return 0;
             }
-            while (rs.next()) {
-                return rs.getInt("counter");
-            }
-            return 0;
         } catch (Exception e) {
             System.out.println(e);
             return 0;
@@ -85,13 +83,11 @@ public class LiveCounter extends HttpServlet {
         try {
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery("select count(*) as counter from REQUEST where FLAG='" + Constants.REQUEST_PENDING + "'");
-            if (rs.next() == false) {
+           if (rs.next()) {
+                return rs.getInt("counter");
+            }else{
                 return 0;
             }
-            while (rs.next()) {
-                return rs.getInt("counter");
-            }
-            return 0;
         } catch (Exception e) {
             System.out.println(e);
             return 0;

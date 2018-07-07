@@ -172,7 +172,7 @@
             }
 
             var headerApp = angular.module('EmployeeBroadcast', []);
-            headerApp.controller('EmployeeBroadcastCtrl', function ($scope, $http) {
+            headerApp.controller('EmployeeBroadcastCtrl', function ($scope, $http,$interval) {
                 $scope.showBroadcast = function () {
                     const request = {
                         method: 'GET',
@@ -189,6 +189,9 @@
                         console.log('Error ', response);
                     });
                 };
+                $interval(function () {
+                    $scope.showBroadcast();
+                }, 5000);
 
                 $scope.verifyCheckin = function () {
                     showLoader('.modal');

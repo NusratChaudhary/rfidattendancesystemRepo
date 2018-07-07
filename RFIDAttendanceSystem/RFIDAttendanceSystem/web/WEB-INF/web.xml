@@ -96,6 +96,9 @@
         <servlet-name>AdminController</servlet-name>
         <url-pattern>/AdminController</url-pattern>
     </servlet-mapping>
+    <listener>
+    <listener-class>Automate.JobScheduler</listener-class>
+  </listener>
     <session-config>
         <session-timeout>
             30

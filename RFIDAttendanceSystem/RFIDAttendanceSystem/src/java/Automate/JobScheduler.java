@@ -27,6 +27,7 @@ public class JobScheduler implements ServletContextListener {
     @Override
     public void contextInitialized(ServletContextEvent sce) {
         try {
+            System.out.println("Automate System Initialized");
             JobDetail dawnJob = newJob(DawnJobs.class).withIdentity(
                     "DawnJob", "Group1").build();
             Trigger trigger = newTrigger()
@@ -36,6 +37,7 @@ public class JobScheduler implements ServletContextListener {
             scheduler = new StdSchedulerFactory().getScheduler();
             scheduler.start();
             scheduler.scheduleJob(dawnJob, trigger);
+             System.out.println("Automate System Job Scheduled");
         } catch (Exception e) {
             System.out.println(e);
         }

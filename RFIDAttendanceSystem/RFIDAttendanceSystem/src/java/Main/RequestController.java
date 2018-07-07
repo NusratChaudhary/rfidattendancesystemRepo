@@ -165,7 +165,7 @@ public class RequestController extends HttpServlet {
             ps.setInt(5, employee.getEmployeeId());
             ps.setInt(6, 0);
             ps.setTimestamp(7, Helper.getCurrentTimeStamp());
-            ps.setString(7, Constants.REQUEST_PENDING);
+            ps.setString(8, Constants.REQUEST_PENDING);
             ps.setTimestamp(9, null);
             ObjectMapper mapper = new ObjectMapper();
 

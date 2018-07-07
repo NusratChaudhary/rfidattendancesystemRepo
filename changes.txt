@@ -8,7 +8,7 @@ checkout emp on morning~
 
 
 insert into employees values(
-01234567,
+1234567,
 'Nusrat',
 'Chaudhary',
 'female',

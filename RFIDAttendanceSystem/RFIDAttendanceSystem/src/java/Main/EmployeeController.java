@@ -20,6 +20,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -84,7 +85,7 @@ public class EmployeeController extends HttpServlet {
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery("select * from EMPLOYEES");
             while (rs.next()) {
-                if (!rs.getString("FLAG").equals(Constants.USER_DELETED)) {
+                if (!rs.getString("FLAG").equals(Constants.USER_DELETED) && !rs.getString("EMAIL").equals("admin@symphid.com")) {
                     int salary = 0;
                     String departmentName = null;
                     int rfidNumber = 0;
@@ -169,8 +170,15 @@ public class EmployeeController extends HttpServlet {
         Connection con = new ConnectionManager().getConnection();
         try {
             int count = 0;
-            Statement stmt = con.createStatement();
-            count = stmt.executeUpdate("update employees set  FIRSTNAME=?,LASTNAME=?,GENDER=?,PHONENUMBER=?,EMAIL=?,ADDRESS=?,DOB=? where EMPLOYEEID=" + employee.getEmployeeId());
+            PreparedStatement pstmt = con.prepareStatement("update employees set  FIRSTNAME=?,LASTNAME=?,GENDER=?,PHONENUMBER=?,EMAIL=?,ADDRESS=?,DOB=? where EMPLOYEEID=" + employee.getEmployeeId());
+            pstmt.setString(1, employee.getFirstName());
+            pstmt.setString(2, employee.getLastName());
+            pstmt.setString(3, employee.getGender());
+            pstmt.setString(4, employee.getPhoneNumber());
+            pstmt.setString(5, employee.getEmail());
+            pstmt.setString(6, employee.getAddress());
+            pstmt.setDate(7, new java.sql.Date(new SimpleDateFormat("yyyy-MM-dd").parse(employee.getDob()).getTime()));
+            count = pstmt.executeUpdate();
             if (!employee.getdepartmentName().equals("null") && employee.getsalary() != 0) {
                 boolean exist = Helper.checkIfExist(
                         con,

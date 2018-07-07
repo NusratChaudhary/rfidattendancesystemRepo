@@ -375,8 +375,7 @@
                                 <thead>
                                     <tr>
                                         <th scope="col">#</th>
-                                        <th scope="col">Email</th>
-                                        <th scope="col">Subject</th>
+                                        <th scope="col">Mobile Number</th>
                                         <th scope="col">Message</th>
                                         <th scope="col">Time</th>
                                     </tr>
@@ -385,7 +384,6 @@
                                     <tr ng-if="smsData.length > 0" ng-repeat="sms in smsData| filter : smsFilter">
                                         <th scope="row">{{$index + 1}}</th>
                                         <td>{{sms.reciver}}</td>
-                                        <td>{{sms.subject}}</td>
                                         <td>{{sms.context}}</td>
                                         <td>{{sms.time}}</td>
                                     </tr>
@@ -685,6 +683,7 @@
                     if (changes > 0) {
                         delete emp.$$hashKey;
                         delete emp.name;
+                        delete emp.hrEnabled;
                         emp.isUserHr = emp.userHr;
                         delete emp.userHr;
                         showLoader('body');

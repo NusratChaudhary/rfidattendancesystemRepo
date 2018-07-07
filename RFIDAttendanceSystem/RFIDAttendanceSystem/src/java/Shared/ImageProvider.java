@@ -40,7 +40,7 @@ public class ImageProvider extends HttpServlet {
         if (request.getParameter("id")!=null) {
             rfidNumber=Integer.parseInt(request.getParameter("id"));
         }else{
-            rfidNumber=(Integer)((Employee) session.getAttribute("userData")).getRfid().getRfidNumber();
+            rfidNumber=(Integer)((Employee) session.getAttribute("userData")).getRfid().getRfidnumber();
         }
         Connection con = new ConnectionManager().getConnection();
         try {

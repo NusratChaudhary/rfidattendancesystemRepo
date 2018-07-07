@@ -72,6 +72,8 @@
                                     alertData = {classType: 'alert-warning', message: 'Sorry Cant Checkin Please Complete Verification'}
                                 } else if (data === RFID_CARD_NOT_AVAILABLE) {
                                     alertData = {classType: 'alert-warning', message: 'No such card found or Card is invalid'}
+                                } else if (data === ATTENDANCE_VERIFY) {
+                                    alertData = {classType: 'alert-warning', message: 'Verify Your Checkin Before you Checkout'}
                                 } else {
                                     alertData = {classType: 'alert-danger', message: 'Error Occured Please Contact Administrator'}
                                 }

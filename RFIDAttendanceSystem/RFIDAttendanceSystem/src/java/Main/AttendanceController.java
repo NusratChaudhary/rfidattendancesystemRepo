@@ -101,6 +101,9 @@ public class AttendanceController extends HttpServlet {
                             case Constants.ATTENDANCE_NOT_FOUND:
                                 out.print(CheckInEmployee(Integer.parseInt(request.getParameter("rfid")), con));
                                 break;
+                            case Constants.ATTENDANCE_VERIFY:
+                                out.print(Constants.ATTENDANCE_VERIFY);
+                                break;
                             case Constants.ATTENDANCE_ALREADY_COMPLETED:
                                 out.print(Constants.ATTENDANCE_ALREADY_COMPLETED);
                                 break;
@@ -142,7 +145,7 @@ public class AttendanceController extends HttpServlet {
         Connection con = new ConnectionManager().getConnection();
         String flag = null;
         try {
-            int rfidNumber = ((Employee) session.getAttribute("userData")).getRfid().getRfidNumber();
+            int rfidNumber = ((Employee) session.getAttribute("userData")).getRfid().getRfidnumber();
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery("select attendenceid,checkin,checkout,flag from ATTENDENCE where rfidnumber=" + rfidNumber);
             while (rs.next()) {
@@ -150,6 +153,8 @@ public class AttendanceController extends HttpServlet {
                     flag = "IN";
                 } else if (rs.getString("flag").equals(Constants.ATTENDANCE_OUT)) {
                     flag = "PRESENT";
+                } else if (rs.getString("flag").equals(Constants.ATTENDANCE_VERIFY)) {
+                    flag = "VERIFICATION";
                 } else {
                     flag = "ABSENT";
                 }
@@ -201,6 +206,9 @@ public class AttendanceController extends HttpServlet {
                         case Constants.ATTENDANCE_OUT:
                             flag = "Checked Out";
                             break;
+                        case Constants.ATTENDANCE_VERIFY:
+                            flag = "Verification";
+                            break;
                         default:
                             flag = "ERR";
                     }
@@ -248,6 +256,9 @@ public class AttendanceController extends HttpServlet {
                 }
                 if (rs.getString("flag").equals(Constants.ATTENDANCE_OUT)) {
                     return Constants.ATTENDANCE_ALREADY_COMPLETED;
+                }
+                if (rs.getString("flag").equals(Constants.ATTENDANCE_VERIFY)) {
+                    return Constants.ATTENDANCE_VERIFY;
                 }
             } else {
                 return Constants.ATTENDANCE_NOT_FOUND;
@@ -412,6 +423,9 @@ public class AttendanceController extends HttpServlet {
                         break;
                     case Constants.ATTENDANCE_OUT:
                         flag = "Checked Out";
+                        break;
+                    case Constants.ATTENDANCE_VERIFY:
+                        flag = "Verification";
                         break;
                     default:
                         flag = "ERR";

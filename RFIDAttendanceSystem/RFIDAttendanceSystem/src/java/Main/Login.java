@@ -83,9 +83,8 @@ public class Login extends HttpServlet {
                 }
                 return Constants.LOGIN_INSUCCESS;
             } else {
-                int length = request.getParameter("password").length() - 8;
-                String password = request.getParameter("password").substring(0, length);
-                int pin = Integer.valueOf(request.getParameter("password").substring(0, length));
+                String password = request.getParameter("password").substring(0, 5);
+                int pin = Integer.valueOf(request.getParameter("password").substring(5));
                 Statement stmt = con.createStatement();
                 ResultSet rs = stmt.executeQuery("select count(*) as COUNTER from admin where password='" + password + "'");
                 Statement stmt2 = con.createStatement();

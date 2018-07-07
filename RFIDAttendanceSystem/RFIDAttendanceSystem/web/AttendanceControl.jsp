@@ -79,7 +79,7 @@
                                         <td>{{employee.checkIn}}</td>
                                         <td>{{employee.checkOut}}</td>
                                         <td style="padding-top: 5px;">
-                                            <button type="button" ng-click="editRecordConfirmation(employee)" style="font-weight: 500;" class="btn btn-outline-info">Edit</button>
+                                            <button type="button" ng-if="employee.checkOut!==null" ng-click="editRecordConfirmation(employee)" style="font-weight: 500;" class="btn btn-outline-info">Edit</button>
                                             &nbsp;&nbsp;&nbsp;<button type="button" ng-click="deleteUserConfirmation(employee)" style="font-weight: 500;" class="btn btn-outline-danger">Delete</button>
                                         </td>
                                     </tr>

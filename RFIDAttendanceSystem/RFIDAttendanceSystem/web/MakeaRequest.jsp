@@ -181,7 +181,7 @@
 
                 $scope.sendRequest = function () {
                     if ($scope.sendSubject && $scope.sendMessage) {
-                        showLoader('modal');
+                        showLoader('.modal');
                         const request = {
                             method: 'POST',
                             url: 'RequestController',
@@ -200,18 +200,20 @@
                             } else {
                                 $scope.alertCreator('Error in Sending Requests', 'alert-danger');
                             }
-                            hideLoader('modal');
+                            hideLoader('.modal');
+                            $('#composeRequest').modal('toggle');
                         }, function (response) {
                             $scope.alertCreator('Error in Sending Requests', 'alert-danger');
                             console.log('Error ', response);
-                            hideLoader('modal');
+                            hideLoader('.modal');
+                            $('#composeRequest').modal('toggle');
                         });
                     }
                 };
                 $scope.alertCreator = function (message, className) {
                     document.getElementById("messageAlert").classList.remove('fadeOut');
                     $scope.alertData = {message: message, className: className};
-                     $("html, body").animate({scrollTop: 0}, "fast");
+                    $("html, body").animate({scrollTop: 0}, "fast");
                     setTimeout(function () {
                         var element, name, arr;
                         element = document.getElementById("messageAlert");

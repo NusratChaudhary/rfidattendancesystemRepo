@@ -13,27 +13,27 @@ import oracle.sql.BLOB;
  */
 public class Rfid {
 
-    private int rfidNumber;
+    private int rfidnumber;
     private boolean verifyCheckin;
 
     public Rfid() {
     }
 
-    public Rfid(int rfidNumber, boolean verifyCheckin) {
-        this.rfidNumber = rfidNumber;
+    public Rfid(int rfidnumber, boolean verifyCheckin) {
+        this.rfidnumber = rfidnumber;
         this.verifyCheckin = verifyCheckin;
     }
 
-    public Rfid(int rfidNumber) {
-        this.rfidNumber = rfidNumber;
+    public Rfid(int rfidnumber) {
+        this.rfidnumber = rfidnumber;
     }
 
-    public int getRfidNumber() {
-        return rfidNumber;
+    public int getRfidnumber() {
+        return rfidnumber;
     }
 
-    public void setRfidNumber(int rfidNumber) {
-        this.rfidNumber = rfidNumber;
+    public void setRfidnumber(int rfidnumber) {
+        this.rfidnumber = rfidnumber;
     }
 
     public boolean isVerifyCheckin() {

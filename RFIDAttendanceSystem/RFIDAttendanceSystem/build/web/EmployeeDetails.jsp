@@ -349,6 +349,7 @@
                     if (changes > 0) {
                         delete emp.$$hashKey;
                         delete emp.name;
+                        delete emp.hrEnabled;
                         emp.isUserHr = emp.userHr;
                         delete emp.userHr;
                         showLoader('body');

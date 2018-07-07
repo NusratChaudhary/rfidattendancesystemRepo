@@ -59,35 +59,49 @@ public class DawnJobs implements Job {
 class Jobs {
 
     Connection con = new ConnectionManager().getConnection();
+    int taskCompleted = 0;
 
     synchronized void clearSecretPinTable() {
+        System.out.println("JOB 1 Done");
         try {
             Statement stmt = con.createStatement();
             stmt.executeUpdate("truncate TABLE SECRETPIN");
         } catch (Exception e) {
             System.out.println(e);
         }
+        taskCompleted++;
+        closeConnection();
     }
 
     synchronized void checkOutUsers() {
+        System.out.println("JOB 2 Done");
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("dd-M-yyyy");
             SimpleDateFormat sdf2 = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
-            Date date = sdf2.parse(sdf.format(new Date()) + " 05:00:00");
+            Date date = sdf2.parse(sdf.format(new Date()) + " 17:00:00");
             PreparedStatement pstmt = con.prepareStatement("update ATTENDENCE set Flag='" + Constants.ATTENDANCE_OUT + "', CHECKOUT=? where CHECKOUT IS NULL AND  Flag='" + Constants.ATTENDANCE_IN + "'");
             pstmt.setTimestamp(1, new java.sql.Timestamp(date.getTime()));
             pstmt.executeUpdate();
         } catch (Exception e) {
             System.out.println(e);
         }
+        taskCompleted++;
+        closeConnection();
     }
 
     synchronized void sendAdminPin() {
+        System.out.println("JOB 3 Done");
         try {
-            SecretPinManager.sendPin(SecretPinManager.createPin(01234567, Constants.PIN_TYPE_ADMINPIN, con, "9769884996"));
+            SecretPinManager.sendPin(SecretPinManager.createPin(1234567, Constants.PIN_TYPE_ADMINPIN, con, "9769884996"));
         } catch (Exception e) {
             System.out.println(e);
-        } finally {
+        }
+        taskCompleted++;
+        closeConnection();
+    }
+
+    void closeConnection() {
+        if (taskCompleted == 3) {
             try {
                 con.close();
             } catch (SQLException ex) {

@@ -35,7 +35,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author mohnish
  */
 public class AdminController extends HttpServlet {
-    
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -47,7 +47,7 @@ public class AdminController extends HttpServlet {
                     switch (request.getParameter("task")) {
                         case Constants.GET_ALL_ATTENDANCE:
                             out.print(new AttendanceController().getAllEmployeeAttendance(null, null));
-                            
+
                             break;
                         case Constants.GET_ALL_EMPLOYEES:
                             out.print(new EmployeeController().getAllEmployees());
@@ -69,7 +69,7 @@ public class AdminController extends HttpServlet {
             out.print("invalidRequest");
         }
     }
-    
+
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -109,7 +109,7 @@ public class AdminController extends HttpServlet {
             out.print("invalidRequest");
         }
     }
-    
+
     private String addHrUser(int employeeId) {
         Connection con = new ConnectionManager().getConnection();
         try {
@@ -129,7 +129,7 @@ public class AdminController extends HttpServlet {
             }
         }
     }
-    
+
     private String deleteHrUser(int employeeId) {
         Connection con = new ConnectionManager().getConnection();
         try {
@@ -148,7 +148,7 @@ public class AdminController extends HttpServlet {
             }
         }
     }
-    
+
     private String toggleHrUserStatus(int employeeId, boolean flag) {
         Connection con = new ConnectionManager().getConnection();
         try {
@@ -170,7 +170,7 @@ public class AdminController extends HttpServlet {
             }
         }
     }
-    
+
     private String loadMailData() {
         Connection con = new ConnectionManager().getConnection();
         try {
@@ -198,7 +198,7 @@ public class AdminController extends HttpServlet {
             }
         }
     }
-    
+
     private String loadSMSData() {
         Connection con = new ConnectionManager().getConnection();
         try {
@@ -208,8 +208,8 @@ public class AdminController extends HttpServlet {
             while (rs.next()) {
                 listOfSMS.add(new Message(
                         rs.getString("RECIEVER"),
-                        rs.getString("SUBJECT"),
-                        rs.getString("CONTEXT"),
+                        null,
+                        rs.getString("MESSAGE"),
                         String.valueOf(rs.getTimestamp("TIME"))
                 ));
             }
@@ -225,5 +225,5 @@ public class AdminController extends HttpServlet {
                 Logger.getLogger(AdminController.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-    }    
+    }
 }

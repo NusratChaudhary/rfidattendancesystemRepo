@@ -41,6 +41,7 @@ const ATTENDANCE_IN = "in";
 const ATTENDANCE_OUT = "out";
 const ATTENDANCE_ABSENT = "absent";
 const ATTENDANCE_ALREADY_COMPLETED = "already_completed";
+const ATTENDANCE_VERIFY = "ATTENDANCE_VERIFY";
 
 const OK = "OK";
 
